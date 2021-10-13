@@ -1,38 +1,74 @@
 { "frames": [
    {
     "filename": "Drew 0.aseprite",
-    "frame": { "x": 0, "y": 0, "w": 22, "h": 24 },
+    "frame": { "x": 0, "y": 0, "w": 40, "h": 26 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 22, "h": 24 },
-    "sourceSize": { "w": 22, "h": 24 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
     "duration": 200
    },
    {
     "filename": "Drew 1.aseprite",
-    "frame": { "x": 22, "y": 0, "w": 22, "h": 24 },
+    "frame": { "x": 40, "y": 0, "w": 40, "h": 26 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 22, "h": 24 },
-    "sourceSize": { "w": 22, "h": 24 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
     "duration": 100
    },
    {
     "filename": "Drew 2.aseprite",
-    "frame": { "x": 44, "y": 0, "w": 22, "h": 24 },
+    "frame": { "x": 80, "y": 0, "w": 40, "h": 26 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 22, "h": 24 },
-    "sourceSize": { "w": 22, "h": 24 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
     "duration": 200
    },
    {
     "filename": "Drew 3.aseprite",
-    "frame": { "x": 66, "y": 0, "w": 22, "h": 24 },
+    "frame": { "x": 120, "y": 0, "w": 40, "h": 26 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 22, "h": 24 },
-    "sourceSize": { "w": 22, "h": 24 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
+    "duration": 100
+   },
+   {
+    "filename": "Drew 4.aseprite",
+    "frame": { "x": 160, "y": 0, "w": 40, "h": 26 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
+    "duration": 150
+   },
+   {
+    "filename": "Drew 5.aseprite",
+    "frame": { "x": 200, "y": 0, "w": 40, "h": 26 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
+    "duration": 100
+   },
+   {
+    "filename": "Drew 6.aseprite",
+    "frame": { "x": 240, "y": 0, "w": 40, "h": 26 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
+    "duration": 250
+   },
+   {
+    "filename": "Drew 7.aseprite",
+    "frame": { "x": 280, "y": 0, "w": 40, "h": 26 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 40, "h": 26 },
+    "sourceSize": { "w": 40, "h": 26 },
     "duration": 100
    }
  ],
@@ -41,10 +77,11 @@
   "version": "1.2.29-x64",
   "image": "drew.png",
   "format": "RGBA8888",
-  "size": { "w": 88, "h": 24 },
+  "size": { "w": 320, "h": 26 },
   "scale": "1",
   "frameTags": [
-   { "name": "idle", "from": 0, "to": 3, "direction": "forward" }
+   { "name": "idle", "from": 0, "to": 3, "direction": "forward" },
+   { "name": "attack 1", "from": 4, "to": 7, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
