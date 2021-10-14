@@ -26,6 +26,9 @@ local GameState = {
     sy = GlobalScale
 }
 
+-- Declare Debug Mode
+Debug = true
+
 -- hooks for updating state. free to call from within
 -- a scene.
 
@@ -59,7 +62,9 @@ function love.draw()
     -- Only for debugging
     -- With (36, 24) grids are 20 pixels by 20 pixels
     -- 1440/36 = 20 pixels and 960/24 = 20 pixels
-    debugGrid(36, 24)
+    if Debug then
+        debugGrid(36, 24)
+    end
 end
 
 -- Draws a grid over the window for debugging

@@ -24,18 +24,25 @@ function player2:load()
     -- Player location
     self.width = self.animation[self.animationName]:getWidth()
     self.height = self.animation[self.animationName]:getHeight()
-    self.x = WindowWidth/GlobalScale-20-self.width
-    self.y = 140 - self.height
+    self.x = WindowWidth/GlobalScale*0.7+self.width/2
+    self.y = WindowHeight/GlobalScale*0.8
     self.vel = 50
-    self.xShift = 2/3*self.animation[self.animationName]:getWidth()
+    self.xVel = 0
+    self.yVel = 0
+    self.xShift = 0.65*self.animation[self.animationName]:getWidth()
     self.xDir = -1
+    -- Add physics
+    self.physics = {}
+    self.physics.body = love.physics.newBody(World, self.x, self.y, "dynamic")
+    self.physics.body:setFixedRotation(true)
+    self.physics.bw = 0.32*self.width
+    self.physics.bh = 0.9*self.height
+    self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
+    self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     -- Hitbox / Hurtbox
     self.health = 92
     self.hurtbox = {}
-    self.hurtbox.x = self.x
-    self.hurtbox.y = self.y
-    self.hurtbox.width = self.width
-    self.hurtbox.height = self.height
+    self:updateHurtBox()
     self.attack = false
     self.attack_timer = 0
     self.hitbox ={}
@@ -49,31 +56,32 @@ end
 
 function player2:draw()
     self.hb_animation:draw(WindowWidth/GlobalScale-2-self.hb_animation:getWidth(), 2)
-    self.animation[self.animationName]:draw(self.x + self.xShift - self.width/2,
-                                            self.y, 0, self.xDir, 1)
-    self:drawHurtBox()
-    if self.attack then
-         self:drawHitBox()
+    self.animation[self.animationName]:draw(self.x + self.xShift - 0.32*self.width,
+                                            self.y - self.height/2, 0, self.xDir, 1)
+    if Debug then
+        self:drawBody()
     end
+end
+
+function player2:drawBody()
+    bx, by = self.physics.body:getPosition()
+    love.graphics.setColor(0,0,1,0.2)
+    love.graphics.rectangle("fill", bx-self.physics.bw/2, by-self.physics.bh/2, self.physics.bw, self.physics.bh)
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.rectangle("fill", bx, by, 1, 1)
 end
 
 function player2:update(dt)
     self:move(dt)
     -- Process attack animations
     self:attack_1(dt)
-    if self.animationName ~= "idle" then
-        print(self.animationName)
-    end
     if self.attack then
-        --print("Attacking!")
         if self.animationName ~= "a1" then
-            --print("Attacking!")
             self.animationName = "a1"
             self.animation[self.animationName]:setFrame(1)
             --self.animation[self.animationName]:play()
         end
     else
-        -- print("Idling!")
         if self.animationName ~= "idle" then
             self.animationName = "idle"
             self.animation[self.animationName]:setFrame(1)
@@ -105,19 +113,28 @@ function player2:update(dt)
     if self.invuln == true then
         self.invuln_timer = self.invuln_timer + dt
     end
-    if self.invuln_timer > 0.5 then
+    if self.invuln_timer > 0.7 then
         self.invuln = false
         self.invuln_timer = 0
     end
+
+    -- Sync Phyiscs
+    self:syncPhysics()
+end
+
+function player2:syncPhysics()
+    self.x, self.y = self.physics.body:getPosition()
+    -- self.x = bx - self.width/2
+    -- self.y = by - self.height/2
+    self.physics.body:setLinearVelocity(self.xVel, self.yVel)
 end
 
 function player2:attack_1(dt)
     if self.attack then
         self.attack_timer = self.attack_timer + dt
     end
-    if self.attack_timer > 0.60 then
+    if self.attack_timer > 0.55 then
         self.attack = false
-        print(self.attack_timer)
         self.attack_timer = 0
         self.hitbox.width = self.width
     end
@@ -130,14 +147,19 @@ function player2:move(dt)
     end
     -- Set left animations
     if love.keyboard.isDown("kp1") then
-        self.x = self.x - self.vel*dt
+        self.xVel = -self.vel
+        -- self.x = self.x - self.vel*dt
         self.xDir = -1
-        self.xShift = 2/3*self.animation[self.animationName]:getWidth()
+        -- self.xShift = 2/3*self.animation[self.animationName]:getWidth()
+        self.xShift = 0.65*self.animation[self.animationName]:getWidth()
     -- Set right animations
     elseif love.keyboard.isDown("kp3") then
-        self.x = self.x + self.vel*dt
+        self.xVel = self.vel
+        -- self.x = self.x + self.vel*dt
         self.xDir = 1
         self.xShift = 0
+    else
+        self.xVel = 0
     end
 end
 
@@ -147,7 +169,7 @@ function player2:damage(d)
     if self.health < 0 then
         self.health = 0
     end
-    self.anim = true
+    self.hb_anim = true
     self.invuln = true
     self.invuln_timer = 0
 end
@@ -159,10 +181,10 @@ function player2:drawHurtBox()
 end
 
 function player2:updateHurtBox()
-    self.hurtbox.width = self.xDir*self.width
-    self.hurtbox.height = self.height
-    self.hurtbox.x = self.x + self.xShift - self.width/2
-    self.hurtbox.y = self.y
+    self.hurtbox.width = 0.4*self.xDir*self.width
+    self.hurtbox.height = 0.9*self.height
+    self.hurtbox.x = self.x + self.xShift - 0.65*self.width
+    self.hurtbox.y = self.y+0.1*self.height
 end
 
 function player2:drawHitBox()

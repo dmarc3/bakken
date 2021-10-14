@@ -24,18 +24,27 @@ function player1:load()
     -- Player location
     self.width = self.animation[self.animationName]:getWidth()
     self.height = self.animation[self.animationName]:getHeight()
-    self.x = 20
-    self.y = 140 - self.height
+    self.x = WindowWidth/GlobalScale*0.2
+    self.y = WindowHeight/GlobalScale*0.8
     self.vel = 50
+    self.jump_vel = 175
+    self.xVel = 0
+    self.yVel = 0
     self.xShift = 0
     self.xDir = 1
+    -- Add physics
+    self.physics = {}
+    self.physics.body = love.physics.newBody(World, self.x, self.y, "dynamic")
+    self.physics.body:setFixedRotation(true)
+    self.physics.bw = 0.32*self.width
+    self.physics.bh = self.height
+    self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
+    self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
+    self.physics.grounded = true
     -- Hitbox / Hurtbox
     self.health = 92
     self.hurtbox = {}
-    self.hurtbox.x = self.x
-    self.hurtbox.y = self.y
-    self.hurtbox.width = self.width
-    self.hurtbox.height = self.height
+    self:updateHurtBox()
     self.attack = false
     self.attack_timer = 0
     self.hitbox ={}
@@ -49,34 +58,33 @@ end
 
 function player1:draw()
     self.hb_animation:draw(2, 2)
-    self.animation[self.animationName]:draw(self.x + self.xShift - self.width/2,
-                                            self.y, 0, self.xDir, 1)
-    -- love.graphics.setColor(0.8, 0, 0, 1)
-    -- love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
-    -- love.graphics.setColor(1, 1, 1, 1)
-    self:drawHurtBox()
-    if self.attack then
-        self:drawHitBox()
+    self.animation[self.animationName]:draw(self.x + self.xShift - 0.32*self.width,
+                                            self.y - self.height/2, 0, self.xDir, 1)
+    
+    if Debug then
+        self:drawBody()
     end
+end
+
+function player1:drawBody()
+    bx, by = self.physics.body:getPosition()
+    love.graphics.setColor(1,0,0,0.2)
+    love.graphics.rectangle("fill", bx-self.physics.bw/2, by-self.physics.bh/2, self.physics.bw, self.physics.bh)
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.rectangle("fill", bx, by, 1, 1)
 end
 
 function player1:update(dt)
     self:move(dt)
     -- Process attack animations
     self:attack_1(dt)
-    if self.animationName ~= "idle" then
-        print(self.animationName)
-    end
     if self.attack then
-        --print("Attacking!")
         if self.animationName ~= "a1" then
-            --print("Attacking!")
             self.animationName = "a1"
             self.animation[self.animationName]:setFrame(1)
             --self.animation[self.animationName]:play()
         end
     else
-        -- print("Idling!")
         if self.animationName ~= "idle" then
             self.animationName = "idle"
             self.animation[self.animationName]:setFrame(1)
@@ -108,10 +116,21 @@ function player1:update(dt)
     if self.invuln == true then
         self.invuln_timer = self.invuln_timer + dt
     end
-    if self.invuln_timer > 0.5 then
+    if self.invuln_timer > 0.7 then
         self.invuln = false
         self.invuln_timer = 0
     end
+
+    -- Sync Phyiscs
+    self:applyGravity(dt)
+    self:syncPhysics()
+end
+
+function player1:syncPhysics()
+    self.x, self.y = self.physics.body:getPosition()
+    -- self.x = bx - self.width/2
+    -- self.y = by - self.height/2
+    self.physics.body:setLinearVelocity(self.xVel, self.yVel)
 end
 
 function player1:attack_1(dt)
@@ -120,7 +139,6 @@ function player1:attack_1(dt)
     end
     if self.attack_timer > 0.60 then
         self.attack = false
-        print(self.attack_timer)
         self.attack_timer = 0
         self.hitbox.width = self.width
     end
@@ -128,19 +146,24 @@ end
 
 function player1:move(dt)
     -- Jump
-    if love.keyboard.isDown("space") then
-        
+    if love.keyboard.isDown("w") then
+        self.yVel = -self.jump_vel
+        self.physics.grounded = false
     end
     -- Set left animations
     if love.keyboard.isDown("a") then
-        self.x = self.x - self.vel*dt
+        self.xVel = -self.vel
+        -- self.x = self.x - self.vel*dt
         self.xDir = -1
-        self.xShift = 2/3*self.animation[self.animationName]:getWidth()
+        self.xShift = 0.65*self.animation[self.animationName]:getWidth()
     -- Set right animations
     elseif love.keyboard.isDown("d") then
-        self.x = self.x + self.vel*dt
+        self.xVel = self.vel
+        -- self.x = self.x + self.vel*dt
         self.xDir = 1
         self.xShift = 0
+    else
+        self.xVel = 0
     end
 end
 
@@ -189,6 +212,42 @@ function player1:detectHit(x, y, w, h)
             end
         end
     end
+end
+
+function player1:applyGravity(dt)
+    if not self.physics.grounded then
+        self.yVel = self.yVel + Gravity * dt
+    end
+end
+
+function player1:beginContact(a, b, collision)
+	print("Being Contact!")
+    if self.physics.grounded == true then return end
+	local nx, ny = collision:getNormal()
+	if a == self.physics.fixture then
+		if ny > 0 then
+			self:land(collision)
+		end
+	elseif b == self.physics.fixture then
+		if ny < 0 then
+			self:land(collision)
+		end
+	end
+end
+
+function player1:land(collision)
+	self.currentGroundCollision = collision
+	self.yVel = 0
+	self.physics.grounded = true
+end
+
+function player1:endContact(a, b, collision)
+    print("End Contact!")
+	if a == self.physics.fixture or b == self.physics.fixture then
+		if self.currentGroundCollision == collision then
+			self.physics.grounded = false
+		end
+	end
 end
 
 return player1
