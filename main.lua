@@ -22,8 +22,8 @@ local GameState = {
         titleScene = titleScene,
         fightScene = fightScene,
     },
-    sx = 3,
-    sy = 3
+    sx = GlobalScale,
+    sy = GlobalScale
 }
 
 -- hooks for updating state. free to call from within
@@ -58,8 +58,8 @@ function love.draw()
     
     -- Only for debugging
     -- With (36, 24) grids are 20 pixels by 20 pixels
-    -- 720/36 = 20 pixels and 480/24 = 20 pixels
-    --debugGrid(36, 24)
+    -- 1440/36 = 20 pixels and 960/24 = 20 pixels
+    debugGrid(36, 24)
 end
 
 -- Draws a grid over the window for debugging
