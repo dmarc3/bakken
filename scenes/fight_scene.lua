@@ -38,10 +38,11 @@ function fight_scene:update(dt, gamestate)
 end
 
 function fight_scene:draw(sx, sy)
+    love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.rectangle("fill", 0, 140, WindowWidth, 20)
+    love.graphics.setColor(0.1, 0.1, 0.1, 1)
+    love.graphics.rectangle("fill", 0, 120, WindowWidth, 40)
     love.graphics.setColor(1, 1, 1, 1)
     --background.animation:draw(0, 0)
     player1:draw()
