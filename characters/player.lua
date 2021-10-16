@@ -6,6 +6,7 @@ Player.__index = Player
 
 function Player:new(id, char)
     local instance = setmetatable({}, Player)
+    instance.id = id
     
     -- Process character
     instance.spritesheet = love.graphics.newImage("assets/Characters/"..char..".png")
@@ -23,8 +24,17 @@ function Player:new(id, char)
     instance.idle_duration = data.idle_duration
     instance.attack_1_duration = data.attack_1_duration
 
-    -- Process id + healthbar
-    instance.id = id
+    -- Process controller
+    local joystickcount = love.joystick.getJoystickCount( )
+    if joystickcount == 2 then
+        local joysticks = love.joystick.getJoysticks()
+        instance.joystick = joysticks[instance.id]
+    else
+        instance.joystick = nil
+    end
+    print("Player "..instance.id.." is using "..instance.joystick:getName())
+
+    -- Process healthbar
     instance.hb_spritesheet = love.graphics.newImage("assets/ui/player"..id.."_health_bar.png")
     instance.hb_asepriteMeta = "assets/ui/player"..id.."_health_bar.json"
     instance.hb_animation = peachy.new(instance.hb_asepriteMeta, instance.hb_spritesheet, "Health")
@@ -43,10 +53,17 @@ function Player:new(id, char)
         instance.r = 1
         instance.g = 0
         instance.b = 0
-        instance.left = "a"
-        instance.right = "d"
-        instance.j = "w"
-        instance.a = "e"
+        if instance.joystick then
+            instance.left = "a"
+            instance.right = "d"
+            instance.j = 1
+            instance.a = 3
+        else
+            instance.left = "a"
+            instance.right = "d"
+            instance.j = "w"
+            instance.a = "e"
+        end
     else
         instance.x = WindowWidth/GlobalScale*0.7+instance.width/2
         instance.y = WindowHeight/GlobalScale*0.8
@@ -57,10 +74,18 @@ function Player:new(id, char)
         instance.r = 0
         instance.g = 0
         instance.b = 1
-        instance.left = "kp1"
-        instance.right = "kp3"
-        instance.j = "kp5"
-        instance.a = "kp4"
+        if instance.joystick then
+            instance.left = "kp1"
+            instance.right = "kp3"
+            instance.j = 1
+            instance.a = 3
+        else
+            instance.left = "kp1"
+            instance.right = "kp3"
+            instance.j = "kp5"
+            instance.a = "kp4"
+        end
+        
     end
     instance.xVel = 0
     instance.yVel = 0
@@ -186,6 +211,22 @@ function Player:attack_1(dt)
 end
 
 function Player:move(dt)
+    local xdir = self.joystick:getAxis(1)
+    if xdir > 0.5 then
+        if self.xVel < self.maxSpeed then
+            self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
+        end
+        self.xDir = 1
+        self.xShift = 0
+    elseif xdir < -0.5 then
+        if self.xVel > -self.maxSpeed then
+            self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
+        end
+        self.xDir = -1
+        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
+    else
+        self:applyFriction(dt)
+    end
     -- Set left animations
     if love.keyboard.isDown(self.left) then
         -- self.physics.body:applyForce(-self.physics.xforce, 0)
@@ -294,11 +335,15 @@ function Player:land(collision)
 	self.grounded = true
 end
 
-function Player:jump(key)
-    if key == self.j and self.grounded then
+function Player:jump(button)
+    if button == self.j and self.grounded then
         self.yVel = self.jumpAmount
         self.grounded = false
     end
+    --if key == self.j and self.grounded then
+    --    self.yVel = self.jumpAmount
+    --    self.grounded = false
+    --end
 end
 
 function Player:EndContact(a, b, collision)

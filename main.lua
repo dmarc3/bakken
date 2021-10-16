@@ -58,7 +58,6 @@ end
 function love.draw()
     -- print(GameState.current.name)
     GameState.current:draw(GameState.sx, GameState.sy)
-    
     -- Only for debugging
     -- With (36, 24) grids are 20 pixels by 20 pixels
     -- 1440/36 = 20 pixels and 960/24 = 20 pixels
