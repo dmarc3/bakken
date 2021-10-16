@@ -17,6 +17,11 @@ function Player:new(id, char)
     instance.animationName = "idle"
     instance.width = instance.animation[instance.animationName]:getWidth()
     instance.height = instance.animation[instance.animationName]:getHeight()
+    local data = require("characters/"..char)
+    instance.body_width_pad = data.body_width_pad
+    instance.x_shift_pad = data.x_shift_pad
+    instance.idle_duration = data.idle_duration
+    instance.attack_1_duration = data.attack_1_duration
 
     -- Process id + healthbar
     instance.id = id
@@ -45,7 +50,7 @@ function Player:new(id, char)
     else
         instance.x = WindowWidth/GlobalScale*0.7+instance.width/2
         instance.y = WindowHeight/GlobalScale*0.8
-        instance.xShift = 0.65*instance.width
+        instance.xShift = instance.x_shift_pad*instance.width
         instance.xDir = -1
         instance.hb_x = WindowWidth/GlobalScale-2-instance.hb_animation:getWidth()
         instance.hb_y = 2
@@ -77,7 +82,7 @@ function Player:load()
     self.physics = {}
     self.physics.body = love.physics.newBody(World, self.x, self.y, "dynamic")
     self.physics.body:setFixedRotation(true)
-    self.physics.bw = 0.32*self.width
+    self.physics.bw = self.body_width_pad*self.width
     self.physics.bh = self.height
     self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
@@ -98,7 +103,7 @@ end
 
 function Player:draw()
     self.hb_animation:draw(self.hb_x, self.hb_y)
-    self.animation[self.animationName]:draw(self.x + self.xShift - 0.32*self.width,
+    self.animation[self.animationName]:draw(self.x + self.xShift - self.body_width_pad*self.width,
                                             self.y - self.height/2, 0, self.xDir, 1)
     if Debug then
         self:drawBody()
@@ -173,7 +178,7 @@ function Player:attack_1(dt)
     if self.attack then
         self.attack_timer = self.attack_timer + dt
     end
-    if self.attack_timer > 0.60 then
+    if self.attack_timer > self.attack_1_duration then
         self.attack = false
         self.attack_timer = 0
         self.hitbox.width = self.width
@@ -190,7 +195,7 @@ function Player:move(dt)
         end
         -- self.xVel = -self.vel
         self.xDir = -1
-        self.xShift = 0.65*self.animation[self.animationName]:getWidth()
+        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
     -- Set right animations
     elseif love.keyboard.isDown(self.right) then
         if self.xVel < self.maxSpeed then
