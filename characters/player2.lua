@@ -26,7 +26,8 @@ function player2:load()
     self.height = self.animation[self.animationName]:getHeight()
     self.x = WindowWidth/GlobalScale*0.7+self.width/2
     self.y = WindowHeight/GlobalScale*0.8
-    self.vel = 50
+    self.vel = 80
+    self.jump_vel = 475
     self.xVel = 0
     self.yVel = 0
     self.xShift = 0.65*self.animation[self.animationName]:getWidth()
@@ -39,6 +40,11 @@ function player2:load()
     self.physics.bh = 0.9*self.height
     self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
+    self.physics.body:setMass(1.0)
+    self.physics.fixture:setFriction(Friction)
+    self.physics.ximpulse = 10
+    self.physics.yimpulse = 200
+    self.physics.grounded = true
     -- Hitbox / Hurtbox
     self.health = 92
     self.hurtbox = {}
@@ -119,13 +125,12 @@ function player2:update(dt)
     end
 
     -- Sync Phyiscs
+    self:applyGravity(dt)
     self:syncPhysics()
 end
 
 function player2:syncPhysics()
     self.x, self.y = self.physics.body:getPosition()
-    -- self.x = bx - self.width/2
-    -- self.y = by - self.height/2
     self.physics.body:setLinearVelocity(self.xVel, self.yVel)
 end
 
@@ -142,20 +147,24 @@ end
 
 function player2:move(dt)
     -- Jump
-    if love.keyboard.isDown("space") then
-        
+    if love.keyboard.isDown("kp5") and self.physics.grounded then
+        self.physics.grounded = false
+        -- print("Apply Impulse of "..-self.physics.yimpulse)
+        -- self.physics.body:applyLinearImpulse(0, -self.physics.yimpulse)
+        self.yVel = -self.jump_vel
     end
     -- Set left animations
     if love.keyboard.isDown("kp1") then
+        -- self.physics.body:applyForce(-self.physics.xforce, 0)
+        -- self.physics.body:applyLinearImpulse(-self.physics.ximpulse, 0)
         self.xVel = -self.vel
-        -- self.x = self.x - self.vel*dt
         self.xDir = -1
-        -- self.xShift = 2/3*self.animation[self.animationName]:getWidth()
         self.xShift = 0.65*self.animation[self.animationName]:getWidth()
     -- Set right animations
     elseif love.keyboard.isDown("kp3") then
+        -- self.physics.body:applyForce(self.physics.xforce, 0)
+        -- self.physics.body:applyLinearImpulse(self.physics.ximpulse, 0)
         self.xVel = self.vel
-        -- self.x = self.x + self.vel*dt
         self.xDir = 1
         self.xShift = 0
     else
@@ -208,6 +217,43 @@ function player2:detectHit(x, y, w, h)
             end
         end
     end
+end
+
+function player2:applyGravity(dt)
+    if not self.physics.grounded then
+        -- self.physics.body:applyForce(0, Gravity)
+        self.yVel = self.yVel + Gravity*dt
+    end
+end
+
+function player2:BeginContact(a, b, collision)
+	print("Being Contact!")
+    if self.physics.grounded == true then return end
+	local nx, ny = collision:getNormal()
+	if a == self.physics.fixture then
+		if ny > 0 then
+			self:land(collision)
+		end
+	elseif b == self.physics.fixture then
+		if ny < 0 then
+			self:land(collision)
+		end
+	end
+end
+
+function player2:land(collision)
+	self.currentGroundCollision = collision
+	self.yVel = 0
+	self.physics.grounded = true
+end
+
+function player2:EndContact(a, b, collision)
+    print("End Contact!")
+	if a == self.physics.fixture or b == self.physics.fixture then
+		if self.currentGroundCollision == collision then
+			self.physics.grounded = false
+		end
+	end
 end
 
 return player2
