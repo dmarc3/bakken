@@ -1,26 +1,39 @@
 local scene = require "scene"
 
 local peachy = require("3rd/peachy/peachy")
-local player1 = require"characters/player1"
-local player2 = require"characters/player2"
+local player = require"characters/player"
+-- local player2 = require"characters/player2"
 
 local fight_scene = scene:new("fight")
 
-Gravity = 500
+-- Gravity = 9.81
+Gravity = 300
+Meter = 64
+Friction = 0.0
+love.physics.setMeter(Meter)
 
 function fight_scene:load()
-    World = love.physics.newWorld(0, 0)
+    World = love.physics.newWorld(0, Meter*Gravity, false)
     World:setCallbacks(BeginContact, EndContact)
+     -- Create Ground and Walls
     Ground = {}
     Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
     Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
     Ground.fixture = love.physics.newFixture(Ground.body, Ground.shape)
+    Ground.fixture:setFriction(Friction)
+    Walls = {}
+    Walls.left = {}
+    Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+    Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+    Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
+    Walls.right = {}
+    Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+    Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+    Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
+    player1 = player:new(1, "lilah")
     player1:load()
+    player2 = player:new(2, "drew")
     player2:load()
-    -- background = {}
-    -- background.spritesheet = love.graphics.newImage("assets/levels/curlew.png")
-    -- background.asepriteMeta = "assets/levels/curlew.json"
-    -- background.animation = peachy.new(background.asepriteMeta, background.spritesheet, "Idle")
 end
   
 
@@ -31,17 +44,17 @@ function fight_scene:update(dt, gamestate)
 
     -- Process Player 1 attacks
     if player1.attack then
-        if not player2.invuln then
-            player2:detectHit(player1.hitbox.x, player1.hitbox.y, player1.hitbox.width, player1.hitbox.height)
-        end
+        -- if not player2.invuln then
+            -- player2:detectHit(player1.hitbox.x, player1.hitbox.y, player1.hitbox.width, player1.hitbox.height)
+        -- end
     end
 
     -- Process Player 2 attacks
-    if player2.attack then
-        if not player1.invuln then
-            player1:detectHit(player2.hitbox.x, player2.hitbox.y, player2.hitbox.width, player2.hitbox.height)
-        end
-    end
+    -- if player2.attack then
+        -- if not player1.invuln then
+            -- player1:detectHit(player2.hitbox.x, player2.hitbox.y, player2.hitbox.width, player2.hitbox.height)
+        -- end
+    -- end
 end
 
 function fight_scene:draw(sx, sy)
@@ -69,13 +82,18 @@ function fight_scene:drawBackground()
 end
 
 function BeginContact(a, b, collision)
-    print("Begin Contact!")
-	player1:beginContact(a, b, collision)
+	player1:BeginContact(a, b, collision)
+    player2:BeginContact(a, b, collision)
 end
 
 function EndContact(a, b, collision)
-    print("End Contact!")
-	player1:endContact(a, b, collision)
+	player1:EndContact(a, b, collision)
+    player2:EndContact(a, b, collision)
+end
+
+function love.keypressed(key)
+    player1:jump(key)
+    player2:jump(key)
 end
 
 function love.keyreleased(key)
