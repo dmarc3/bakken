@@ -186,7 +186,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 150
    },
    {
     "filename": "drew 21.aseprite",
@@ -195,7 +195,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 150
    },
    {
     "filename": "drew 22.aseprite",
@@ -204,7 +204,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 150
    },
    {
     "filename": "drew 23.aseprite",
@@ -213,7 +213,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 200
    },
    {
     "filename": "drew 24.aseprite",
@@ -222,7 +222,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 150
    },
    {
     "filename": "drew 25.aseprite",
@@ -231,7 +231,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 150
    },
    {
     "filename": "drew 26.aseprite",
@@ -240,7 +240,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 200
    }
  ],
  "meta": {
