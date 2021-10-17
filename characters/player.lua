@@ -29,10 +29,11 @@ function Player:new(id, char)
     if joystickcount == 2 then
         local joysticks = love.joystick.getJoysticks()
         instance.joystick = joysticks[instance.id]
+        print("Player "..instance.id.." is using "..instance.joystick:getName())
     else
+        print("Player "..instance.id.." is using the keyboard")
         instance.joystick = nil
     end
-    print("Player "..instance.id.." is using "..instance.joystick:getName())
 
     -- Process healthbar
     instance.hb_spritesheet = love.graphics.newImage("assets/ui/player"..id.."_health_bar.png")
@@ -145,7 +146,11 @@ end
 
 function Player:update(dt)
     self:syncPhysics()
-    self:move(dt)
+    if self.joystick then
+        self:moveJoystick(dt)
+    else
+        self:moveKeyboard(dt)
+    end
     self:applyGravity(dt)
     -- Process attack animations
     self:attack_1(dt)
@@ -210,15 +215,15 @@ function Player:attack_1(dt)
     end
 end
 
-function Player:move(dt)
+function Player:moveJoystick(dt)
     local xdir = self.joystick:getAxis(1)
-    if xdir > 0.5 then
+    if xdir > 0.1 then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
         self.xDir = 1
         self.xShift = 0
-    elseif xdir < -0.5 then
+    elseif xdir < -0.1 then
         if self.xVel > -self.maxSpeed then
             self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
         end
@@ -227,6 +232,9 @@ function Player:move(dt)
     else
         self:applyFriction(dt)
     end
+end
+
+function Player:moveKeyboard(dt)
     -- Set left animations
     if love.keyboard.isDown(self.left) then
         -- self.physics.body:applyForce(-self.physics.xforce, 0)

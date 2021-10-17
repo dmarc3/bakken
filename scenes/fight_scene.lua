@@ -115,15 +115,25 @@ end
 function love.keypressed(key)
     player1:jump(key)
     player2:jump(key)
+    if not player1.joystick then
+        if key == "e" then
+            player1.attack = true
+        end
+    end
+    if not player2.joystick then
+        if key == "kp4" then
+            player2.attack = true
+        end
+    end
 end
 
-function love.keyreleased(key)
+--[[ function love.keyreleased(key)
     if key == "e" then
         player1.attack = true
     end
     if key == "kp4" then
         player2.attack = true
     end
-end
+end ]]
 
 return fight_scene
