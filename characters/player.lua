@@ -13,15 +13,18 @@ function Player:new(id, char)
     instance.asepriteMeta = "assets/Characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
-        jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
+        -- walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        -- jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
         a1 = peachy.new(instance.asepriteMeta, instance.spritesheet, "attack 1"),
     }
     instance.animationName = "idle"
     instance.width = instance.animation[instance.animationName]:getWidth()
     instance.height = instance.animation[instance.animationName]:getHeight()
     local data = require("characters/"..char)
+    instance.xorigin = data.xorigin
+    instance.yground = data.yground
     instance.body_width_pad = data.body_width_pad
+    instance.body_height_pad = data.body_height_pad
     instance.x_shift_pad = data.x_shift_pad
     instance.idle_duration = data.idle_duration
     instance.attack_1_duration = data.attack_1_duration
@@ -114,7 +117,7 @@ function Player:load()
     self.physics.body = love.physics.newBody(World, self.x, self.y, "dynamic")
     self.physics.body:setFixedRotation(true)
     self.physics.bw = self.body_width_pad*self.width
-    self.physics.bh = self.height
+    self.physics.bh = self.body_height_pad*self.height
     self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     -- Hitbox / Hurtbox
@@ -135,8 +138,13 @@ end
 
 function Player:draw()
     self.hb_animation:draw(self.hb_x, self.hb_y)
-    self.animation[self.animationName]:draw(self.x + self.xShift - self.body_width_pad*self.width,
-                                            self.y - self.height/2, 0, self.xDir, 1)
+    self.animation[self.animationName]:draw(self.x,
+                                            self.y,
+                                            0,
+                                            self.xDir,
+                                            1,
+                                            self.animation[self.animationName]:getWidth()*self.xorigin,
+                                            self.animation[self.animationName]:getHeight()/2)
     if Debug then
         self:drawBody()
     end
@@ -145,12 +153,13 @@ end
 function Player:setState()
     if self.attack then
         self.animationName = "a1"
-    elseif not self.grounded then
-        self.animationName = "jump"
+    --elseif not self.grounded then
+        --self.animationName = "jump"
     elseif self.xVel == 0 then
         self.animationName = "idle"
     else
-        self.animationName = "walk"
+        -- self.animationName = "walk"
+        self.animationName = "idle"
     end
 end
 
