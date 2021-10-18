@@ -30,17 +30,17 @@ function fight_scene:load()
     Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
     Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
     Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
-    player1 = player:new(1, "sam")
+    player1 = player:new(1, "drew")
     player1:load()
-    player2 = player:new(2, "drew")
-    player2:load()
+    -- player2 = player:new(2, "drew")
+    -- player2:load()
 end
   
 
 function fight_scene:update(dt, gamestate)
     World:update(dt)
     player1:update(dt)
-    player2:update(dt)
+    -- player2:update(dt)
 
     -- Process Player 1 attacks
     if player1.attack then
@@ -62,7 +62,7 @@ function fight_scene:draw(sx, sy)
     love.graphics.scale(sx, sy)
     self:drawBackground()
     player1:draw()
-    player2:draw()
+    -- player2:draw()
     love.graphics.pop()
 
     if Debug then
@@ -89,12 +89,12 @@ end
 
 function BeginContact(a, b, collision)
 	player1:BeginContact(a, b, collision)
-    player2:BeginContact(a, b, collision)
+    -- player2:BeginContact(a, b, collision)
 end
 
 function EndContact(a, b, collision)
 	player1:EndContact(a, b, collision)
-    player2:EndContact(a, b, collision)
+    -- player2:EndContact(a, b, collision)
 end
 
 function love.joystickpressed(joystick, button)
@@ -105,26 +105,26 @@ function love.joystickpressed(joystick, button)
             player1.attack = true
         end
     else
-        player2:jump(button)
-        if button == 3 then
-            player2.attack = true
-        end
+        -- player2:jump(button)
+        -- if button == 3 then
+        --     player2.attack = true
+        -- end
     end
 end
 
 function love.keypressed(key)
     player1:jump(key)
-    player2:jump(key)
+    -- player2:jump(key)
     if not player1.joystick then
         if key == "e" then
             player1.attack = true
         end
     end
-    if not player2.joystick then
-        if key == "kp4" then
-            player2.attack = true
-        end
-    end
+    -- if not player2.joystick then
+    --     if key == "kp4" then
+    --         player2.attack = true
+    --     end
+    -- end
 end
 
 --[[ function love.keyreleased(key)

@@ -13,6 +13,8 @@ function Player:new(id, char)
     instance.asepriteMeta = "assets/Characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
+        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
         a1 = peachy.new(instance.asepriteMeta, instance.spritesheet, "attack 1"),
     }
     instance.animationName = "idle"
@@ -96,7 +98,7 @@ end
 
 function Player:load()
     -- Define constants
-    self.maxSpeed = 80
+    self.maxSpeed = 60
     self.acceleration = 4000
     self.friction = 3500
     self.gravity = 1500
@@ -104,6 +106,9 @@ function Player:load()
     self.grounded = true
     self.vel = 80
     self.jump_vel = 475
+    self.hasDoubleJump = true
+    self.graceTime = 0
+    self.graceDuration = 0.1
     -- Add physics body
     self.physics = {}
     self.physics.body = love.physics.newBody(World, self.x, self.y, "dynamic")
@@ -118,6 +123,7 @@ function Player:load()
     self:updateHurtBox()
     self.attack = false
     self.attack_timer = 0
+    self.move = false
     self.hitbox ={}
     self.hitbox.x = self.x+self.width
     self.hitbox.y = self.y+self.height*0.4
@@ -136,6 +142,18 @@ function Player:draw()
     end
 end
 
+function Player:setState()
+    if self.attack then
+        self.animationName = "a1"
+    elseif not self.grounded then
+        self.animationName = "jump"
+    elseif self.xVel == 0 then
+        self.animationName = "idle"
+    else
+        self.animationName = "walk"
+    end
+end
+
 function Player:drawBody()
     bx, by = self.physics.body:getPosition()
     love.graphics.setColor(self.r, self.g, self.b, 0.2)
@@ -146,31 +164,22 @@ end
 
 function Player:update(dt)
     self:syncPhysics()
+    self:setState()
     if self.joystick then
         self:moveJoystick(dt)
     else
         self:moveKeyboard(dt)
     end
     self:applyGravity(dt)
-    -- Process attack animations
     self:attack_1(dt)
-    if self.attack then
-        if self.animationName ~= "a1" then
-            self.animationName = "a1"
-            self.animation[self.animationName]:setFrame(1)
-            --self.animation[self.animationName]:play()
-        end
-    else
-        if self.animationName ~= "idle" then
-            self.animationName = "idle"
-            self.animation[self.animationName]:setFrame(1)
-            self.animation[self.animationName]:play()
-        end
-    end
     self.animation[self.animationName]:update(dt)
     self:updateHurtBox()
     self:updateHitBox()
+    self:updateHealthBar(dt)
+    self:decreaseGraceTime(dt)
+end
 
+function Player:updateHealthBar(dt)
     -- Process health bar
     if self.hb_anim == true then
         self.hb_anim_timer = self.hb_anim_timer + dt
@@ -187,7 +196,7 @@ function Player:update(dt)
     end
     self.hb_animation:setFrame(self.hb_frame)
     self.hb_animation:update(dt)
-    
+
     -- Process invulnerability
     if self.invuln == true then
         self.invuln_timer = self.invuln_timer + dt
@@ -196,7 +205,6 @@ function Player:update(dt)
         self.invuln = false
         self.invuln_timer = 0
     end
-    
 end
 
 function Player:syncPhysics()
@@ -206,6 +214,9 @@ end
 
 function Player:attack_1(dt)
     if self.attack then
+        if self.attack_timer == 0 then
+            self.animation[self.animationName]:setFrame(1)
+        end
         self.attack_timer = self.attack_timer + dt
     end
     if self.attack_timer > self.attack_1_duration then
@@ -217,13 +228,13 @@ end
 
 function Player:moveJoystick(dt)
     local xdir = self.joystick:getAxis(1)
-    if xdir > 0.1 then
+    if xdir > 0.3 then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
         self.xDir = 1
         self.xShift = 0
-    elseif xdir < -0.1 then
+    elseif xdir < -0.3 then
         if self.xVel > -self.maxSpeed then
             self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
         end
@@ -242,7 +253,6 @@ function Player:moveKeyboard(dt)
         if self.xVel > -self.maxSpeed then
             self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
         end
-        -- self.xVel = -self.vel
         self.xDir = -1
         self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
     -- Set right animations
@@ -252,7 +262,6 @@ function Player:moveKeyboard(dt)
         end
         -- self.physics.body:applyForce(self.physics.xforce, 0)
         -- self.physics.body:applyLinearImpulse(self.physics.ximpulse, 0)
-        -- self.xVel = self.vel
         self.xDir = 1
         self.xShift = 0
     else
@@ -297,16 +306,6 @@ function Player:updateHitBox()
     self.hitbox.height = self.height*0.2
 end
 
--- function Player:detectHit(x, y, w, h)
---     if x-2*w > self.hurtbox.x and x-2*w < self.hurtbox.x + self.hurtbox.width then
---         if y > self.hurtbox.y and y < self.hurtbox.y + self.hurtbox.height then
---             if not self.invuln then
---                 self:damage(10)
---             end
---         end
---     end
--- end
-
 function Player:applyGravity(dt)
     if not self.grounded then
         -- self.physics.body:applyForce(0, Gravity)
@@ -341,17 +340,27 @@ function Player:land(collision)
 	self.currentGroundCollision = collision
 	self.yVel = 0
 	self.grounded = true
+    self.hasDoubleJump = true
+    self.graceTime = self.graceDuration
 end
 
 function Player:jump(button)
-    if button == self.j and self.grounded then
-        self.yVel = self.jumpAmount
-        self.grounded = false
+    if button == self.j then
+        if self.grounded or self.graceTime > 0 then
+            self.yVel = self.jumpAmount
+            self.grounded = false
+            self.graceTime = 0
+        elseif self.hasDoubleJump then
+            self.hasDoubleJump = false
+            self.yVel = self.jumpAmount
+        end
     end
-    --if key == self.j and self.grounded then
-    --    self.yVel = self.jumpAmount
-    --    self.grounded = false
-    --end
+end
+
+function Player:decreaseGraceTime(dt)
+    if not self.grounded then
+        self.graceTime = self.graceTime - dt
+    end
 end
 
 function Player:EndContact(a, b, collision)

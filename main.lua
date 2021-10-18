@@ -27,7 +27,7 @@ local GameState = {
 }
 
 -- Declare Debug Mode
-Debug = true
+Debug = false
 
 -- hooks for updating state. free to call from within
 -- a scene.
