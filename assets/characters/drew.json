@@ -241,6 +241,69 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
     "duration": 150
+   },
+   {
+    "filename": "drew 27.aseprite",
+    "frame": { "x": 1350, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 150
+   },
+   {
+    "filename": "drew 28.aseprite",
+    "frame": { "x": 1400, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 150
+   },
+   {
+    "filename": "drew 29.aseprite",
+    "frame": { "x": 1450, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 150
+   },
+   {
+    "filename": "drew 30.aseprite",
+    "frame": { "x": 1500, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 150
+   },
+   {
+    "filename": "drew 31.aseprite",
+    "frame": { "x": 1550, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 150
+   },
+   {
+    "filename": "drew 32.aseprite",
+    "frame": { "x": 1600, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 150
+   },
+   {
+    "filename": "drew 33.aseprite",
+    "frame": { "x": 1650, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 200
    }
  ],
  "meta": {
@@ -248,13 +311,16 @@
   "version": "1.2.29-x64",
   "image": "drew.png",
   "format": "RGBA8888",
-  "size": { "w": 1350, "h": 58 },
+  "size": { "w": 1700, "h": 58 },
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 3, "direction": "forward" },
    { "name": "attack 1", "from": 4, "to": 12, "direction": "forward" },
    { "name": "walk forward", "from": 13, "to": 18, "direction": "forward" },
-   { "name": "jump", "from": 19, "to": 26, "direction": "forward" }
+   { "name": "jump", "from": 19, "to": 26, "direction": "forward" },
+   { "name": "block start", "from": 27, "to": 29, "direction": "forward" },
+   { "name": "block", "from": 30, "to": 30, "direction": "forward" },
+   { "name": "block end", "from": 31, "to": 33, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
