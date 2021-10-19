@@ -1,1 +1,1 @@
-return {xorigin=0.25, body_width_pad=0.30, body_height_pad=0.5, x_shift_pad=0.585,idle_duration=0.6,attack_1_duration=1.16}
+return {xorigin=0.25, body_width_pad=0.30, body_height_pad=0.5, x_shift_pad=0.585,idle_duration=0.6,attack_1_duration=1.16, block_start_dur=0.40, block_end_dur=0.45}

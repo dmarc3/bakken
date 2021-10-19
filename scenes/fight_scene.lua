@@ -97,16 +97,16 @@ function EndContact(a, b, collision)
     player2:EndContact(a, b, collision)
 end
 
-function love.joystickpressed(joystick, button)
-    -- print(button)
+function love.gamepadpressed(joystick, button)
+    print(button)
     if joystick:getID() == 1 then
         player1:jump(button)
-        if button == 3 then
+        if button == "x" then
             player1.attack = true
         end
     else
         player2:jump(button)
-        if button == 3 then
+        if button == "x" then
             player2.attack = true
         end
     end

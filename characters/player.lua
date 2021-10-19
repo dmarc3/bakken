@@ -13,8 +13,11 @@ function Player:new(id, char)
     instance.asepriteMeta = "assets/Characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        -- walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
         -- jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
+        block = peachy.new(instance.asepriteMeta, instance.spritesheet, "block"),
+        block_start = peachy.new(instance.asepriteMeta, instance.spritesheet, "block start"),
+        block_end = peachy.new(instance.asepriteMeta, instance.spritesheet, "block end"),
         a1 = peachy.new(instance.asepriteMeta, instance.spritesheet, "attack 1"),
     }
     instance.animationName = "idle"
@@ -22,7 +25,8 @@ function Player:new(id, char)
     instance.height = instance.animation[instance.animationName]:getHeight()
     local data = require("characters/"..char)
     instance.xorigin = data.xorigin
-    instance.yground = data.yground
+    instance.block_start_dur = data.block_start_dur
+    instance.block_end_dur = data.block_end_dur
     instance.body_width_pad = data.body_width_pad
     instance.body_height_pad = data.body_height_pad
     instance.x_shift_pad = data.x_shift_pad
@@ -60,15 +64,17 @@ function Player:new(id, char)
         instance.g = 0
         instance.b = 0
         if instance.joystick then
-            instance.left = "a"
-            instance.right = "d"
-            instance.j = 1
-            instance.a = 3
+            instance.left = "dpleft"
+            instance.right = "dpright"
+            instance.j = "a"
+            instance.a = "x"
+            instance.b = "triggerleft"
         else
             instance.left = "a"
             instance.right = "d"
             instance.j = "w"
             instance.a = "e"
+            instance.b = "q"
         end
     else
         instance.x = WindowWidth/GlobalScale*0.7+instance.width/2
@@ -81,15 +87,17 @@ function Player:new(id, char)
         instance.g = 0
         instance.b = 1
         if instance.joystick then
-            instance.left = "kp1"
-            instance.right = "kp3"
-            instance.j = 1
-            instance.a = 3
+            instance.left = "dpleft"
+            instance.right = "dpright"
+            instance.j = "a"
+            instance.a = "x"
+            instance.b = "triggerleft"
         else
             instance.left = "kp1"
             instance.right = "kp3"
             instance.j = "kp5"
             instance.a = "kp4"
+            instance.b = "kp6"
         end
         
     end
@@ -112,6 +120,8 @@ function Player:load()
     self.hasDoubleJump = true
     self.graceTime = 0
     self.graceDuration = 0.1
+    self.block_timer = 0
+    self.end_block = false
     -- Add physics body
     self.physics = {}
     self.physics.body = love.physics.newBody(World, self.x, self.y, "dynamic")
@@ -126,6 +136,7 @@ function Player:load()
     self:updateHurtBox()
     self.attack = false
     self.attack_timer = 0
+    self.blocking = false
     self.move = false
     self.hitbox ={}
     self.hitbox.x = self.x+self.width
@@ -151,15 +162,27 @@ function Player:draw()
 end
 
 function Player:setState()
+    local current_state = self.animationName
     if self.attack then
         self.animationName = "a1"
+    elseif self.blocking and self.block_timer < self.block_start_dur then
+        self.animationName = "block_start"
+    elseif self.blocking then
+        self.animationName = "block"
+    elseif self.end_block then
+        self.animationName = "block_end"
     --elseif not self.grounded then
         --self.animationName = "jump"
     elseif self.xVel == 0 then
         self.animationName = "idle"
     else
-        -- self.animationName = "walk"
-        self.animationName = "idle"
+        self.animationName = "walk"
+        -- self.animationName = "idle"
+    end
+    -- Reset starting frame to 1 if state has changed
+    if current_state ~= self.animationName then
+        -- print("Changing from "..current_state.." to "..self.animationName)
+        self.animation[self.animationName]:setFrame(1)
     end
 end
 
@@ -181,6 +204,7 @@ function Player:update(dt)
     end
     self:applyGravity(dt)
     self:attack_1(dt)
+    self:block(dt)
     self.animation[self.animationName]:update(dt)
     self:updateHurtBox()
     self:updateHitBox()
@@ -236,27 +260,14 @@ function Player:attack_1(dt)
 end
 
 function Player:moveJoystick(dt)
-    local xdir = self.joystick:getAxis(1)
-    if xdir > 0.3 then
+    local xdir = self.joystick:getGamepadAxis("leftx")
+    if xdir > 0.3 and not self.blocking then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
         self.xDir = 1
         self.xShift = 0
-    elseif xdir < -0.3 then
-        if self.xVel > -self.maxSpeed then
-            self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
-        end
-        self.xDir = -1
-        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
-    else
-        self:applyFriction(dt)
-    end
-end
-
-function Player:moveKeyboard(dt)
-    -- Set left animations
-    if love.keyboard.isDown(self.left) then
+    elseif self.joystick:isGamepadDown(self.left) and not self.blocking then
         -- self.physics.body:applyForce(-self.physics.xforce, 0)
         -- self.physics.body:applyLinearImpulse(-self.physics.ximpulse, 0)
         if self.xVel > -self.maxSpeed then
@@ -264,8 +275,13 @@ function Player:moveKeyboard(dt)
         end
         self.xDir = -1
         self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
-    -- Set right animations
-    elseif love.keyboard.isDown(self.right) then
+    elseif xdir < -0.3 and not self.blocking then
+        if self.xVel > -self.maxSpeed then
+            self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
+        end
+        self.xDir = -1
+        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
+    elseif self.joystick:isGamepadDown(self.right) and not self.blocking then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
@@ -276,6 +292,68 @@ function Player:moveKeyboard(dt)
     else
         self:applyFriction(dt)
     end
+end
+
+function Player:block(dt)
+    local cur_block = self.blocking
+    -- Increment block timer
+    if self.blocking then
+        self.block_timer = self.block_timer + dt
+    elseif self.end_block then
+        self.block_timer = self.block_timer + dt
+    else
+        self.block_timer = 0
+    end
+    -- Set blocking status
+    if self.joystick then
+        local ltrigger = self.joystick:getGamepadAxis(self.b)
+        if ltrigger > 0.1 then
+            self.blocking = true
+        else
+            self.blocking = false
+        end
+    else
+        if love.keyboard.isDown(self.b) then
+            self.blocking = true
+        else
+            self.blocking = false
+        end
+    end
+    -- Detect if block has ended
+    if cur_block == true and self.blocking == false then
+        self.end_block = true
+        self.block_timer = 0
+    end
+    -- Detect completion of end block
+    if self.end_block and self.block_timer > self.block_end_dur then
+        self.end_block = false
+        self.block_timer = 0
+    end
+end
+
+function Player:moveKeyboard(dt)
+    -- Set left animations
+    if love.keyboard.isDown(self.left) and not self.blocking then
+        -- self.physics.body:applyForce(-self.physics.xforce, 0)
+        -- self.physics.body:applyLinearImpulse(-self.physics.ximpulse, 0)
+        if self.xVel > -self.maxSpeed then
+            self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
+        end
+        self.xDir = -1
+        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
+    -- Set right animations
+    elseif love.keyboard.isDown(self.right) and not self.blocking then
+        if self.xVel < self.maxSpeed then
+            self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
+        end
+        -- self.physics.body:applyForce(self.physics.xforce, 0)
+        -- self.physics.body:applyLinearImpulse(self.physics.ximpulse, 0)
+        self.xDir = 1
+        self.xShift = 0
+    else
+        self:applyFriction(dt)
+    end
+
 end
 
 function Player:damage(d)

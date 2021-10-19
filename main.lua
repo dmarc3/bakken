@@ -14,6 +14,8 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 -- Define Local Parameters Here
 local fightScene = require"scenes/fight_scene"
 local titleScene = require"scenes/title_scene"
+-- Load gamepad mappings
+love.joystick.loadGamepadMappings("3rd/SDL_GameControllerDB/gamecontrollerdb.txt")
 
 -- levels or scenes in our game.
 local GameState = {
@@ -27,7 +29,7 @@ local GameState = {
 }
 
 -- Declare Debug Mode
-Debug = true
+Debug = false
 
 -- hooks for updating state. free to call from within
 -- a scene.
