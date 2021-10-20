@@ -60,9 +60,9 @@ function Player:new(id, char)
         instance.xDir = 1
         instance.hb_x = 2
         instance.hb_y = 2
-        instance.r = 1
-        instance.g = 0
-        instance.b = 0
+        instance.red = 1
+        instance.green = 0
+        instance.blue = 0
         if instance.joystick then
             instance.left = "dpleft"
             instance.right = "dpright"
@@ -83,9 +83,9 @@ function Player:new(id, char)
         instance.xDir = -1
         instance.hb_x = WindowWidth/GlobalScale-2-instance.hb_animation:getWidth()
         instance.hb_y = 2
-        instance.r = 0
-        instance.g = 0
-        instance.b = 1
+        instance.red = 0
+        instance.green = 0
+        instance.blue = 1
         if instance.joystick then
             instance.left = "dpleft"
             instance.right = "dpright"
@@ -119,7 +119,10 @@ function Player:load()
     self.jump_vel = 475
     self.hasDoubleJump = true
     self.graceTime = 0
-    self.graceDuration = 0.1
+    self.graceDuration = 0.35
+    self.attack = false
+    self.attack_timer = 0
+    self.blocking = false
     self.block_timer = 0
     self.end_block = false
     -- Add physics body
@@ -134,9 +137,6 @@ function Player:load()
     self.health = 92
     self.hurtbox = {}
     self:updateHurtBox()
-    self.attack = false
-    self.attack_timer = 0
-    self.blocking = false
     self.move = false
     self.hitbox ={}
     self.hitbox.x = self.x+self.width
@@ -188,28 +188,33 @@ end
 
 function Player:drawBody()
     bx, by = self.physics.body:getPosition()
-    love.graphics.setColor(self.r, self.g, self.b, 0.2)
+    love.graphics.setColor(self.red, self.green, self.blue, 0.2)
     love.graphics.rectangle("fill", bx-self.physics.bw/2, by-self.physics.bh/2, self.physics.bw, self.physics.bh)
     love.graphics.setColor(1,1,1,1)
     love.graphics.rectangle("fill", bx, by, 1, 1)
 end
 
 function Player:update(dt)
+    -- Apply physics
     self:syncPhysics()
-    self:setState()
+    self:applyGravity(dt)
+    -- Move Player
     if self.joystick then
         self:moveJoystick(dt)
     else
         self:moveKeyboard(dt)
     end
-    self:applyGravity(dt)
-    self:attack_1(dt)
-    self:block(dt)
-    self.animation[self.animationName]:update(dt)
+    -- Increment Timers
+    self:increaseAttack1Timer(dt)
+    self:blockTimer(dt)
+    self:decreaseGraceTime(dt)
+
     self:updateHurtBox()
     self:updateHitBox()
     self:updateHealthBar(dt)
-    self:decreaseGraceTime(dt)
+    -- Update Animation
+    self:setState()
+    self.animation[self.animationName]:update(dt)
 end
 
 function Player:updateHealthBar(dt)
@@ -245,20 +250,6 @@ function Player:syncPhysics()
     self.physics.body:setLinearVelocity(self.xVel, self.yVel)
 end
 
-function Player:attack_1(dt)
-    if self.attack then
-        if self.attack_timer == 0 then
-            self.animation[self.animationName]:setFrame(1)
-        end
-        self.attack_timer = self.attack_timer + dt
-    end
-    if self.attack_timer > self.attack_1_duration then
-        self.attack = false
-        self.attack_timer = 0
-        self.hitbox.width = self.width
-    end
-end
-
 function Player:moveJoystick(dt)
     local xdir = self.joystick:getGamepadAxis("leftx")
     if xdir > 0.3 and not self.blocking then
@@ -291,43 +282,6 @@ function Player:moveJoystick(dt)
         self.xShift = 0
     else
         self:applyFriction(dt)
-    end
-end
-
-function Player:block(dt)
-    local cur_block = self.blocking
-    -- Increment block timer
-    if self.blocking then
-        self.block_timer = self.block_timer + dt
-    elseif self.end_block then
-        self.block_timer = self.block_timer + dt
-    else
-        self.block_timer = 0
-    end
-    -- Set blocking status
-    if self.joystick then
-        local ltrigger = self.joystick:getGamepadAxis(self.b)
-        if ltrigger > 0.1 then
-            self.blocking = true
-        else
-            self.blocking = false
-        end
-    else
-        if love.keyboard.isDown(self.b) then
-            self.blocking = true
-        else
-            self.blocking = false
-        end
-    end
-    -- Detect if block has ended
-    if cur_block == true and self.blocking == false then
-        self.end_block = true
-        self.block_timer = 0
-    end
-    -- Detect completion of end block
-    if self.end_block and self.block_timer > self.block_end_dur then
-        self.end_block = false
-        self.block_timer = 0
     end
 end
 
@@ -368,7 +322,7 @@ function Player:damage(d)
 end
 
 function Player:drawHurtBox()
-    love.graphics.setColor(self.r, self.g, self.b, 0.15)
+    love.graphics.setColor(self.red, self.green, self.blue, 0.15)
 	love.graphics.rectangle("fill", self.hurtbox.x, self.hurtbox.y, self.hurtbox.width, self.hurtbox.height)
 	love.graphics.setColor(1, 1, 1)
 end
@@ -381,7 +335,7 @@ function Player:updateHurtBox()
 end
 
 function Player:drawHitBox()
-    love.graphics.setColor(self.r, self.g, self.b, 0.5)
+    love.graphics.setColor(self.red, self.green, self.blue, 0.5)
 	love.graphics.rectangle("fill", self.hitbox.x, self.hitbox.y, self.hitbox.width, self.hitbox.height)
 	love.graphics.setColor(1, 1, 1)
 end
@@ -409,7 +363,7 @@ function Player:applyFriction(dt)
 end
 
 function Player:BeginContact(a, b, collision)
-	print("Being Contact!")
+	-- print("Being Contact!")
     if self.grounded == true then return end
 	local nx, ny = collision:getNormal()
 	if a == self.physics.fixture then
@@ -431,15 +385,28 @@ function Player:land(collision)
     self.graceTime = self.graceDuration
 end
 
-function Player:jump(button)
-    if button == self.j then
-        if self.grounded or self.graceTime > 0 then
-            self.yVel = self.jumpAmount
-            self.grounded = false
-            self.graceTime = 0
-        elseif self.hasDoubleJump then
-            self.hasDoubleJump = false
-            self.yVel = self.jumpAmount
+function Player:jump()
+    if self.joystick then
+        if ButtonsPressed[self.id][self.j] == true then
+            if self.grounded then
+                self.yVel = self.jumpAmount
+                self.grounded = false
+                --self.graceTime = 0
+            elseif self.hasDoubleJump and self.graceTime < 0 then
+                self.hasDoubleJump = false
+                self.yVel = self.jumpAmount
+            end
+        end
+    else
+        if KeysPressed[self.j] == true then
+            if self.grounded or self.graceTime > 0 then
+                self.yVel = self.jumpAmount
+                self.grounded = false
+                --self.graceTime = 0
+            elseif self.hasDoubleJump then
+                self.hasDoubleJump = false
+                self.yVel = self.jumpAmount
+            end
         end
     end
 end
@@ -450,8 +417,77 @@ function Player:decreaseGraceTime(dt)
     end
 end
 
+function Player:attack_1()
+    if self.joystick then
+        if ButtonsPressed[self.id][self.a] == true then
+            self.attack = true
+        end
+    else
+        if KeysPressed[self.a] == true then
+            self.attack = true
+        end
+    end
+end
+
+function Player:increaseAttack1Timer(dt)
+    if self.attack then
+        if self.attack_timer == 0 then
+            self.animation[self.animationName]:setFrame(1)
+        end
+        self.attack_timer = self.attack_timer + dt
+    end
+    if self.attack_timer > self.attack_1_duration then
+        self.attack = false
+        self.attack_timer = 0
+        self.hitbox.width = self.width
+    end
+end
+
+function Player:block()
+    -- Current block status
+    local cur_block = self.blocking
+    -- Set block flag
+    if self.joystick then
+        if AxisMoved[self.id][self.b] == nil then
+            self.blocking = false
+        elseif AxisMoved[self.id][self.b] > 0.5 then
+            self.blocking = true
+        else
+            self.blocking = false
+        end
+    else
+        if KeysPressed[self.b] == true then
+            self.blocking = true
+        else
+            self.blocking = false
+        end
+    end
+    
+    -- Detect if block has ended
+    if cur_block == true and self.blocking == false then
+        self.end_block = true
+        self.block_timer = 0
+    end
+end
+
+function Player:blockTimer(dt)
+    -- Increment block timer
+    if self.blocking then
+        self.block_timer = self.block_timer + dt
+    elseif self.end_block then
+        self.block_timer = self.block_timer + dt
+    else
+        self.block_timer = 0
+    end
+    -- Detect completion of end block
+    if self.end_block and self.block_timer > self.block_end_dur then
+        self.end_block = false
+        self.block_timer = 0
+    end
+end
+
 function Player:EndContact(a, b, collision)
-    print("End Contact!")
+    -- print("End Contact!")
 	if a == self.physics.fixture or b == self.physics.fixture then
 		if self.currentGroundCollision == collision then
 			self.grounded = false

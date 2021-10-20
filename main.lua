@@ -28,8 +28,17 @@ local GameState = {
     sy = GlobalScale
 }
 
+-- Capture keyboard / controller inputs
+KeysPressed = {}
+ButtonsPressed = {}
+ButtonsPressed[1] = {}
+ButtonsPressed[2] = {}
+AxisMoved = {}
+AxisMoved[1] = {}
+AxisMoved[2] = {}
+
 -- Declare Debug Mode
-Debug = false
+Debug = true
 
 -- hooks for updating state. free to call from within
 -- a scene.
@@ -65,6 +74,29 @@ function love.draw()
     -- 1440/36 = 20 pixels and 960/24 = 20 pixels
     if Debug then
         debugGrid(36, 24)
+    end
+end
+
+function love.keypressed(key)
+    KeysPressed[key] = true
+end
+
+function love.keyreleased(key)
+    KeysPressed[key] = nil
+end
+
+function love.gamepadpressed(joystick, button)
+    ButtonsPressed[joystick:getID()][button] = true
+end
+
+function love.gamepadreleased(joystick, button)
+    ButtonsPressed[joystick:getID()][button] = nil
+end
+
+function love.gamepadaxis(joystick, axis, value)
+    AxisMoved[joystick:getID()][axis] = value
+    if AxisMoved[joystick:getID()][axis] < math.abs(0.1) then
+        AxisMoved[joystick:getID()][axis] = nil
     end
 end
 

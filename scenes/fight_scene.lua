@@ -30,7 +30,7 @@ function fight_scene:load()
     Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
     Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
     Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
-    player1 = player:new(1, "lilah")
+    player1 = player:new(1, "drew")
     player1:load()
     player2 = player:new(2, "drew")
     player2:load()
@@ -41,6 +41,7 @@ function fight_scene:update(dt, gamestate)
     World:update(dt)
     player1:update(dt)
     player2:update(dt)
+    CheckKeys()
 
     -- Process Player 1 attacks
     if player1.attack then
@@ -68,6 +69,7 @@ function fight_scene:draw(sx, sy)
     if Debug then
         love.graphics.print("xVel: "..player1.xVel, 20, 100)
         love.graphics.print("yVel: "..player1.yVel, 20, 120)
+        love.graphics.print("Time: "..player1.graceTime, 20, 140)
     end
 
 end
@@ -97,8 +99,8 @@ function EndContact(a, b, collision)
     player2:EndContact(a, b, collision)
 end
 
-function love.gamepadpressed(joystick, button)
-    print(button)
+--[[ function love.gamepadpressed(joystick, button)
+    -- print(button)
     if joystick:getID() == 1 then
         player1:jump(button)
         if button == "x" then
@@ -110,30 +112,27 @@ function love.gamepadpressed(joystick, button)
             player2.attack = true
         end
     end
-end
-
-function love.keypressed(key)
-    player1:jump(key)
-    player2:jump(key)
-    if not player1.joystick then
-        if key == "e" then
-            player1.attack = true
-        end
-    end
-    if not player2.joystick then
-        if key == "kp4" then
-            player2.attack = true
-        end
-    end
-end
-
---[[ function love.keyreleased(key)
-    if key == "e" then
-        player1.attack = true
-    end
-    if key == "kp4" then
-        player2.attack = true
-    end
 end ]]
+
+function CheckKeys()
+    local function pconcat(tab)
+        local keyset={}
+        local n=0
+        for k,v in pairs(tab) do
+            n=n+1
+            keyset[n]=k
+        end
+        return table.concat(keyset, " ")
+    end
+    player1:jump()
+    player2:jump()
+    player1:attack_1()
+    player2:attack_1()
+    player1:block()
+    player2:block()
+    print(pconcat(AxisMoved[1]))
+end
+
+
 
 return fight_scene
