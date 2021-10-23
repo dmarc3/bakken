@@ -14,23 +14,29 @@ love.physics.setMeter(Meter)
 
 function fight_scene:load()
     World = love.physics.newWorld(0, Meter*Gravity, false)
-    World:setCallbacks(BeginContact, EndContact)
+    World:setCallbacks(beginContact, endContact)
      -- Create Ground and Walls
     Ground = {}
     Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+    Ground.body:setUserData("ground")
     Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
     Ground.fixture = love.physics.newFixture(Ground.body, Ground.shape)
     Ground.fixture:setFriction(Friction)
+    Ground.fixture:setUserData("ground")
     Walls = {}
     Walls.left = {}
     Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+    Walls.left.body:setUserData("wall")
     Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
     Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
+    Walls.left.fixture:setUserData("wall")
     Walls.right = {}
     Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+    Walls.right.body:setUserData("wall")
     Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
     Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
-    player1 = player:new(1, "drew")
+    Walls.right.fixture:setUserData("wall")
+    player1 = player:new(1, "lilah")
     player1:load()
     player2 = player:new(2, "drew")
     player2:load()
@@ -69,7 +75,8 @@ function fight_scene:draw(sx, sy)
     if Debug then
         love.graphics.print("xVel: "..player1.xVel, 20, 100)
         love.graphics.print("yVel: "..player1.yVel, 20, 120)
-        love.graphics.print("Time: "..player1.graceTime, 20, 140)
+        love.graphics.print("MouseX: "..love.mouse:getX(), 20, 140)
+        love.graphics.print("MouseY: "..love.mouse:getY(), 20, 160)
     end
 
 end
@@ -89,14 +96,33 @@ function fight_scene:drawBackground()
 
 end
 
-function BeginContact(a, b, collision)
-	player1:BeginContact(a, b, collision)
-    player2:BeginContact(a, b, collision)
+function beginContact(a, b, collision)
+    -- Process Damage
+    if (a:getUserData() == "sensor1" and b:getUserData() == "player2") or (b:getUserData() == "sensor1" and a:getUserData() == "player2") then
+        if not player2.invuln then
+            if not player2.blocking then
+                player2:damage(10)
+            else
+                player2:damage(10*0.2)
+            end
+        end
+    end
+    if (a:getUserData() == "sensor2" and b:getUserData() == "player1") or (b:getUserData() == "sensor2" and a:getUserData() == "player1") then
+        if not player1.invuln then
+            if not player1.blocking then
+                player1:damage(10)
+            else
+                player1:damage(10*0.2)
+            end
+        end
+    end
+	player1:beginContact(a, b, collision)
+    player2:beginContact(a, b, collision)
 end
 
-function EndContact(a, b, collision)
-	player1:EndContact(a, b, collision)
-    player2:EndContact(a, b, collision)
+function endContact(a, b, collision)
+	player1:endContact(a, b, collision)
+    player2:endContact(a, b, collision)
 end
 
 --[[ function love.gamepadpressed(joystick, button)
@@ -128,11 +154,9 @@ function CheckKeys()
     player2:jump()
     player1:attack_1()
     player2:attack_1()
-    player1:block()
-    player2:block()
-    print(pconcat(AxisMoved[1]))
+    player1:blocks()
+    player2:blocks()
+    --print(pconcat(AxisMoved[1]))
 end
-
-
 
 return fight_scene

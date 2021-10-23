@@ -7,6 +7,12 @@ Player.__index = Player
 function Player:new(id, char)
     local instance = setmetatable({}, Player)
     instance.id = id
+    instance.char = char
+    if id == 1 then
+        instance.enemy_id = 2
+    else
+        instance.enemy_id = 1
+    end
     
     -- Process character
     instance.spritesheet = love.graphics.newImage("assets/Characters/"..char..".png")
@@ -23,15 +29,22 @@ function Player:new(id, char)
     instance.animationName = "idle"
     instance.width = instance.animation[instance.animationName]:getWidth()
     instance.height = instance.animation[instance.animationName]:getHeight()
-    local data = require("characters/"..char)
-    instance.xorigin = data.xorigin
-    instance.block_start_dur = data.block_start_dur
-    instance.block_end_dur = data.block_end_dur
-    instance.body_width_pad = data.body_width_pad
-    instance.body_height_pad = data.body_height_pad
-    instance.x_shift_pad = data.x_shift_pad
-    instance.idle_duration = data.idle_duration
-    instance.attack_1_duration = data.attack_1_duration
+    require("characters/"..char)
+    instance.xorigin = xorigin
+    instance.block_start_dur = block_start_dur
+    instance.block_end_dur = block_end_dur
+    instance.body_width_pad = body_width_pad
+    instance.body_height_pad = body_height_pad
+    instance.x_shift_pad = x_shift_pad
+    instance.idle_duration = idle_duration
+    instance.attack_1_duration = attack_1_duration
+    instance.idle = idle
+    instance.a1 = a1
+    instance.walk = walk
+    instance.block_start = block_start
+    instance.block = block
+    instance.block_end = block_end
+
 
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
@@ -119,43 +132,56 @@ function Player:load()
     self.jump_vel = 475
     self.hasDoubleJump = true
     self.graceTime = 0
-    self.graceDuration = 0.35
+    self.graceDuration = 0.2
     self.attack = false
     self.attack_timer = 0
+    self.anim_shift = 0
     self.blocking = false
     self.block_timer = 0
     self.end_block = false
+    self.original_x = self.x
+    self.frame_change = false
+    self.delete_bodies = {}
     -- Add physics body
     self.physics = {}
     self.physics.body = love.physics.newBody(World, self.x, self.y, "dynamic")
     self.physics.body:setFixedRotation(true)
+    self.physics.body:setUserData("player"..self.id)
     self.physics.bw = self.body_width_pad*self.width
     self.physics.bh = self.body_height_pad*self.height
     self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
+    self.physics.fixture:setUserData("player"..self.id)
     -- Hitbox / Hurtbox
     self.health = 92
     self.hurtbox = {}
     self:updateHurtBox()
     self.move = false
-    self.hitbox ={}
-    self.hitbox.x = self.x+self.width
-    self.hitbox.y = self.y+self.height*0.4
-    self.hitbox.width = self.width
-    self.hitbox.height = self.height*0.2
     self.invuln = false
     self.invuln_timer = 0
 end
 
 function Player:draw()
     self.hb_animation:draw(self.hb_x, self.hb_y)
-    self.animation[self.animationName]:draw(self.x,
-                                            self.y,
-                                            0,
-                                            self.xDir,
-                                            1,
-                                            self.animation[self.animationName]:getWidth()*self.xorigin,
-                                            self.animation[self.animationName]:getHeight()/2)
+    if self.animationName == "a1" then
+        self.animation[self.animationName]:draw(self.original_x,
+                                                self.y,
+                                                0,
+                                                self.xDir,
+                                                1,
+                                                self.xorigin,
+                                                self.animation[self.animationName]:getHeight()/2)
+    else
+        self.animation[self.animationName]:draw(self.x,
+                                                self.y,
+                                                0,
+                                                self.xDir,
+                                                1,
+                                                self.xorigin,
+                                                self.animation[self.animationName]:getHeight()/2)
+    end
+    self:drawHitBox("a1")
+    -- end
     if Debug then
         self:drawBody()
     end
@@ -163,6 +189,7 @@ end
 
 function Player:setState()
     local current_state = self.animationName
+    local current_x = self.x
     if self.attack then
         self.animationName = "a1"
     elseif self.blocking and self.block_timer < self.block_start_dur then
@@ -177,12 +204,23 @@ function Player:setState()
         self.animationName = "idle"
     else
         self.animationName = "walk"
-        -- self.animationName = "idle"
     end
     -- Reset starting frame to 1 if state has changed
     if current_state ~= self.animationName then
         -- print("Changing from "..current_state.." to "..self.animationName)
         self.animation[self.animationName]:setFrame(1)
+    end
+    -- Apply animation shifts
+    local current_frame = self.animation[self.animationName]:getFrame()
+    if self.frame_change then
+        if self.animationName == "a1" then
+            if self[self.animationName]["f"..tostring(current_frame)]["hit"] then
+                if self.xDir*self[self.animationName]["f"..tostring(current_frame)]["dx"] ~= 0 then
+                    self.anim_shift = self.xDir*self[self.animationName]["f"..tostring(current_frame)]["dx"]
+                end
+            end
+            self.physics.body:setX(self.x+self.xDir*self[self.animationName]["f"..tostring(current_frame)]["dx"])
+        end
     end
 end
 
@@ -195,6 +233,8 @@ function Player:drawBody()
 end
 
 function Player:update(dt)
+    local current_frame = self.animation[self.animationName]:getFrame()
+    local current_anim = self.animationName
     -- Apply physics
     self:syncPhysics()
     self:applyGravity(dt)
@@ -210,11 +250,16 @@ function Player:update(dt)
     self:decreaseGraceTime(dt)
 
     self:updateHurtBox()
-    self:updateHitBox()
     self:updateHealthBar(dt)
     -- Update Animation
     self:setState()
     self.animation[self.animationName]:update(dt)
+    if current_frame ~= self.animation[self.animationName]:getFrame() or current_anim ~= self.animationName then
+        self.frame_change = true
+    else
+        self.frame_change = false
+    end
+    self:deleteBodies()
 end
 
 function Player:updateHealthBar(dt)
@@ -252,32 +297,36 @@ end
 
 function Player:moveJoystick(dt)
     local xdir = self.joystick:getGamepadAxis("leftx")
-    if xdir > 0.3 and not self.blocking then
+    local jump_logic = not self.grounded
+    local block_logic = not self.blocking
+    local attack_logic = not self.attack
+    local logic_test = block_logic and attack_logic or jump_logic
+    if xdir > 0.3 and logic_test then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
+        self.original_x = self.original_x + self.xVel * dt
         self.xDir = 1
         self.xShift = 0
-    elseif self.joystick:isGamepadDown(self.left) and not self.blocking then
-        -- self.physics.body:applyForce(-self.physics.xforce, 0)
-        -- self.physics.body:applyLinearImpulse(-self.physics.ximpulse, 0)
+    elseif self.joystick:isGamepadDown(self.left) and logic_test then
         if self.xVel > -self.maxSpeed then
             self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
         end
+        self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
         self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
-    elseif xdir < -0.3 and not self.blocking then
+    elseif xdir < -0.3 and logic_test then
         if self.xVel > -self.maxSpeed then
             self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
         end
+        self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
         self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
-    elseif self.joystick:isGamepadDown(self.right) and not self.blocking then
+    elseif self.joystick:isGamepadDown(self.right) and logic_test then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
-        -- self.physics.body:applyForce(self.physics.xforce, 0)
-        -- self.physics.body:applyLinearImpulse(self.physics.ximpulse, 0)
+        self.original_x = self.original_x + self.xVel * dt
         self.xDir = 1
         self.xShift = 0
     else
@@ -286,22 +335,23 @@ function Player:moveJoystick(dt)
 end
 
 function Player:moveKeyboard(dt)
+    local block_logic = not self.blocking or not self.grounded
+    local attack_logic = not self.attack or not self.grounded
+    local logic_test = block_logic and attack_logic
     -- Set left animations
-    if love.keyboard.isDown(self.left) and not self.blocking then
-        -- self.physics.body:applyForce(-self.physics.xforce, 0)
-        -- self.physics.body:applyLinearImpulse(-self.physics.ximpulse, 0)
+    if love.keyboard.isDown(self.left) and logic_test then
         if self.xVel > -self.maxSpeed then
             self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
         end
+        self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
         self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
     -- Set right animations
-    elseif love.keyboard.isDown(self.right) and not self.blocking then
+    elseif love.keyboard.isDown(self.right) and logic_test then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
-        -- self.physics.body:applyForce(self.physics.xforce, 0)
-        -- self.physics.body:applyLinearImpulse(self.physics.ximpulse, 0)
+        self.original_x = self.original_x + self.xVel * dt
         self.xDir = 1
         self.xShift = 0
     else
@@ -311,7 +361,7 @@ function Player:moveKeyboard(dt)
 end
 
 function Player:damage(d)
-    print("Player 1 hit for "..tostring(d).." damage!")
+    print("Player "..self.id.." hit for "..tostring(d).." damage!")
     self.health = self.health - d
     if self.health < 0 then
         self.health = 0
@@ -334,17 +384,27 @@ function Player:updateHurtBox()
     self.hurtbox.y = self.y
 end
 
-function Player:drawHitBox()
-    love.graphics.setColor(self.red, self.green, self.blue, 0.5)
-	love.graphics.rectangle("fill", self.hitbox.x, self.hitbox.y, self.hitbox.width, self.hitbox.height)
-	love.graphics.setColor(1, 1, 1)
-end
-
-function Player:updateHitBox()
-    self.hitbox.x = self.x+self.width
-    self.hitbox.y = self.y+self.height*0.4
-    self.hitbox.width = self.width
-    self.hitbox.height = self.height*0.2
+function Player:drawHitBox(anim)
+    -- love.graphics.setColor(self.red, self.green, self.blue, 0.9)
+    local current_frame = self.animation[self.animationName]:getFrame()
+    if self.animationName == "a1" then
+        if self[self.animationName]["f"..tostring(current_frame)]["hit"] then
+            self.a1.hitbox.vertices = _G[self.char.."Hitbox"](self.xDir)
+            self.a1.hitbox.body = love.physics.newBody(World, self.x, self.y, "static")
+            self.a1.hitbox.body:setFixedRotation(true)
+            self.a1.hitbox.body:setUserData("player"..self.id.."_a1")
+            self.a1.hitbox.shape = love.physics.newPolygonShape(self.a1.hitbox.vertices)
+            self.a1.hitbox.fixture = love.physics.newFixture(self.a1.hitbox.body, self.a1.hitbox.shape)
+            self.a1.hitbox.fixture:setSensor(true)
+            self.a1.hitbox.fixture:setUserData("sensor"..self.id)
+            if Debug then
+                love.graphics.setColor(1, 1, 1, 0.5)
+                love.graphics.polygon("fill", self[anim].hitbox.body:getWorldPoints(self[anim].hitbox.shape:getPoints()))
+                love.graphics.setColor(1, 1, 1)
+            end
+            self.delete_bodies["player"..self.id.."_a1"] = 1
+        end
+    end
 end
 
 function Player:applyGravity(dt)
@@ -362,21 +422,6 @@ function Player:applyFriction(dt)
     end
 end
 
-function Player:BeginContact(a, b, collision)
-	-- print("Being Contact!")
-    if self.grounded == true then return end
-	local nx, ny = collision:getNormal()
-	if a == self.physics.fixture then
-		if ny > 0 then
-			self:land(collision)
-		end
-	elseif b == self.physics.fixture then
-		if ny < 0 then
-			self:land(collision)
-		end
-	end
-end
-
 function Player:land(collision)
 	self.currentGroundCollision = collision
 	self.yVel = 0
@@ -387,7 +432,7 @@ end
 
 function Player:jump()
     if self.joystick then
-        if ButtonsPressed[self.id][self.j] == true then
+        if ButtonsPressed[self.id][self.j] == true and not self.attack then
             if self.grounded then
                 self.yVel = self.jumpAmount
                 self.grounded = false
@@ -398,7 +443,7 @@ function Player:jump()
             end
         end
     else
-        if KeysPressed[self.j] == true then
+        if KeysPressed[self.j] == true and not self.attack then
             if self.grounded or self.graceTime > 0 then
                 self.yVel = self.jumpAmount
                 self.grounded = false
@@ -418,6 +463,7 @@ function Player:decreaseGraceTime(dt)
 end
 
 function Player:attack_1()
+    local current_attack = self.attack
     if self.joystick then
         if ButtonsPressed[self.id][self.a] == true then
             self.attack = true
@@ -426,6 +472,9 @@ function Player:attack_1()
         if KeysPressed[self.a] == true then
             self.attack = true
         end
+    end
+    if not current_attack and self.attack then
+        self.original_x = self.physics.body:getX()
     end
 end
 
@@ -439,11 +488,11 @@ function Player:increaseAttack1Timer(dt)
     if self.attack_timer > self.attack_1_duration then
         self.attack = false
         self.attack_timer = 0
-        self.hitbox.width = self.width
+        -- self.original_x = self.original_x - self.a1["f1"]["x"]
     end
 end
 
-function Player:block()
+function Player:blocks()
     -- Current block status
     local cur_block = self.blocking
     -- Set block flag
@@ -486,9 +535,43 @@ function Player:blockTimer(dt)
     end
 end
 
-function Player:EndContact(a, b, collision)
+function Player:deleteBodies()
+    if self.delete_bodies ~= {} then
+        local bodies = World:getBodies()
+        for j, wbody in pairs(bodies) do
+            local body_data = wbody:getUserData()
+            for delete_body, i in pairs(self.delete_bodies) do
+                if body_data == delete_body then
+                    wbody:destroy()
+                    self.delete_bodies[delete_body] = nil
+                end
+            end
+        end
+    end
+end
+
+function Player:beginContact(a, b, collision)
+	-- print("Being Contact!")
+    if self.grounded == true then return end
+    local logic_a = a:getUserData() == "player"..self.id and (b:getUserData() == "ground" or b:getUserData() == "player"..self.enemy_id)
+    local logic_b = b:getUserData() == "player"..self.id and (a:getUserData() == "ground" or a:getUserData() == "player"..self.enemy_id)
+	local nx, ny = collision:getNormal()
+	if logic_a then
+		if ny > 0 then
+			self:land(collision)
+		end
+	elseif logic_b then
+		if ny < 0 then
+			self:land(collision)
+		end
+	end
+end
+
+function Player:endContact(a, b, collision)
     -- print("End Contact!")
-	if a == self.physics.fixture or b == self.physics.fixture then
+    local logic_a = a:getUserData() == "player"..self.id and b:getUserData() == "ground"
+    local logic_b = b:getUserData() == "player"..self.id and a:getUserData() == "ground"
+	if logic_a or logic_b then
 		if self.currentGroundCollision == collision then
 			self.grounded = false
 		end

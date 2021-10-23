@@ -17,10 +17,10 @@ function titleScene:update(dt, gameState)
     self.PB_animation:update(dt)
 
     if next(KeysPressed) ~= nil then
-        gameState:setFightScene()
+        gameState:setPickFighterScene()
     end
     if next(ButtonsPressed[1]) ~= nil then
-        gameState:setFightScene()
+        gameState:setPickFighterScene()
     end
 end
 
