@@ -12,9 +12,9 @@ WindowHeight = love.graphics.getHeight()
 love.graphics.setDefaultFilter("nearest", "nearest")
 
 -- Define Local Parameters Here
-local fightScene = require"scenes/fight_scene"
 local titleScene = require"scenes/title_scene"
 local pickFighterScene = require"scenes/pick_fighter_scene"
+local fightScene = require"scenes/fight_scene"
 -- Load gamepad mappings
 love.joystick.loadGamepadMappings("3rd/SDL_GameControllerDB/gamecontrollerdb.txt")
 
@@ -26,6 +26,8 @@ local GameState = {
         pickFighterScene = pickFighterScene,
         fightScene = fightScene,
     },
+    player1 = "",
+    player2 = "",
     sx = GlobalScale,
     sy = GlobalScale
 }

@@ -2,7 +2,6 @@ local scene = require "scene"
 
 local peachy = require("3rd/peachy/peachy")
 local player = require"characters/player"
--- local player2 = require"characters/player2"
 
 local fight_scene = scene:new("fight")
 
@@ -36,57 +35,90 @@ function fight_scene:load()
     Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
     Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
     Walls.right.fixture:setUserData("wall")
-    player1 = player:new(1, "lilah")
-    player1:load()
-    player2 = player:new(2, "drew")
-    player2:load()
+    Toys = {}
+    Toys.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.765, WindowHeight/GlobalScale*0.68, "static")
+    Toys.body:setUserData("toys")
+    Toys.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
+    Toys.fixture = love.physics.newFixture(Toys.body, Toys.shape)
+    Toys.fixture:setFriction(Friction)
+    Toys.fixture:setUserData("toys")
+    Roof = {}
+    Roof.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.797, WindowHeight/GlobalScale*0.43, "static")
+    Roof.body:setUserData("Roof")
+    Roof.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.1310)
+    Roof.fixture = love.physics.newFixture(Roof.body, Roof.shape)
+    Roof.fixture:setFriction(Friction)
+    Roof.fixture:setUserData("Roof")
+
+    local spritesheet = love.graphics.newImage("assets/levels/backyard.png")
+    local asepriteMeta = "assets/levels/backyard.json"
+    Backyard = {}
+    Backyard.base = peachy.new(asepriteMeta, spritesheet, "idle")
+    Backyard.foreground = peachy.new(asepriteMeta, spritesheet, "foreground")
+    Backyard.toys_top = peachy.new(asepriteMeta, spritesheet, "toys_top")
+    Backyard.toys_top_transparent = peachy.new(asepriteMeta, spritesheet, "toys_top_transparent")
+    Backyard.toys_bottom = peachy.new(asepriteMeta, spritesheet, "toys_bottom")
+    Backyard.clouds = peachy.new(asepriteMeta, spritesheet, "clouds")
+    player1 = nil
+    player2 = nil
 end
   
 
-function fight_scene:update(dt, gamestate)
+function fight_scene:update(dt, gameState)
+    if player1 == nil then
+        player1 = player:new(1, gameState.player1)
+        player1:load()
+    end
+    if player2 == nil then
+        player2 = player:new(2, gameState.player2)
+        player2:load()
+    end
     World:update(dt)
     player1:update(dt)
     player2:update(dt)
     CheckKeys()
-
-    -- Process Player 1 attacks
-    if player1.attack then
-        -- if not player2.invuln then
-        --     player2:detectHit(player1.hitbox.x, player1.hitbox.y, player1.hitbox.width, player1.hitbox.height)
-        -- end
-    end
-
-    -- Process Player 2 attacks
-    if player2.attack then
-        -- if not player1.invuln then
-        --     player1:detectHit(player2.hitbox.x, player2.hitbox.y, player2.hitbox.width, player2.hitbox.height)
-        -- end
-    end
 end
 
 function fight_scene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawBackground()
-    player1:draw()
-    player2:draw()
+    if player1 ~= nil then
+        player1:draw()
+    end
+    if player2 ~= nil then
+        player2:draw()
+    end
+    self:drawForeground()
     love.graphics.pop()
 
     if Debug then
-        love.graphics.print("xVel: "..player1.xVel, 20, 100)
-        love.graphics.print("yVel: "..player1.yVel, 20, 120)
-        love.graphics.print("MouseX: "..love.mouse:getX(), 20, 140)
-        love.graphics.print("MouseY: "..love.mouse:getY(), 20, 160)
+        if player1 ~= nil then
+            love.graphics.print("xVel: "..player1.xVel, 20, 100)
+            love.graphics.print("yVel: "..player1.yVel, 20, 120)
+            love.graphics.print("MouseX: "..love.mouse:getX(), 20, 140)
+            love.graphics.print("MouseY: "..love.mouse:getY(), 20, 160)
+        end
     end
 
 end
 
+function fight_scene:drawForeground()
+    Backyard.toys_bottom:draw(0,0)
+    Backyard.toys_top:draw(0,0)
+end
+
 function fight_scene:drawBackground()
-    love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
-    love.graphics.setColor(0.1, 0.1, 0.1, 1)
-    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 40, WindowWidth/GlobalScale, 40)
+    Backyard.base:draw(0,0)
+    Backyard.clouds:draw(0,0)
+    Backyard.foreground:draw(0,0)
     if Debug then
-        love.graphics.setColor(0, 0, 0, 1)
+        --[[ love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
+        love.graphics.setColor(0.1, 0.1, 0.1, 1)
+        love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 40, WindowWidth/GlobalScale, 40) ]]
+        love.graphics.setColor(0, 0, 0, 0.75)
+        love.graphics.polygon("fill", Toys.body:getWorldPoints(Toys.shape:getPoints()))
+        love.graphics.polygon("fill", Roof.body:getWorldPoints(Roof.shape:getPoints()))
         gx, gy = Ground.body:getPosition()
         love.graphics.rectangle("fill", gx-WindowWidth/GlobalScale/2, gy-10, WindowWidth/GlobalScale, 20)
         love.graphics.setColor(1, 1, 1, 1)
