@@ -304,6 +304,42 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
     "duration": 200
+   },
+   {
+    "filename": "drew 34.aseprite",
+    "frame": { "x": 1700, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 125
+   },
+   {
+    "filename": "drew 35.aseprite",
+    "frame": { "x": 1750, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 125
+   },
+   {
+    "filename": "drew 36.aseprite",
+    "frame": { "x": 1800, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 125
+   },
+   {
+    "filename": "drew 37.aseprite",
+    "frame": { "x": 1850, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 125
    }
  ],
  "meta": {
@@ -311,7 +347,7 @@
   "version": "1.2.29-x64",
   "image": "drew.png",
   "format": "RGBA8888",
-  "size": { "w": 1700, "h": 58 },
+  "size": { "w": 1900, "h": 58 },
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 3, "direction": "forward" },
@@ -320,7 +356,8 @@
    { "name": "jump", "from": 19, "to": 26, "direction": "forward" },
    { "name": "block start", "from": 27, "to": 29, "direction": "forward" },
    { "name": "block", "from": 30, "to": 30, "direction": "forward" },
-   { "name": "block end", "from": 31, "to": 33, "direction": "forward" }
+   { "name": "block end", "from": 31, "to": 33, "direction": "forward" },
+   { "name": "hit", "from": 34, "to": 37, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
