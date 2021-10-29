@@ -1,0 +1,101 @@
+{ "frames": [
+   {
+    "filename": "backyard 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "backyard 1.aseprite",
+    "frame": { "x": 240, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "backyard 2.aseprite",
+    "frame": { "x": 480, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 100
+   },
+   {
+    "filename": "backyard 3.aseprite",
+    "frame": { "x": 720, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 100
+   },
+   {
+    "filename": "backyard 4.aseprite",
+    "frame": { "x": 960, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 100
+   },
+   {
+    "filename": "backyard 5.aseprite",
+    "frame": { "x": 1200, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 100
+   },
+   {
+    "filename": "backyard 6.aseprite",
+    "frame": { "x": 1440, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.30-x64",
+  "image": "backyard.png",
+  "format": "RGBA8888",
+  "size": { "w": 1680, "h": 160 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "idle", "from": 0, "to": 1, "direction": "forward" },
+   { "name": "foreground", "from": 2, "to": 2, "direction": "forward" },
+   { "name": "toys_top_transparent", "from": 3, "to": 3, "direction": "forward" },
+   { "name": "toys_top", "from": 4, "to": 4, "direction": "forward" },
+   { "name": "toys_bottom", "from": 5, "to": 5, "direction": "forward" },
+   { "name": "clouds", "from": 6, "to": 6, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "sky", "opacity": 255, "blendMode": "normal" },
+   { "name": "ground", "opacity": 255, "blendMode": "normal" },
+   { "name": "osa", "opacity": 255, "blendMode": "normal" },
+   { "name": "clouds", "opacity": 255, "blendMode": "normal" },
+   { "name": "tree2", "opacity": 255, "blendMode": "normal" },
+   { "name": "tree_shadow", "opacity": 50, "blendMode": "normal" },
+   { "name": "tree", "opacity": 255, "blendMode": "normal" },
+   { "name": "toys", "opacity": 255, "blendMode": "normal" },
+   { "name": "toys_front", "opacity": 255, "blendMode": "normal" },
+   { "name": "toys_wall", "opacity": 255, "blendMode": "normal" },
+   { "name": "toys_wall_transparent", "opacity": 120, "blendMode": "normal" },
+   { "name": "toys_shadow", "opacity": 50, "blendMode": "normal" },
+   { "name": "trampoline_shadow", "opacity": 50, "blendMode": "normal" },
+   { "name": "trampoline", "opacity": 255, "blendMode": "normal" },
+   { "name": "trampoline_netting", "opacity": 126, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
