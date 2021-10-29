@@ -23,6 +23,7 @@ function Player:new(id, char)
         jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
         airborne = peachy.new(instance.asepriteMeta, instance.spritesheet, "airborne"),
         land = peachy.new(instance.asepriteMeta, instance.spritesheet, "land"),
+        hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "hit"),
         block = peachy.new(instance.asepriteMeta, instance.spritesheet, "block"),
         block_start = peachy.new(instance.asepriteMeta, instance.spritesheet, "block start"),
         block_end = peachy.new(instance.asepriteMeta, instance.spritesheet, "block end"),
@@ -43,6 +44,7 @@ function Player:new(id, char)
     instance.jump_duration = jump_duration
     instance.airborne_duration = airborne_duration
     instance.land_duration = land_duration
+    instance.damage_duration = damage_duration
     instance.idle = idle
     instance.a1 = a1
     instance.walk = walk
@@ -145,6 +147,8 @@ function Player:load()
     self.airborne = false
     self.landing = false
     self.land_timer = 0
+    self.damaged = false
+    self.damage_timer = 0
     self.anim_shift = 0
     self.blocking = false
     self.block_timer = 0
@@ -214,6 +218,8 @@ function Player:setState()
         self.animationName = "land"
     elseif self.airborne and not self.grounded then
         self.animationName = "airborne"
+    elseif self.damaged then
+        self.animationName = "hit"
     elseif self.xVel == 0 then
         self.animationName = "idle"
     else
@@ -380,6 +386,7 @@ function Player:moveKeyboard(dt)
 end
 
 function Player:damage(d)
+    self.damaged = true
     print("Player "..self.id.." hit for "..tostring(d).." damage!")
     self.health = self.health - d
     if self.health < 0 then
@@ -500,6 +507,14 @@ function Player:attack_1()
 end
 
 function Player:incrementTimers(dt)
+    -- Damage timers
+    if self.damaged then
+        self.damage_timer = self.damage_timer + dt
+    end
+    if self.damage_timer > self.damage_duration then
+        self.damaged = false
+        self.damage_timer = 0
+    end
     -- Jump timers
     if not self.grounded then
         self.jump_timer = self.jump_timer + dt

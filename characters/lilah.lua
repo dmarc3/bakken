@@ -16,6 +16,7 @@ attack_1_duration=0.9
 jump_duration=0.5
 airborne_duration=0.8
 land_duration=0.15
+damage_duration=0.5
 block_start_dur=0.45
 block_end_dur=0.45
 
