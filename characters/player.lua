@@ -19,8 +19,10 @@ function Player:new(id, char)
     instance.asepriteMeta = "assets/Characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        -- walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
-        -- jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
+        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
+        airborne = peachy.new(instance.asepriteMeta, instance.spritesheet, "airborne"),
+        land = peachy.new(instance.asepriteMeta, instance.spritesheet, "land"),
         block = peachy.new(instance.asepriteMeta, instance.spritesheet, "block"),
         block_start = peachy.new(instance.asepriteMeta, instance.spritesheet, "block start"),
         block_end = peachy.new(instance.asepriteMeta, instance.spritesheet, "block end"),
@@ -38,9 +40,12 @@ function Player:new(id, char)
     instance.x_shift_pad = x_shift_pad
     instance.idle_duration = idle_duration
     instance.attack_1_duration = attack_1_duration
+    instance.jump_duration = jump_duration
+    instance.airborne_duration = airborne_duration
+    instance.land_duration = land_duration
     instance.idle = idle
     instance.a1 = a1
-    -- instance.walk = walk
+    instance.walk = walk
     instance.block_start = block_start
     instance.block = block
     instance.block_end = block_end
@@ -135,6 +140,11 @@ function Player:load()
     self.graceDuration = 0.2
     self.attack = false
     self.attack_timer = 0
+    self.jumping = false
+    self.jump_timer = 0
+    self.airborne = false
+    self.landing = false
+    self.land_timer = 0
     self.anim_shift = 0
     self.blocking = false
     self.block_timer = 0
@@ -198,12 +208,16 @@ function Player:setState()
         self.animationName = "block"
     elseif self.end_block then
         self.animationName = "block_end"
-    --elseif not self.grounded then
-        --self.animationName = "jump"
+    elseif self.jumping and not self.grounded then
+        self.animationName = "jump"
+    elseif self.landing then
+        self.animationName = "land"
+    elseif self.airborne and not self.grounded then
+        self.animationName = "airborne"
     elseif self.xVel == 0 then
         self.animationName = "idle"
     else
-        -- self.animationName = "walk"
+        self.animationName = "walk"
     end
     -- Reset starting frame to 1 if state has changed
     if current_state ~= self.animationName then
@@ -233,6 +247,9 @@ function Player:drawBody()
 end
 
 function Player:update(dt)
+    if self.id == 1 then
+        print(self.animationName)
+    end
     local current_frame = self.animation[self.animationName]:getFrame()
     local current_anim = self.animationName
     -- Apply physics
@@ -245,9 +262,8 @@ function Player:update(dt)
         self:moveKeyboard(dt)
     end
     -- Increment Timers
-    self:increaseAttack1Timer(dt)
+    self:incrementTimers(dt)
     self:blockTimer(dt)
-    self:decreaseGraceTime(dt)
 
     self:updateHurtBox()
     self:updateHealthBar(dt)
@@ -300,7 +316,8 @@ function Player:moveJoystick(dt)
     local jump_logic = not self.grounded
     local block_logic = not self.blocking
     local attack_logic = not self.attack
-    local logic_test = block_logic and attack_logic or jump_logic
+    local land_logic = not self.landing
+    local logic_test = block_logic and attack_logic or jump_logic and land_logic
     if xdir > 0.3 and logic_test then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
@@ -335,9 +352,11 @@ function Player:moveJoystick(dt)
 end
 
 function Player:moveKeyboard(dt)
-    local block_logic = not self.blocking or not self.grounded
-    local attack_logic = not self.attack or not self.grounded
-    local logic_test = block_logic and attack_logic
+    local jump_logic = not self.grounded
+    local block_logic = not self.blocking
+    local attack_logic = not self.attack
+    local land_logic = not self.landing
+    local logic_test = block_logic and attack_logic or jump_logic and land_logic
     -- Set left animations
     if love.keyboard.isDown(self.left) and logic_test then
         if self.xVel > -self.maxSpeed then
@@ -426,8 +445,11 @@ function Player:land(collision)
 	self.currentGroundCollision = collision
 	self.yVel = 0
 	self.grounded = true
+    self.airborne = false
+    self.landing = true
     self.hasDoubleJump = true
     self.graceTime = self.graceDuration
+    self.jump_timer = 0
 end
 
 function Player:jump()
@@ -436,10 +458,12 @@ function Player:jump()
             if self.grounded then
                 self.yVel = self.jumpAmount
                 self.grounded = false
-                --self.graceTime = 0
+                self.jumping = true
             elseif self.hasDoubleJump and self.graceTime < 0 then
                 self.hasDoubleJump = false
                 self.yVel = self.jumpAmount
+                self.jumping = true
+                self.jump_timer = 0
             end
         end
     else
@@ -447,18 +471,15 @@ function Player:jump()
             if self.grounded or self.graceTime > 0 then
                 self.yVel = self.jumpAmount
                 self.grounded = false
+                self.jumping = true
                 --self.graceTime = 0
             elseif self.hasDoubleJump then
                 self.hasDoubleJump = false
                 self.yVel = self.jumpAmount
+                self.jumping = true
+                self.jump_timer = 0
             end
         end
-    end
-end
-
-function Player:decreaseGraceTime(dt)
-    if not self.grounded then
-        self.graceTime = self.graceTime - dt
     end
 end
 
@@ -475,6 +496,41 @@ function Player:attack_1()
     end
     if not current_attack and self.attack then
         self.original_x = self.physics.body:getX()
+    end
+end
+
+function Player:incrementTimers(dt)
+    -- Jump timers
+    if not self.grounded then
+        self.jump_timer = self.jump_timer + dt
+        self.graceTime = self.graceTime - dt
+    end
+    if self.jump_timer > self.jump_duration then
+        self.jumping = false
+        self.jump_timer = 0
+        if not self.grounded then
+            self.airborne = true
+        end
+    end
+    -- Land timers
+    if self.landing then
+        self.land_timer = self.land_timer + dt
+    end
+    if self.land_timer > self.land_duration then
+        self.landing = false
+        self.land_timer = 0
+    end
+    -- Attack timer
+    if self.attack then
+        if self.attack_timer == 0 then
+            self.animation[self.animationName]:setFrame(1)
+        end
+        self.attack_timer = self.attack_timer + dt
+    end
+    if self.attack_timer > self.attack_1_duration then
+        self.attack = false
+        self.attack_timer = 0
+        -- self.original_x = self.original_x - self.a1["f1"]["x"]
     end
 end
 

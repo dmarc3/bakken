@@ -22,6 +22,7 @@ function fight_scene:load()
     Ground.fixture = love.physics.newFixture(Ground.body, Ground.shape)
     Ground.fixture:setFriction(Friction)
     Ground.fixture:setUserData("ground")
+    Ground.y = WindowHeight/GlobalScale + 10
     Walls = {}
     Walls.left = {}
     Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")

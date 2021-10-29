@@ -15,6 +15,9 @@ body_height_pad=0.38
 x_shift_pad=0.585
 idle_duration=0.6
 attack_1_duration=1.16
+jump_duration=0.5
+airborne_duration=0.8
+land_duration=0.15
 block_start_dur=0.40
 block_end_dur=0.45
 
