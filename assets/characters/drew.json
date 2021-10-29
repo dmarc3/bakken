@@ -42,7 +42,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 400
    },
    {
     "filename": "drew 5.aseprite",
@@ -51,7 +51,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "drew 6.aseprite",
@@ -60,7 +60,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "drew 7.aseprite",
@@ -69,7 +69,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 100
    },
    {
     "filename": "drew 8.aseprite",
@@ -96,7 +96,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 50
+    "duration": 100
    },
    {
     "filename": "drew 11.aseprite",
@@ -105,7 +105,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "drew 12.aseprite",
@@ -114,7 +114,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 50
    },
    {
     "filename": "drew 13.aseprite",
@@ -123,7 +123,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 100
    },
    {
     "filename": "drew 14.aseprite",
@@ -132,7 +132,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 100
    },
    {
     "filename": "drew 15.aseprite",
@@ -177,7 +177,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 25
+    "duration": 150
    },
    {
     "filename": "drew 20.aseprite",
@@ -186,7 +186,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 25
+    "duration": 150
    },
    {
     "filename": "drew 21.aseprite",
@@ -195,7 +195,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 25
    },
    {
     "filename": "drew 22.aseprite",
@@ -204,7 +204,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 25
    },
    {
     "filename": "drew 23.aseprite",
@@ -222,7 +222,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "drew 25.aseprite",
@@ -231,7 +231,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "drew 26.aseprite",
@@ -240,7 +240,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 50
+    "duration": 200
    },
    {
     "filename": "drew 27.aseprite",
@@ -249,7 +249,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 50
+    "duration": 200
    },
    {
     "filename": "drew 28.aseprite",
@@ -267,7 +267,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 50
    },
    {
     "filename": "drew 30.aseprite",
@@ -276,7 +276,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 50
    },
    {
     "filename": "drew 31.aseprite",
@@ -294,7 +294,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 400
+    "duration": 150
    },
    {
     "filename": "drew 33.aseprite",
@@ -303,7 +303,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 400
+    "duration": 150
    },
    {
     "filename": "drew 34.aseprite",
@@ -312,7 +312,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 400
    },
    {
     "filename": "drew 35.aseprite",
@@ -321,7 +321,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 150
+    "duration": 400
    },
    {
     "filename": "drew 36.aseprite",
@@ -330,7 +330,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "drew 37.aseprite",
@@ -339,7 +339,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 125
+    "duration": 150
    },
    {
     "filename": "drew 38.aseprite",
@@ -348,7 +348,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 125
+    "duration": 200
    },
    {
     "filename": "drew 39.aseprite",
@@ -367,6 +367,24 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
     "duration": 125
+   },
+   {
+    "filename": "drew 41.aseprite",
+    "frame": { "x": 2050, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 125
+   },
+   {
+    "filename": "drew 42.aseprite",
+    "frame": { "x": 2100, "y": 0, "w": 50, "h": 58 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "sourceSize": { "w": 50, "h": 58 },
+    "duration": 125
    }
  ],
  "meta": {
@@ -374,19 +392,20 @@
   "version": "1.2.30-x64",
   "image": "drew.png",
   "format": "RGBA8888",
-  "size": { "w": 2050, "h": 58 },
+  "size": { "w": 2150, "h": 58 },
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 3, "direction": "forward" },
-   { "name": "attack 1", "from": 4, "to": 12, "direction": "forward" },
-   { "name": "walk forward", "from": 13, "to": 18, "direction": "forward" },
-   { "name": "jump", "from": 19, "to": 23, "direction": "forward" },
-   { "name": "airborne", "from": 24, "to": 25, "direction": "forward" },
-   { "name": "land", "from": 26, "to": 28, "direction": "forward" },
-   { "name": "block start", "from": 29, "to": 31, "direction": "forward" },
-   { "name": "block", "from": 32, "to": 33, "direction": "forward" },
-   { "name": "block end", "from": 34, "to": 36, "direction": "forward" },
-   { "name": "hit", "from": 37, "to": 40, "direction": "forward" }
+   { "name": "couch_idle", "from": 4, "to": 5, "direction": "forward" },
+   { "name": "attack 1", "from": 6, "to": 14, "direction": "forward" },
+   { "name": "walk forward", "from": 15, "to": 20, "direction": "forward" },
+   { "name": "jump", "from": 21, "to": 25, "direction": "forward" },
+   { "name": "airborne", "from": 26, "to": 27, "direction": "forward" },
+   { "name": "land", "from": 28, "to": 30, "direction": "forward" },
+   { "name": "block start", "from": 31, "to": 33, "direction": "forward" },
+   { "name": "block", "from": 34, "to": 35, "direction": "forward" },
+   { "name": "block end", "from": 36, "to": 38, "direction": "forward" },
+   { "name": "hit", "from": 39, "to": 42, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
