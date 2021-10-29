@@ -295,6 +295,42 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
     "duration": 200
+   },
+   {
+    "filename": "lilah 33.aseprite",
+    "frame": { "x": 1650, "y": 0, "w": 50, "h": 34 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
+    "sourceSize": { "w": 50, "h": 34 },
+    "duration": 125
+   },
+   {
+    "filename": "lilah 34.aseprite",
+    "frame": { "x": 1700, "y": 0, "w": 50, "h": 34 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
+    "sourceSize": { "w": 50, "h": 34 },
+    "duration": 125
+   },
+   {
+    "filename": "lilah 35.aseprite",
+    "frame": { "x": 1750, "y": 0, "w": 50, "h": 34 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
+    "sourceSize": { "w": 50, "h": 34 },
+    "duration": 125
+   },
+   {
+    "filename": "lilah 36.aseprite",
+    "frame": { "x": 1800, "y": 0, "w": 50, "h": 34 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
+    "sourceSize": { "w": 50, "h": 34 },
+    "duration": 125
    }
  ],
  "meta": {
@@ -302,7 +338,7 @@
   "version": "1.2.29-x64",
   "image": "lilah.png",
   "format": "RGBA8888",
-  "size": { "w": 1650, "h": 34 },
+  "size": { "w": 1850, "h": 34 },
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 3, "direction": "forward" },
@@ -311,7 +347,8 @@
    { "name": "jump", "from": 17, "to": 25, "direction": "forward" },
    { "name": "block start", "from": 26, "to": 28, "direction": "forward" },
    { "name": "block", "from": 29, "to": 29, "direction": "forward" },
-   { "name": "block end", "from": 30, "to": 32, "direction": "forward" }
+   { "name": "block end", "from": 30, "to": 32, "direction": "forward" },
+   { "name": "hit", "from": 33, "to": 36, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },

@@ -19,7 +19,7 @@ function Player:new(id, char)
     instance.asepriteMeta = "assets/Characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        -- walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
         -- jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
         block = peachy.new(instance.asepriteMeta, instance.spritesheet, "block"),
         block_start = peachy.new(instance.asepriteMeta, instance.spritesheet, "block start"),
@@ -40,7 +40,7 @@ function Player:new(id, char)
     instance.attack_1_duration = attack_1_duration
     instance.idle = idle
     instance.a1 = a1
-    instance.walk = walk
+    -- instance.walk = walk
     instance.block_start = block_start
     instance.block = block
     instance.block_end = block_end
@@ -203,7 +203,7 @@ function Player:setState()
     elseif self.xVel == 0 then
         self.animationName = "idle"
     else
-        self.animationName = "walk"
+        -- self.animationName = "walk"
     end
     -- Reset starting frame to 1 if state has changed
     if current_state ~= self.animationName then
@@ -398,7 +398,7 @@ function Player:drawHitBox(anim)
             self.a1.hitbox.fixture:setSensor(true)
             self.a1.hitbox.fixture:setUserData("sensor"..self.id)
             if Debug then
-                love.graphics.setColor(1, 1, 1, 0.5)
+                love.graphics.setColor(1, 1, 1, 0.25)
                 love.graphics.polygon("fill", self[anim].hitbox.body:getWorldPoints(self[anim].hitbox.shape:getPoints()))
                 love.graphics.setColor(1, 1, 1)
             end

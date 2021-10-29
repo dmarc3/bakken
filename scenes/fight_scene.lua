@@ -59,6 +59,7 @@ function fight_scene:load()
     Backyard.toys_top_transparent = peachy.new(asepriteMeta, spritesheet, "toys_top_transparent")
     Backyard.toys_bottom = peachy.new(asepriteMeta, spritesheet, "toys_bottom")
     Backyard.clouds = peachy.new(asepriteMeta, spritesheet, "clouds")
+    cloudx = 0
     player1 = nil
     player2 = nil
 end
@@ -76,6 +77,7 @@ function fight_scene:update(dt, gameState)
     World:update(dt)
     player1:update(dt)
     player2:update(dt)
+    self:updateBackground(dt)
     CheckKeys()
 end
 
@@ -100,7 +102,11 @@ function fight_scene:draw(sx, sy)
             love.graphics.print("MouseY: "..love.mouse:getY(), 20, 160)
         end
     end
+end
 
+function fight_scene:updateBackground(dt)
+    Backyard.base:update(dt)
+    cloudx = cloudx - 0.02
 end
 
 function fight_scene:drawForeground()
@@ -110,7 +116,7 @@ end
 
 function fight_scene:drawBackground()
     Backyard.base:draw(0,0)
-    Backyard.clouds:draw(0,0)
+    Backyard.clouds:draw(cloudx,0)
     Backyard.foreground:draw(0,0)
     if Debug then
         --[[ love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
