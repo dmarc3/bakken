@@ -254,7 +254,7 @@ end
 
 function Player:update(dt)
     if self.id == 1 then
-        print(self.animationName)
+        print(self.yVel)
     end
     local current_frame = self.animation[self.animationName]:getFrame()
     local current_anim = self.animationName
@@ -449,6 +449,7 @@ function Player:applyFriction(dt)
 end
 
 function Player:land(collision)
+    print("landing!")
 	self.currentGroundCollision = collision
 	self.yVel = 0
 	self.grounded = true
@@ -624,8 +625,8 @@ end
 function Player:beginContact(a, b, collision)
 	-- print("Being Contact!")
     if self.grounded == true then return end
-    local logic_a = a:getUserData() == "player"..self.id and (b:getUserData() == "ground" or b:getUserData() == "player"..self.enemy_id)
-    local logic_b = b:getUserData() == "player"..self.id and (a:getUserData() == "ground" or a:getUserData() == "player"..self.enemy_id)
+    local logic_a = a:getUserData() == "player"..self.id and (b:getUserData() == "ground" or b:getUserData() == "player"..self.enemy_id or b:getUserData() == "obstacle")
+    local logic_b = b:getUserData() == "player"..self.id and (a:getUserData() == "ground" or a:getUserData() == "player"..self.enemy_id or a:getUserData() == "obstacle")
 	local nx, ny = collision:getNormal()
 	if logic_a then
 		if ny > 0 then
@@ -640,8 +641,8 @@ end
 
 function Player:endContact(a, b, collision)
     -- print("End Contact!")
-    local logic_a = a:getUserData() == "player"..self.id and b:getUserData() == "ground"
-    local logic_b = b:getUserData() == "player"..self.id and a:getUserData() == "ground"
+    local logic_a = a:getUserData() == "player"..self.id and (b:getUserData() == "ground" or b:getUserData() == "player"..self.enemy_id or b:getUserData() == "obstacle")
+    local logic_b = b:getUserData() == "player"..self.id and (a:getUserData() == "ground" or a:getUserData() == "player"..self.enemy_id or a:getUserData() == "obstacle")
 	if logic_a or logic_b then
 		if self.currentGroundCollision == collision then
 			self.grounded = false
