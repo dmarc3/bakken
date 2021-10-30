@@ -60,6 +60,21 @@ function fight_scene:load()
     Backyard.toys_top_transparent = peachy.new(asepriteMeta, spritesheet, "toys_top_transparent")
     Backyard.toys_bottom = peachy.new(asepriteMeta, spritesheet, "toys_bottom")
     Backyard.clouds = peachy.new(asepriteMeta, spritesheet, "clouds")
+
+    local spritesheet = love.graphics.newImage("assets/ui/fight.png")
+    local asepriteMeta = "assets/ui/fight.json"
+    Fight = {}
+    Fight.x = 0
+    -- Fight.x = 3*WindowWidth/GlobalScale/4
+    Fight.y = 3*WindowHeight/GlobalScale/4
+    Fight.zoomin = peachy.new(asepriteMeta, spritesheet, "zoomin")
+    Fight.kabam = peachy.new(asepriteMeta, spritesheet, "kabam")
+    self.fight_duration = 1.0
+    self.fight_timer = 0
+    self.fight_timer2 = 0
+    self.fight = false
+    
+
     cloudx = 0
     player1 = nil
     player2 = nil
@@ -67,6 +82,10 @@ end
   
 
 function fight_scene:update(dt, gameState)
+    self:incrementTimers(dt)
+    if not self.fight then
+        ResetInputs()
+    end
     if player1 == nil then
         player1 = player:new(1, gameState.player1)
         player1:load()
@@ -78,6 +97,7 @@ function fight_scene:update(dt, gameState)
     World:update(dt)
     player1:update(dt)
     player2:update(dt)
+    self:updateFight(dt)
     self:updateBackground(dt)
     CheckKeys()
 end
@@ -93,6 +113,7 @@ function fight_scene:draw(sx, sy)
         player2:draw()
     end
     self:drawForeground()
+    self:drawFight()
     love.graphics.pop()
 
     if Debug then
@@ -132,7 +153,43 @@ function fight_scene:drawBackground()
         love.graphics.rectangle("fill", gx, gy, 1, 1)
     end
     love.graphics.setColor(1, 1, 1, 1)
+end
 
+function fight_scene:incrementTimers(dt)
+    self.fight_timer = self.fight_timer + dt
+end
+
+function fight_scene:updateFight(dt)
+    Fight.zoomin:update(dt)
+    Fight.kabam:update(dt)
+    if self.fight_timer < self.fight_duration then
+        -- Fight.x = Fight.x - 3*(WindowWidth/GlobalScale/self.fight_duration)*dt/4
+        Fight.y = Fight.y - 3*(WindowHeight/GlobalScale/self.fight_duration)*dt/4
+    end
+end
+
+function fight_scene:drawFight()
+    if self.fight_timer < self.fight_duration then
+        Fight.kabam:draw(Fight.x, Fight.y)
+    elseif self.fight_timer < self.fight_duration*2 then
+        Fight.kabam:draw(Fight.x, Fight.y)
+    elseif self.fight_timer < self.fight_duration*3 then
+        love.graphics.setColor(1, 1, 1, (3-self.fight_timer/self.fight_duration))
+        Fight.kabam:draw(Fight.x, Fight.y)
+        love.graphics.setColor(1, 1, 1, 1)
+    else
+        self.fight = true
+    end
+end
+
+function ResetInputs()
+    KeysPressed = {}
+    ButtonsPressed = {}
+    ButtonsPressed[1] = {}
+    ButtonsPressed[2] = {}
+    AxisMoved = {}
+    AxisMoved[1] = {}
+    AxisMoved[2] = {}
 end
 
 function beginContact(a, b, collision)
@@ -163,21 +220,6 @@ function endContact(a, b, collision)
 	player1:endContact(a, b, collision)
     player2:endContact(a, b, collision)
 end
-
---[[ function love.gamepadpressed(joystick, button)
-    -- print(button)
-    if joystick:getID() == 1 then
-        player1:jump(button)
-        if button == "x" then
-            player1.attack = true
-        end
-    else
-        player2:jump(button)
-        if button == "x" then
-            player2.attack = true
-        end
-    end
-end ]]
 
 function CheckKeys()
     local function pconcat(tab)
