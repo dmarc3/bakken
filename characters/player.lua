@@ -149,6 +149,12 @@ function Player:load()
     self.land_timer = 0
     self.damaged = false
     self.damage_timer = 0
+    self.sprinting = false
+    self.sprint_timer = 0
+    self.sprint_dt = 0.3
+    self.start_sprint_timer = false
+    self.lastPress = nil
+    self.lastAxis = nil
     self.anim_shift = 0
     self.blocking = false
     self.block_timer = 0
@@ -168,8 +174,6 @@ function Player:load()
     self.physics.fixture:setUserData("player"..self.id)
     -- Hitbox / Hurtbox
     self.health = 92
-    self.hurtbox = {}
-    self:updateHurtBox()
     self.move = false
     self.invuln = false
     self.invuln_timer = 0
@@ -254,7 +258,7 @@ end
 
 function Player:update(dt)
     if self.id == 1 then
-        print(self.yVel)
+        -- print(self.sprinting)
     end
     local current_frame = self.animation[self.animationName]:getFrame()
     local current_anim = self.animationName
@@ -269,11 +273,10 @@ function Player:update(dt)
     end
     -- Increment Timers
     self:incrementTimers(dt)
-    self:blockTimer(dt)
 
-    self:updateHurtBox()
     self:updateHealthBar(dt)
     -- Update Animation
+    self:detectSprint(dt)
     self:setState()
     self.animation[self.animationName]:update(dt)
     if current_frame ~= self.animation[self.animationName]:getFrame() or current_anim ~= self.animationName then
@@ -285,31 +288,12 @@ function Player:update(dt)
 end
 
 function Player:updateHealthBar(dt)
-    -- Process health bar
-    if self.hb_anim == true then
-        self.hb_anim_timer = self.hb_anim_timer + dt
-    end
-    if self.hb_anim_timer > 0.005 then
-        if self.hb_frame < 93 then
-            self.hb_animation:nextFrame()
-            self.hb_frame = self.hb_frame + 1
-        end
-    end
     if self.health == 93 - self.hb_animation:getFrame() then
         self.hb_anim = false
         self.hb_anim_timer = 0
     end
     self.hb_animation:setFrame(self.hb_frame)
     self.hb_animation:update(dt)
-
-    -- Process invulnerability
-    if self.invuln == true then
-        self.invuln_timer = self.invuln_timer + dt
-    end
-    if self.invuln_timer > 0.7 then
-        self.invuln = false
-        self.invuln_timer = 0
-    end
 end
 
 function Player:syncPhysics()
@@ -318,40 +302,37 @@ function Player:syncPhysics()
 end
 
 function Player:moveJoystick(dt)
-    local xdir = self.joystick:getGamepadAxis("leftx")
     local jump_logic = not self.grounded
     local block_logic = not self.blocking
     local attack_logic = not self.attack
     local land_logic = not self.landing
-    local logic_test = block_logic and attack_logic or jump_logic and land_logic
-    if xdir > 0.3 and logic_test then
+    local logic_test = (block_logic and attack_logic) or (jump_logic and land_logic)
+    if AxisMoved[self.id]["leftx"] ~= nil and logic_test then
+        if AxisMoved[self.id]["leftx"] > 0 then
+            if self.xVel < self.maxSpeed then
+                self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
+            end
+            self.original_x = self.original_x + self.xVel * dt
+            self.xDir = 1
+        elseif AxisMoved[self.id]["leftx"] < 0 then
+            if self.xVel > -self.maxSpeed then
+                self.xVel = math.max(self.xVel - self.acceleration * dt, -self.maxSpeed)
+            end
+            self.original_x = self.original_x + self.xVel * dt
+            self.xDir = -1
+        end
+    elseif ButtonsPressed[self.id][self.right] and logic_test then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = 1
-        self.xShift = 0
-    elseif self.joystick:isGamepadDown(self.left) and logic_test then
+    elseif ButtonsPressed[self.id][self.left] and logic_test then
         if self.xVel > -self.maxSpeed then
-            self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
+            self.xVel = math.max(self.xVel - self.acceleration * dt, -self.maxSpeed)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
-        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
-    elseif xdir < -0.3 and logic_test then
-        if self.xVel > -self.maxSpeed then
-            self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
-        end
-        self.original_x = self.original_x + self.xVel * dt
-        self.xDir = -1
-        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
-    elseif self.joystick:isGamepadDown(self.right) and logic_test then
-        if self.xVel < self.maxSpeed then
-            self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
-        end
-        self.original_x = self.original_x + self.xVel * dt
-        self.xDir = 1
-        self.xShift = 0
     else
         self:applyFriction(dt)
     end
@@ -362,27 +343,76 @@ function Player:moveKeyboard(dt)
     local block_logic = not self.blocking
     local attack_logic = not self.attack
     local land_logic = not self.landing
-    local logic_test = block_logic and attack_logic or jump_logic and land_logic
+    local logic_test = (block_logic and attack_logic) or (jump_logic and land_logic)
     -- Set left animations
-    if love.keyboard.isDown(self.left) and logic_test then
-        if self.xVel > -self.maxSpeed then
-            self.xVel = math.min(self.xVel - self.acceleration * dt, -self.maxSpeed)
-        end
-        self.original_x = self.original_x + self.xVel * dt
-        self.xDir = -1
-        self.xShift = self.x_shift_pad*self.animation[self.animationName]:getWidth()
-    -- Set right animations
-    elseif love.keyboard.isDown(self.right) and logic_test then
+    if KeysPressed[self.right] and logic_test then
         if self.xVel < self.maxSpeed then
             self.xVel = math.min(self.xVel + self.acceleration * dt, self.maxSpeed)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = 1
-        self.xShift = 0
+    elseif KeysPressed[self.left] and logic_test then
+        if self.xVel > -self.maxSpeed then
+            self.xVel = math.max(self.xVel - self.acceleration * dt, -self.maxSpeed)
+        end
+        self.original_x = self.original_x + self.xVel * dt
+        self.xDir = -1
     else
         self:applyFriction(dt)
     end
 
+end
+
+function Player:detectSprint(dt)
+    -- Start Sprint
+    if AxisMoved[self.id]["leftx"] ~= nil and self.lastAxis == nil then
+        if self.start_sprint_timer and self.sprint_timer < self.sprint_dt then
+            self.sprinting = true
+            self.sprint_timer = 0
+            self.start_sprint_timer = false
+            self.acceleration = self.acceleration * 2
+            self.maxSpeed = self.maxSpeed * 2
+        else
+            self.start_sprint_timer = true
+            self.sprint_timer = 0
+        end
+    elseif (ButtonsPressed[self.id][self.left] ~= nil or ButtonsPressed[self.id][self.right] ~= nil) and self.lastPress == nil then
+        if self.start_sprint_timer and self.sprint_timer < self.sprint_dt then
+            self.sprinting = true
+            self.sprint_timer = 0
+            self.start_sprint_timer = false
+            self.acceleration = self.acceleration * 2
+            self.maxSpeed = self.maxSpeed * 2
+        else
+            self.start_sprint_timer = true
+            self.sprint_timer = 0
+        end
+    elseif (KeysPressed[self.left] ~= nil or KeysPressed[self.right] ~= nil) and self.lastPress == nil then
+        if self.start_sprint_timer and self.sprint_timer < self.sprint_dt then
+            self.sprinting = true
+            self.sprint_timer = 0
+            self.start_sprint_timer = false
+            self.acceleration = self.acceleration * 2
+            self.maxSpeed = self.maxSpeed * 2
+        else
+            self.start_sprint_timer = true
+            self.sprint_timer = 0
+        end
+    end
+    -- End Sprint
+    local axis_logic = AxisMoved[self.id]["leftx"] == nil
+    local button_logic =  not ButtonsPressed[self.id][self.left] and not ButtonsPressed[self.id][self.right]
+    local keys_logic = not KeysPressed[self.left] and not KeysPressed[self.right]
+    local pressed_logic = axis_logic and button_logic and keys_logic
+    if self.sprinting and (pressed_logic or self.blocking or self.attack) then
+        self.sprinting = false
+        self.sprint_timer = 0
+        self.acceleration = self.acceleration / 2
+        self.maxSpeed = self.maxSpeed / 2
+    end
+    -- Record current button press
+    self.lastAxis = AxisMoved[self.id]["leftx"]
+    self.lastPress = ButtonsPressed[self.id][self.left] or ButtonsPressed[self.id][self.right] or KeysPressed[self.left] or KeysPressed[self.right]
 end
 
 function Player:damage(d)
@@ -395,19 +425,6 @@ function Player:damage(d)
     self.hb_anim = true
     self.invuln = true
     self.invuln_timer = 0
-end
-
-function Player:drawHurtBox()
-    love.graphics.setColor(self.red, self.green, self.blue, 0.15)
-	love.graphics.rectangle("fill", self.hurtbox.x, self.hurtbox.y, self.hurtbox.width, self.hurtbox.height)
-	love.graphics.setColor(1, 1, 1)
-end
-
-function Player:updateHurtBox()
-    self.hurtbox.width = self.xDir*self.width
-    self.hurtbox.height = self.height
-    self.hurtbox.x = self.x + self.xShift - self.width/2
-    self.hurtbox.y = self.y
 end
 
 function Player:drawHitBox(anim)
@@ -449,7 +466,6 @@ function Player:applyFriction(dt)
 end
 
 function Player:land(collision)
-    print("landing!")
 	self.currentGroundCollision = collision
 	self.yVel = 0
 	self.grounded = true
@@ -508,7 +524,11 @@ function Player:attack_1()
 end
 
 function Player:incrementTimers(dt)
-    -- Damage timers
+    -- Sprint timer
+    if self.start_sprint_timer then
+        self.sprint_timer = self.sprint_timer + dt
+    end
+    -- Damage timer
     if self.damaged then
         self.damage_timer = self.damage_timer + dt
     end
@@ -528,7 +548,7 @@ function Player:incrementTimers(dt)
             self.airborne = true
         end
     end
-    -- Land timers
+    -- Land timer
     if self.landing then
         self.land_timer = self.land_timer + dt
     end
@@ -546,21 +566,36 @@ function Player:incrementTimers(dt)
     if self.attack_timer > self.attack_1_duration then
         self.attack = false
         self.attack_timer = 0
-        -- self.original_x = self.original_x - self.a1["f1"]["x"]
     end
-end
-
-function Player:increaseAttack1Timer(dt)
-    if self.attack then
-        if self.attack_timer == 0 then
-            self.animation[self.animationName]:setFrame(1)
+    -- Block timer
+    if self.blocking then
+        self.block_timer = self.block_timer + dt
+    elseif self.end_block then
+        self.block_timer = self.block_timer + dt
+    else
+        self.block_timer = 0
+    end
+    if self.end_block and self.block_timer > self.block_end_dur then
+        self.end_block = false
+        self.block_timer = 0
+    end
+    -- Health Bar timer
+    if self.hb_anim then
+        self.hb_anim_timer = self.hb_anim_timer + dt
+    end
+    if self.hb_anim_timer > 0.005 then
+        if self.hb_frame < 93 then
+            self.hb_animation:nextFrame()
+            self.hb_frame = self.hb_frame + 1
         end
-        self.attack_timer = self.attack_timer + dt
     end
-    if self.attack_timer > self.attack_1_duration then
-        self.attack = false
-        self.attack_timer = 0
-        -- self.original_x = self.original_x - self.a1["f1"]["x"]
+    -- Invulnerability timer
+    if self.invuln == true then
+        self.invuln_timer = self.invuln_timer + dt
+    end
+    if self.invuln_timer > 0.7 then
+        self.invuln = false
+        self.invuln_timer = 0
     end
 end
 
@@ -591,22 +626,6 @@ function Player:blocks()
     end
 end
 
-function Player:blockTimer(dt)
-    -- Increment block timer
-    if self.blocking then
-        self.block_timer = self.block_timer + dt
-    elseif self.end_block then
-        self.block_timer = self.block_timer + dt
-    else
-        self.block_timer = 0
-    end
-    -- Detect completion of end block
-    if self.end_block and self.block_timer > self.block_end_dur then
-        self.end_block = false
-        self.block_timer = 0
-    end
-end
-
 function Player:deleteBodies()
     if self.delete_bodies ~= {} then
         local bodies = World:getBodies()
@@ -631,11 +650,15 @@ function Player:beginContact(a, b, collision)
 	if logic_a then
 		if ny > 0 then
 			self:land(collision)
-		end
+        elseif ny < 0 then
+            self.yVel = 0
+        end
 	elseif logic_b then
 		if ny < 0 then
 			self:land(collision)
-		end
+        elseif ny > 0 then
+            self.yVel = 0
+        end
 	end
 end
 
