@@ -19,11 +19,13 @@ function Player:new(id, char)
     instance.asepriteMeta = "assets/Characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
+        --walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
         jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
         airborne = peachy.new(instance.asepriteMeta, instance.spritesheet, "airborne"),
         land = peachy.new(instance.asepriteMeta, instance.spritesheet, "land"),
-        hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "hit"),
+        --hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "hit"),
+        hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
         block = peachy.new(instance.asepriteMeta, instance.spritesheet, "block"),
         block_start = peachy.new(instance.asepriteMeta, instance.spritesheet, "block start"),
         block_end = peachy.new(instance.asepriteMeta, instance.spritesheet, "block end"),
