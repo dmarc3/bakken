@@ -141,7 +141,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 200
+    "duration": 400
    },
    {
     "filename": "sam 16.aseprite",
@@ -150,7 +150,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 200
+    "duration": 400
    },
    {
     "filename": "sam 17.aseprite",
@@ -159,7 +159,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 100
+    "duration": 50
    },
    {
     "filename": "sam 18.aseprite",
@@ -168,7 +168,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 100
+    "duration": 50
    },
    {
     "filename": "sam 19.aseprite",
@@ -177,7 +177,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 100
+    "duration": 50
    },
    {
     "filename": "sam 20.aseprite",
@@ -186,7 +186,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 100
+    "duration": 50
    },
    {
     "filename": "sam 21.aseprite",
@@ -222,7 +222,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 200
+    "duration": 400
    },
    {
     "filename": "sam 25.aseprite",
@@ -231,7 +231,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 36, "h": 58 },
     "sourceSize": { "w": 36, "h": 58 },
-    "duration": 200
+    "duration": 400
    },
    {
     "filename": "sam 26.aseprite",
