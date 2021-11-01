@@ -55,18 +55,26 @@ function fight_scene:load()
     local asepriteMeta = "assets/levels/backyard.json"
     Backyard = {}
     Backyard.base = peachy.new(asepriteMeta, spritesheet, "idle")
+    Backyard.bush = peachy.new(asepriteMeta, spritesheet, "bush")
+    Backyard.tree = peachy.new(asepriteMeta, spritesheet, "tree")
     Backyard.foreground = peachy.new(asepriteMeta, spritesheet, "foreground")
+    Backyard.toys = peachy.new(asepriteMeta, spritesheet, "toys")
     Backyard.toys_top = peachy.new(asepriteMeta, spritesheet, "toys_top")
     Backyard.toys_top_transparent = peachy.new(asepriteMeta, spritesheet, "toys_top_transparent")
     Backyard.toys_bottom = peachy.new(asepriteMeta, spritesheet, "toys_bottom")
-    Backyard.clouds = peachy.new(asepriteMeta, spritesheet, "clouds")
+    Backyard.sun = peachy.new(asepriteMeta, spritesheet, "sun")
+    Backyard.clouds1 = peachy.new(asepriteMeta, spritesheet, "clouds")
+    Backyard.clouds2 = peachy.new(asepriteMeta, spritesheet, "clouds")
+    Backyard.bird1 = peachy.new(asepriteMeta, spritesheet, "bird")
+    Backyard.bird2 = peachy.new(asepriteMeta, spritesheet, "bird")
 
     local spritesheet = love.graphics.newImage("assets/ui/fight.png")
     local asepriteMeta = "assets/ui/fight.json"
     Fight = {}
     Fight.x = 0
-    -- Fight.x = 3*WindowWidth/GlobalScale/4
     Fight.y = 3*WindowHeight/GlobalScale/4
+    Fight.x0 = Fight.x
+    Fight.y0 = Fight.y
     Fight.zoomin = peachy.new(asepriteMeta, spritesheet, "zoomin")
     Fight.kabam = peachy.new(asepriteMeta, spritesheet, "kabam")
     self.fight_duration = 1.0
@@ -74,18 +82,18 @@ function fight_scene:load()
     self.fight_timer2 = 0
     self.fight = false
     
+    -- Moving background
+    self.cloudx = 0
+    self.birdx = 100
+    self.sunx = 0
 
-    cloudx = 0
     player1 = nil
     player2 = nil
 end
   
 
 function fight_scene:update(dt, gameState)
-    self:incrementTimers(dt)
-    if not self.fight then
-        ResetInputs()
-    end
+    -- Load players for the first time
     if player1 == nil then
         player1 = player:new(1, gameState.player1)
         player1:load()
@@ -93,6 +101,15 @@ function fight_scene:update(dt, gameState)
     if player2 == nil then
         player2 = player:new(2, gameState.player2)
         player2:load()
+    end
+    -- Increment Timers
+    self:incrementTimers(dt)
+    -- Supress controller inputs
+    if not self.fight or player1.knocked_out or player2.knocked_out then
+        ResetInputs()
+        if player1.knocked_out or player2.knocked_out then
+            self:resetFighters(dt)
+        end
     end
     World:update(dt)
     player1:update(dt)
@@ -128,7 +145,27 @@ end
 
 function fight_scene:updateBackground(dt)
     Backyard.base:update(dt)
-    cloudx = cloudx - 0.02
+    Backyard.bush:update(dt)
+    Backyard.tree:update(dt)
+    Backyard.foreground:update(dt)
+    Backyard.toys:update(dt)
+    Backyard.toys_top:update(dt)
+    Backyard.toys_top_transparent:update(dt)
+    Backyard.toys_bottom:update(dt)
+    Backyard.bird1:update(dt)
+    Backyard.bird2:update(dt)
+    Backyard.clouds1:update(dt)
+    Backyard.clouds2:update(dt)
+    Backyard.sun:update(dt)
+    self.cloudx = self.cloudx - 0.02
+    if self.cloudx < -WindowWidth/GlobalScale then
+        self.cloudx = self.cloudx + WindowWidth/GlobalScale
+    end
+    self.birdx = self.birdx - 0.5
+    if self.birdx < -2*WindowWidth/GlobalScale then
+        self.birdx = self.birdx + 2*WindowWidth/GlobalScale
+    end
+    self.sunx = self.sunx - 0.001
 end
 
 function fight_scene:drawForeground()
@@ -138,7 +175,14 @@ end
 
 function fight_scene:drawBackground()
     Backyard.base:draw(0,0)
-    Backyard.clouds:draw(cloudx,0)
+    Backyard.bush:draw(0,0)
+    Backyard.tree:draw(0,0)
+    Backyard.toys:draw(0,0)
+    Backyard.sun:draw(self.sunx, 0)
+    Backyard.clouds1:draw(self.cloudx,0)
+    Backyard.clouds2:draw(self.cloudx+WindowWidth/GlobalScale,0)
+    Backyard.bird1:draw(self.birdx, 0)
+    Backyard.bird2:draw(self.birdx+2*WindowWidth/GlobalScale, 0)
     Backyard.foreground:draw(0,0)
     if Debug then
         --[[ love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
@@ -179,6 +223,51 @@ function fight_scene:drawFight()
         love.graphics.setColor(1, 1, 1, 1)
     else
         self.fight = true
+    end
+end
+
+function fight_scene:resetFighters(dt)
+    -- Reset player1
+    player1.physics.fixture:setMask(2)
+    if player1.x > player1.x0 then
+        if player1.joystick then
+            ButtonsPressed[player1.id][player1.left] = true
+        end
+    else
+        if player1.joystick then
+            ButtonsPressed[player1.id][player1.right] = true
+        end
+    end
+    if math.abs(player1.x - player1.x0) < 0.05*player1.x0 then
+        ButtonsPressed[player1.id][player1.left] = nil
+        ButtonsPressed[player1.id][player1.right] = nil
+        player1.physics.body:setPosition(player1.x0, player1.y0)
+        player1.xDir = 1.0
+    end
+    -- Reset player2
+    player2.physics.fixture:setMask(2)
+    if player2.x > player2.x0 then
+        if player2.joystick then
+            ButtonsPressed[player2.id][player2.left] = true
+        end
+    else
+        if player2.joystick then
+            ButtonsPressed[player2.id][player2.right] = true
+        end
+    end
+    if math.abs(player2.x - player2.x0) < 0.05*player2.x0 then
+        ButtonsPressed[player2.id][player2.left] = nil
+        ButtonsPressed[player2.id][player2.right] = nil
+        player2.physics.body:setPosition(player2.x0, player2.y0)
+        player2.xDir = -1.0
+    end
+    -- Switch boolean
+    if (player1.x - player1.x0 < 0.05*player1.x0) and (player2.x - player2.x0 < 0.05*player2.x0) then
+        player1.knocked_out = false
+        player2.knocked_out = false
+        player1.physics.fixture:setMask()
+        player2.physics.fixture:setMask()
+        self.fight = false
     end
 end
 

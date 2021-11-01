@@ -73,6 +73,10 @@ function Player:new(id, char)
     instance.hb_animation:pause()
     instance.hb_anim = false
     instance.hb_anim_timer = 0
+    instance.hb_lives_animation = peachy.new(instance.hb_asepriteMeta, instance.hb_spritesheet, "Lives")
+    instance.hb_lives_frame = 1
+    instance.hb_lives_animation:setFrame(instance.hb_lives_frame)
+    instance.hb_lives_animation:pause()
     if id == 1 then
         instance.x = WindowWidth/GlobalScale*0.2
         instance.y = WindowHeight/GlobalScale*0.8
@@ -129,6 +133,8 @@ end
 
 function Player:load()
     -- Define constants
+    self.x0 = self.x
+    self.y0 = self.y
     self.maxSpeed = 60
     self.acceleration = 4000
     self.friction = 3500
@@ -172,15 +178,19 @@ function Player:load()
     self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     self.physics.fixture:setUserData("player"..self.id)
+    self.physics.fixture:setCategory(2)
     -- Hitbox / Hurtbox
     self.health = 92
     self.move = false
+    self.knocked_out = false
     self.invuln = false
     self.invuln_timer = 0
+    self.reset_position = false
 end
 
 function Player:draw()
     self.hb_animation:draw(self.hb_x, self.hb_y)
+    self.hb_lives_animation:draw(self.hb_x, self.hb_y)
     if self.animationName == "a1" then
         self.animation[self.animationName]:draw(self.original_x,
                                                 self.y,
@@ -257,9 +267,6 @@ function Player:drawBody()
 end
 
 function Player:update(dt)
-    if self.id == 1 then
-        -- print(self.sprinting)
-    end
     local current_frame = self.animation[self.animationName]:getFrame()
     local current_anim = self.animationName
     -- Apply physics
@@ -292,8 +299,19 @@ function Player:updateHealthBar(dt)
         self.hb_anim = false
         self.hb_anim_timer = 0
     end
+    if self.health == 0 and self.hb_lives_frame ~= 3 then
+        print("Player"..self.id.." was knocked out!")
+        self.hb_lives_frame = self.hb_lives_frame + 1
+        self.health = 92
+        self.hb_frame = 1
+        self.hb_anim = false
+        self.hb_anim_timer = 0
+        self.knocked_out = true
+    end
     self.hb_animation:setFrame(self.hb_frame)
+    self.hb_lives_animation:setFrame(self.hb_lives_frame)
     self.hb_animation:update(dt)
+    self.hb_lives_animation:update(dt)
 end
 
 function Player:syncPhysics()
