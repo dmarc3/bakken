@@ -496,7 +496,7 @@ end
 
 function Player:jump()
     if self.joystick then
-        if ButtonsPressed[self.id][self.j] == true and not self.attack then
+        if ButtonsPressed[self.id][self.j] == true and not self.attack and not self.blocking then
             if self.grounded then
                 self.yVel = self.jumpAmount
                 self.grounded = false
@@ -509,7 +509,7 @@ function Player:jump()
             end
         end
     else
-        if KeysPressed[self.j] == true and not self.attack then
+        if KeysPressed[self.j] == true and not self.attack and not self.blocking then
             if self.grounded or self.graceTime > 0 then
                 self.yVel = self.jumpAmount
                 self.grounded = false
