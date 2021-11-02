@@ -4,7 +4,7 @@ local json = require("3rd/json/json")
 Player = {}
 Player.__index = Player
 
-function Player:new(id, char)
+function Player:new(id, char, x, y)
     local instance = setmetatable({}, Player)
     instance.id = id
     instance.char = char
@@ -103,8 +103,10 @@ function Player:new(id, char)
             instance.b = "q"
         end
     else
-        instance.x = WindowWidth/GlobalScale*0.7+instance.width/2
-        instance.y = WindowHeight/GlobalScale*0.8
+        -- instance.x = WindowWidth/GlobalScale*0.7+instance.width/2
+        instance.x = x
+        -- instance.y = WindowHeight/GlobalScale*0.8
+        instance.y = y
         instance.xShift = instance.x_shift_pad*instance.width
         instance.xDir = -1
         instance.hb_x = WindowWidth/GlobalScale-2-instance.hb_animation:getWidth()

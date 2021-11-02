@@ -15,7 +15,7 @@ function fight_scene:load()
     World = love.physics.newWorld(0, Meter*Gravity, false)
     World:setCallbacks(beginContact, endContact)
     -- Import level
-    local level = "bakke_backyard"
+    local level = "curlew"
     Level = require("levels/"..level)
     print(Level)
     Level:load()
@@ -43,11 +43,11 @@ end
 function fight_scene:update(dt, gameState)
     -- Load players for the first time
     if player1 == nil then
-        player1 = player:new(1, gameState.player1)
+        player1 = player:new(1, gameState.player1, Level.x1, Level.y1)
         player1:load()
     end
     if player2 == nil then
-        player2 = player:new(2, gameState.player2)
+        player2 = player:new(2, gameState.player2, Level.x2, Level.y2)
         player2:load()
     end
     -- Increment Timers

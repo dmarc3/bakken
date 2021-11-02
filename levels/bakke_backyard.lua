@@ -59,6 +59,10 @@ function Level:load()
     Backyard.bird1 = peachy.new(asepriteMeta, spritesheet, "bird")
     Backyard.bird2 = peachy.new(asepriteMeta, spritesheet, "bird")
     -- Define Constants
+    self.x1 = WindowWidth/GlobalScale*0.2
+    self.y1 = WindowHeight/GlobalScale*0.8
+    self.x2 = WindowWidth/GlobalScale*0.8
+    self.y2 = WindowHeight/GlobalScale*0.8
     self.cloudx = 0
     self.birdx = 100
     self.sunx = 0
