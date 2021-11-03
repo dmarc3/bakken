@@ -6,7 +6,7 @@ local player = require"characters/player"
 local fight_scene = scene:new("fight")
 
 -- Gravity = 9.81
-Gravity = 300
+Gravity = 10
 Meter = 64
 Friction = 0.0
 love.physics.setMeter(Meter)
@@ -17,7 +17,6 @@ function fight_scene:load()
     -- Import level
     local level = "curlew"
     Level = require("levels/"..level)
-    print(Level)
     Level:load()
 
     -- Import fight ui
@@ -50,6 +49,8 @@ function fight_scene:update(dt, gameState)
         player2 = player:new(2, gameState.player2, Level.x2, Level.y2)
         player2:load()
     end
+    -- print("Player 1 has mass of "..player1.physics.body:getMass())
+    -- print("Player 2 has mass of "..player2.physics.body:getMass())
     -- Increment Timers
     self:incrementTimers(dt)
     -- Supress controller inputs
@@ -173,6 +174,7 @@ function ResetInputs()
 end
 
 function beginContact(a, b, collision)
+    -- print("Begin contact between "..a:getUserData().." and "..b:getUserData())
     -- Process Damage
     if (a:getUserData() == "sensor1" and b:getUserData() == "player2") or (b:getUserData() == "sensor1" and a:getUserData() == "player2") then
         if not player2.invuln then
@@ -197,11 +199,12 @@ function beginContact(a, b, collision)
 end
 
 function endContact(a, b, collision)
+    -- print("End contact between "..a:getUserData().." and "..b:getUserData())
 	player1:endContact(a, b, collision)
     player2:endContact(a, b, collision)
 end
 
-function CheckKeys()
+function CheckKeys(dt)
     local function pconcat(tab)
         local keyset={}
         local n=0

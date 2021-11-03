@@ -79,10 +79,9 @@ function pickFighterScene:drawBackground()
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 40, WindowWidth/GlobalScale, 40)
     if Debug then
         love.graphics.setColor(0, 0, 0, 1)
-        gx, gy = Ground.body:getPosition()
-        love.graphics.rectangle("fill", gx-WindowWidth/GlobalScale/2, gy-10, WindowWidth/GlobalScale, 20)
+        love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale-20, WindowWidth/GlobalScale, 20)
         love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill", gx, gy, 1, 1)
+        love.graphics.rectangle("fill",  WindowHeight/GlobalScale-20, WindowWidth/GlobalScale, 1, 1)
     end
     love.graphics.setColor(1, 1, 1, 1)
 end

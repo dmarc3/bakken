@@ -42,7 +42,7 @@ AxisMoved[1] = {}
 AxisMoved[2] = {}
 
 -- Declare Debug Mode
-Debug = false
+Debug = true
 Debug_Pause = false
 Debug_Speed = 1.0
 

@@ -79,9 +79,9 @@ function Player:new(id, char, x, y)
     instance.hb_lives_frame = 1
     instance.hb_lives_animation:setFrame(instance.hb_lives_frame)
     instance.hb_lives_animation:pause()
+    instance.x = x
+    instance.y = y
     if id == 1 then
-        instance.x = WindowWidth/GlobalScale*0.2
-        instance.y = WindowHeight/GlobalScale*0.8
         instance.xShift = 0
         instance.xDir = 1
         instance.hb_x = 2
@@ -103,10 +103,6 @@ function Player:new(id, char, x, y)
             instance.b = "q"
         end
     else
-        -- instance.x = WindowWidth/GlobalScale*0.7+instance.width/2
-        instance.x = x
-        -- instance.y = WindowHeight/GlobalScale*0.8
-        instance.y = y
         instance.xShift = instance.x_shift_pad*instance.width
         instance.xDir = -1
         instance.hb_x = WindowWidth/GlobalScale-2-instance.hb_animation:getWidth()
@@ -183,6 +179,7 @@ function Player:load()
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     self.physics.fixture:setUserData("player"..self.id)
     self.physics.fixture:setCategory(2)
+    self.physics.body:setMass(100)
     -- Hitbox / Hurtbox
     self.health = 92
     self.move = false
@@ -320,6 +317,7 @@ end
 
 function Player:syncPhysics()
     self.x, self.y = self.physics.body:getPosition()
+    _, self.yVel = self.physics.body:getLinearVelocity()
     self.physics.body:setLinearVelocity(self.xVel, self.yVel)
 end
 
@@ -473,10 +471,11 @@ function Player:drawHitBox(anim)
 end
 
 function Player:applyGravity(dt)
-    if not self.grounded then
-        -- self.physics.body:applyForce(0, Gravity)
-        self.yVel = self.yVel + Gravity*dt
-    end
+    self.physics.body:applyForce(0, Gravity*self.physics.body:getMass())
+    --[[ if not self.grounded then
+        self.physics.body:applyForce(0, Gravity)
+        -- self.yVel = self.yVel + Gravity*dt
+    end ]]
 end
 
 function Player:applyFriction(dt)
@@ -489,7 +488,7 @@ end
 
 function Player:land(collision)
 	self.currentGroundCollision = collision
-	self.yVel = 0
+	-- self.yVel = 0
 	self.grounded = true
     self.airborne = false
     self.landing = true
@@ -502,12 +501,14 @@ function Player:jump()
     if self.joystick then
         if ButtonsPressed[self.id][self.j] == true and not self.attack and not self.blocking then
             if self.grounded then
-                self.yVel = self.jumpAmount
+                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
+                --self.yVel = self.jumpAmount
                 self.grounded = false
                 self.jumping = true
             elseif self.hasDoubleJump and self.graceTime < 0 then
                 self.hasDoubleJump = false
-                self.yVel = self.jumpAmount
+                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
+                --self.yVel = self.jumpAmount
                 self.jumping = true
                 self.jump_timer = 0
             end
@@ -672,14 +673,14 @@ function Player:beginContact(a, b, collision)
 	if logic_a then
 		if ny > 0 then
 			self:land(collision)
-        elseif ny < 0 then
-            self.yVel = 0
+--[[         elseif ny < 0 then
+            self.yVel = 0 ]]
         end
 	elseif logic_b then
 		if ny < 0 then
 			self:land(collision)
-        elseif ny > 0 then
-            self.yVel = 0
+        --[[ elseif ny > 0 then
+            self.yVel = 0 ]]
         end
 	end
 end
