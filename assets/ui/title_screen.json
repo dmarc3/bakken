@@ -10,8 +10,8 @@
    }
  ],
  "meta": {
-  "app": "http://www.aseprite.org/",
-  "version": "1.2.29-x64",
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.30-x64",
   "image": "title_screen.png",
   "format": "RGBA8888",
   "size": { "w": 240, "h": 160 },
@@ -20,7 +20,9 @@
    { "name": "Idle", "from": 0, "to": 0, "direction": "forward" }
   ],
   "layers": [
-   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+   { "name": "background", "opacity": 255, "blendMode": "normal" },
+   { "name": "title", "opacity": 255, "blendMode": "normal" },
+   { "name": "phrase", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]
