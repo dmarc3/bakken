@@ -63,6 +63,9 @@ end
 
 -- A primary callback of LÖVE that is called only once
 function love.load()
+    love.graphics.clear()
+    love.graphics.setColor(1, 1, 1, 1)
+    -- Gamestate and scene handling
     GameState.current:load()
     for _, scene in pairs(GameState.scenes) do
         scene:load()

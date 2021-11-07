@@ -4,6 +4,7 @@ Level = {}
 Level.__index = Level
 
 function Level:load()
+    self.name = "bakke_backyard"
     -- Create Ground and Walls
     Ground = {}
     Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")

@@ -8,16 +8,24 @@ local fight_scene = scene:new("fight")
 -- Gravity = 9.81
 Gravity = 10
 Meter = 64
-Friction = 10
+Friction = 5
 love.physics.setMeter(Meter)
 
 function fight_scene:load()
     World = love.physics.newWorld(0, Meter*Gravity, false)
     World:setCallbacks(beginContact, endContact)
+
+    -- Load canvas
+    self.canvas = love.graphics.newCanvas(WindowWidth, WindowHeight)
+
     -- Import level
     local level = "curlew"
     Level = require("levels/"..level)
     Level:load()
+    if Level.name == "curlew" then
+        local water_effect = love.filesystem.read("levels/water_shader.glsl")
+        self.eff = love.graphics.newShader(water_effect)
+    end
 
     -- Import fight ui
     local spritesheet = love.graphics.newImage("assets/ui/fight.png")
@@ -65,10 +73,23 @@ function fight_scene:update(dt, gameState)
     player2:update(dt)
     self:updateFight(dt)
     Level:update(dt)
+    -- Apply shader if Curlew level
+    if Level.name == "curlew" then
+        self.eff:send("dock2_y", Level.Dock[2].body:getY()/(WindowHeight/GlobalScale))
+        self.eff:send("dock3_y", Level.Dock[3].body:getY()/(WindowHeight/GlobalScale))
+        self.eff:send("dock4_y", Level.Dock[4].body:getY()/(WindowHeight/GlobalScale))
+        self.eff:send("dock5_y", Level.Dock[5].body:getY()/(WindowHeight/GlobalScale))
+        self.eff:send("float1_y", Level.Floaty1.body:getY()/(WindowHeight/GlobalScale))
+        self.eff:send("float1_x", Level.Floaty1.body:getX()/(WindowWidth/GlobalScale))
+        self.eff:send("float2_y", Level.Floaty2.body:getY()/(WindowHeight/GlobalScale))
+        self.eff:send("float2_x", Level.Floaty2.body:getX()/(WindowWidth/GlobalScale))
+    end
     CheckKeys()
 end
 
 function fight_scene:draw(sx, sy)
+    love.graphics.setCanvas(self.canvas)
+    love.graphics.clear()
     love.graphics.push()
     love.graphics.scale(sx, sy)
     Level:drawBackground()
@@ -90,6 +111,13 @@ function fight_scene:draw(sx, sy)
             love.graphics.print("MouseY: "..love.mouse:getY(), 20, 160)
         end
     end
+    love.graphics.setCanvas()
+    -- Apply shader if Curlew level
+    if Level.name == "curlew" then
+        love.graphics.setShader(self.eff)
+    end
+    love.graphics.draw(self.canvas, 0, 0)
+    love.graphics.setShader()
 end
 
 function fight_scene:incrementTimers(dt)
