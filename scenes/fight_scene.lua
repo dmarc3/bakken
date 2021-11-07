@@ -8,7 +8,7 @@ local fight_scene = scene:new("fight")
 -- Gravity = 9.81
 Gravity = 10
 Meter = 64
-Friction = 0.0
+Friction = 10
 love.physics.setMeter(Meter)
 
 function fight_scene:load()

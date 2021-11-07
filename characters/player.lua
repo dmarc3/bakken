@@ -19,13 +19,13 @@ function Player:new(id, char, x, y)
     instance.asepriteMeta = "assets/Characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        --walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        --walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
+        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
         jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
         airborne = peachy.new(instance.asepriteMeta, instance.spritesheet, "airborne"),
         land = peachy.new(instance.asepriteMeta, instance.spritesheet, "land"),
-        --hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "hit"),
-        hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
+        hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "hit"),
+        --hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
         block = peachy.new(instance.asepriteMeta, instance.spritesheet, "block"),
         block_start = peachy.new(instance.asepriteMeta, instance.spritesheet, "block start"),
         block_end = peachy.new(instance.asepriteMeta, instance.spritesheet, "block end"),
@@ -175,7 +175,9 @@ function Player:load()
     self.physics.body:setUserData("player"..self.id)
     self.physics.bw = self.body_width_pad*self.width
     self.physics.bh = self.body_height_pad*self.height
-    self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
+    local vertices = _G[self.char.."Hurtbox"]()
+    -- self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
+    self.physics.shape = love.physics.newPolygonShape(vertices)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     self.physics.fixture:setUserData("player"..self.id)
     self.physics.fixture:setCategory(2)
@@ -260,9 +262,12 @@ function Player:setState()
 end
 
 function Player:drawBody()
+    love.graphics.setColor(1, 1, 1, 0.25)
+                
+                love.graphics.setColor(1, 1, 1)
     bx, by = self.physics.body:getPosition()
-    love.graphics.setColor(self.red, self.green, self.blue, 0.2)
-    love.graphics.rectangle("fill", bx-self.physics.bw/2, by-self.physics.bh/2, self.physics.bw, self.physics.bh)
+    love.graphics.setColor(self.red, self.green, self.blue, 0.8)
+    love.graphics.polygon("fill", self.physics.body:getWorldPoints(self.physics.shape:getPoints()))
     love.graphics.setColor(1,1,1,1)
     love.graphics.rectangle("fill", bx, by, 1, 1)
 end

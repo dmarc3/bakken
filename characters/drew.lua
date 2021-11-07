@@ -9,6 +9,15 @@ function drewHitbox(xDir)
 	        -8*xDir, 13}
 end
 
+function drewHurtbox()
+	return {-2, 12,
+			-6, 11,
+			-6, -11,
+			6, -11,
+			6, 11,
+			2, 12}
+end
+
 xorigin=12
 body_width_pad=0.25
 body_height_pad=0.38

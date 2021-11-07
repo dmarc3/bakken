@@ -7,6 +7,16 @@ function lilahHitbox(xDir)
             8*xDir, 10}
 end
 
+function lilahHurtbox()
+	return {-2, 14,
+			-6, 13,
+			-6, 13,
+			-6, -12,
+			6, -12,
+			6, 13,
+			2, 14}
+		end
+
 xorigin=21
 body_width_pad=0.3
 body_height_pad=0.75
