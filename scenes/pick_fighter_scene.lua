@@ -23,6 +23,7 @@ function pickFighterScene:load()
     self.animations.player2 = peachy.new(asepriteMeta, spritesheet, "player2")
     self.animations.player2_selected = peachy.new(asepriteMeta, spritesheet, "player2_selected")
     self.animations.selection = peachy.new(asepriteMeta, spritesheet, "selection")
+    self.animations.selection:pause()
     local spritesheet = love.graphics.newImage("assets/ui/stage.png")
     local asepriteMeta = "assets/ui/stage.json"
     self.animations.stage = peachy.new(asepriteMeta, spritesheet, "stage")
@@ -37,6 +38,8 @@ function pickFighterScene:load()
     self.player2 = 2
     self.move = false
     self.move_timer = 0
+    self.delay = true
+    self.delay_timer = 0
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
     if joystickcount == 2 then
@@ -47,9 +50,14 @@ function pickFighterScene:load()
         self.joystick1 = nil
         self.joystick2 = nil
     end
+    -- Reset Inputs on load
+    ResetInputs()
 end
 
 function pickFighterScene:update(dt, gameState)
+    -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
+    self:processDelay()
+    self:incrementTimers(dt)
     self:updateCharacters(dt)
     if KeysPressed["enter"] == true then
         gameState.player1 = self.chars[self.player1]
@@ -64,6 +72,7 @@ function pickFighterScene:update(dt, gameState)
 end
 
 function pickFighterScene:draw(sx, sy)
+    self:processDelay()
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawBackground()
@@ -227,6 +236,31 @@ function pickFighterScene:selectCharacter()
     if ButtonsPressed[2]["b"] == true then
         self.selected2 = false
     end
+end
+
+function pickFighterScene:incrementTimers(dt)
+    self.delay_timer = self.delay_timer + dt
+    if self.delay_timer > 0.25 then
+        self.delay = false
+    end
+end
+
+function pickFighterScene:processDelay()
+    if self.delay then
+        self.selected1 = false
+        self.selected2 = false
+        ResetInputs()
+    end
+end
+
+function ResetInputs()
+    KeysPressed = {}
+    ButtonsPressed = {}
+    ButtonsPressed[1] = {}
+    ButtonsPressed[2] = {}
+    AxisMoved = {}
+    AxisMoved[1] = {}
+    AxisMoved[2] = {}
 end
 
 return pickFighterScene

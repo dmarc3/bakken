@@ -18,6 +18,10 @@ local fightScene = require"scenes/fight_scene"
 -- Load gamepad mappings
 love.joystick.loadGamepadMappings("3rd/SDL_GameControllerDB/gamecontrollerdb.txt")
 
+-- Set windows icon
+local icon = love.image.newImageData("assets/icon.png")
+love.window.setIcon(icon)
+
 -- levels or scenes in our game.
 local GameState = {
     current = titleScene,
