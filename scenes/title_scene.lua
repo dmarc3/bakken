@@ -36,6 +36,7 @@ function titleScene:loadChars(p1, p2)
     self.chars[1].spritesheet = love.graphics.newImage("assets/Characters/"..self.chars[1].name..".png")
     self.chars[1].asepriteMeta = "assets/Characters/"..self.chars[1].name..".json"
     self.chars[1].animation = {
+        sheathed = peachy.new(self.chars[1].asepriteMeta, self.chars[1].spritesheet, "sheathed"),
         idle = peachy.new(self.chars[1].asepriteMeta, self.chars[1].spritesheet, "idle"),
         walk = peachy.new(self.chars[1].asepriteMeta, self.chars[1].spritesheet, "walk forward"),
         jump = peachy.new(self.chars[1].asepriteMeta, self.chars[1].spritesheet, "jump"),
@@ -51,7 +52,7 @@ function titleScene:loadChars(p1, p2)
     self.chars[1].y = WindowHeight/GlobalScale*0.8
     self.chars[1].xShift = 0
     self.chars[1].xDir = 1
-    self.chars[1].animationName = "idle"
+    self.chars[1].animationName = "sheathed"
     require("characters/"..self.chars[1].name)
     self.chars[1].xorigin = xorigin
     self.chars[1].block_start_dur = block_start_dur
@@ -143,10 +144,10 @@ function titleScene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     love.graphics.setBackgroundColor(0.0, 0.0, 0.0, 1.0)
-    love.graphics.setColor(0.1, 0.1, 0.1, 1)
+    self.title.image:draw(self.title.x, 0)
+    love.graphics.setColor(0.2, 0.2, 0.2, 1)
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 50, WindowWidth/GlobalScale, 50)
     love.graphics.setColor(1, 1, 1, 1)
-    self.title.image:draw(self.title.x, 0)
     for i = 1, 3 do
         if self.timer > self.phrase.delay[i] then
             self.phrase[i]:draw()
