@@ -1,12 +1,102 @@
 { "frames": [
    {
-    "filename": "curlew.aseprite",
+    "filename": "curlew 0.aseprite",
     "frame": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 500
+   },
+   {
+    "filename": "curlew 1.aseprite",
+    "frame": { "x": 240, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 2.aseprite",
+    "frame": { "x": 480, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 3.aseprite",
+    "frame": { "x": 720, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 4.aseprite",
+    "frame": { "x": 960, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 5.aseprite",
+    "frame": { "x": 1200, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 6.aseprite",
+    "frame": { "x": 1440, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 7.aseprite",
+    "frame": { "x": 1680, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 8.aseprite",
+    "frame": { "x": 1920, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 9.aseprite",
+    "frame": { "x": 2160, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
+   },
+   {
+    "filename": "curlew 10.aseprite",
+    "frame": { "x": 2400, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 500
    }
  ],
  "meta": {
@@ -14,15 +104,25 @@
   "version": "1.2.30-x64",
   "image": "curlew.png",
   "format": "RGBA8888",
-  "size": { "w": 240, "h": 160 },
+  "size": { "w": 2640, "h": 160 },
   "scale": "1",
   "frameTags": [
-   { "name": "idle", "from": 0, "to": 0, "direction": "forward" }
+   { "name": "idle", "from": 0, "to": 1, "direction": "forward" },
+   { "name": "dock1", "from": 2, "to": 2, "direction": "forward" },
+   { "name": "dock2", "from": 3, "to": 3, "direction": "forward" },
+   { "name": "dock3", "from": 4, "to": 4, "direction": "forward" },
+   { "name": "dock4", "from": 5, "to": 5, "direction": "forward" },
+   { "name": "dock5", "from": 6, "to": 7, "direction": "forward" },
+   { "name": "floaty1", "from": 8, "to": 8, "direction": "forward" },
+   { "name": "floaty2", "from": 9, "to": 9, "direction": "forward" },
+   { "name": "floaty2_front", "from": 10, "to": 10, "direction": "forward" }
   ],
   "layers": [
    { "name": "water", "opacity": 255, "blendMode": "normal" },
+   { "name": "background", "opacity": 255, "blendMode": "normal" },
    { "name": "dock", "opacity": 255, "blendMode": "normal" },
-   { "name": "floaty", "opacity": 255, "blendMode": "normal" }
+   { "name": "floaty1", "opacity": 255, "blendMode": "normal" },
+   { "name": "floaty2", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]
