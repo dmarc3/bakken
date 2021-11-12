@@ -33,8 +33,8 @@ function titleScene:loadChars(p1, p2)
     self.chars = {}
     self.chars[1] = {}
     self.chars[1].name = p1
-    self.chars[1].spritesheet = love.graphics.newImage("assets/Characters/"..self.chars[1].name..".png")
-    self.chars[1].asepriteMeta = "assets/Characters/"..self.chars[1].name..".json"
+    self.chars[1].spritesheet = love.graphics.newImage("assets/characters/"..self.chars[1].name..".png")
+    self.chars[1].asepriteMeta = "assets/characters/"..self.chars[1].name..".json"
     self.chars[1].animation = {
         sheathed = peachy.new(self.chars[1].asepriteMeta, self.chars[1].spritesheet, "sheathed"),
         idle = peachy.new(self.chars[1].asepriteMeta, self.chars[1].spritesheet, "idle"),
@@ -75,8 +75,8 @@ function titleScene:loadChars(p1, p2)
     -- Load Character 2
     self.chars[2] = {}
     self.chars[2].name = p2
-    self.chars[2].spritesheet = love.graphics.newImage("assets/Characters/"..self.chars[2].name..".png")
-    self.chars[2].asepriteMeta = "assets/Characters/"..self.chars[2].name..".json"
+    self.chars[2].spritesheet = love.graphics.newImage("assets/characters/"..self.chars[2].name..".png")
+    self.chars[2].asepriteMeta = "assets/characters/"..self.chars[2].name..".json"
     self.chars[2].animation = {
         idle = peachy.new(self.chars[2].asepriteMeta, self.chars[2].spritesheet, "idle"),
         walk = peachy.new(self.chars[2].asepriteMeta, self.chars[2].spritesheet, "walk forward"),
