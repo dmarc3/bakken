@@ -11,8 +11,8 @@ function pickFighterScene:load()
     self.chars_spacing = {12, 21, 9}
     self.animations = {}
     for _, char in pairs(self.chars) do
-        local spritesheet = love.graphics.newImage("assets/Characters/"..char..".png")
-        local asepriteMeta = "assets/Characters/"..char..".json"
+        local spritesheet = love.graphics.newImage("assets/characters/"..char..".png")
+        local asepriteMeta = "assets/characters/"..char..".json"
         self.animations[char] = {idle = peachy.new(asepriteMeta, spritesheet, "idle")}
     end
     local spritesheet = love.graphics.newImage("assets/ui/character_box.png")

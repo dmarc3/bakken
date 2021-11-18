@@ -15,8 +15,8 @@ function Player:new(id, char, x, y)
     end
     
     -- Process character
-    instance.spritesheet = love.graphics.newImage("assets/Characters/"..char..".png")
-    instance.asepriteMeta = "assets/Characters/"..char..".json"
+    instance.spritesheet = love.graphics.newImage("assets/characters/"..char..".png")
+    instance.asepriteMeta = "assets/characters/"..char..".json"
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
         --walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
