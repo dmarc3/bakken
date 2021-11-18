@@ -24,7 +24,7 @@ function titleScene:load()
     self.PB_SpriteSheet = love.graphics.newImage("assets/ui/press_button.png")
     self.PB_SpriteSheetMeta = "assets/ui/press_button.json"
     self.press_button = peachy.new(self.PB_SpriteSheetMeta, self.PB_SpriteSheet, "Idle")
-    self:loadChars("drew", "lilah")
+    --self:loadChars("drew", "lilah")
 
 end
 
@@ -120,7 +120,7 @@ function titleScene:update(dt, gameState)
         ResetInputs()
     end
     self:updateTitle(dt)
-    self:updateChars(dt)
+    --self:updateChars(dt)
     for i = 1, 3 do
         self.phrase[i]:update(dt)
     end
@@ -157,7 +157,7 @@ function titleScene:draw(sx, sy)
         self.press_button:draw(WindowWidth/GlobalScale/2, WindowHeight/GlobalScale*0.8, 0, 1, 1, self.press_button:getWidth()/2, self.press_button:getHeight()/2)
         self.interact = true
     end
-    self:drawChars()
+    --self:drawChars()
     love.graphics.pop()
 end
 

@@ -115,7 +115,8 @@ function Level:load()
     local spritesheet = love.graphics.newImage("assets/levels/curlew.png")
     local asepriteMeta = "assets/levels/curlew.json"
     Curlew = {}
-    Curlew.base = peachy.new(asepriteMeta, spritesheet, "idle")
+    Curlew.Water = peachy.new(asepriteMeta, spritesheet, "water")
+    Curlew.Background = peachy.new(asepriteMeta, spritesheet, "background")
     Curlew.Dock = {}
     Curlew.Dock[1] = peachy.new(asepriteMeta, spritesheet, "dock1")
     Curlew.Dock[2] = peachy.new(asepriteMeta, spritesheet, "dock2")
@@ -125,6 +126,8 @@ function Level:load()
     Curlew.Floaty1 = peachy.new(asepriteMeta, spritesheet, "floaty1")
     Curlew.Floaty2 = peachy.new(asepriteMeta, spritesheet, "floaty2")
     Curlew.Floaty2_front = peachy.new(asepriteMeta, spritesheet, "floaty2_front")
+    self.normal_map = love.graphics.newImage("assets/levels/normal_map.png")
+    self.normal_map:setWrap("repeat")
     -- Define Constants
     self.x1 = WindowWidth/GlobalScale*0.33
     self.y1 = WindowHeight/GlobalScale*0.1
@@ -136,7 +139,7 @@ function Level:load()
 end
 
 function Level:update(dt)
-    Curlew.base:update(dt)
+    Curlew.Water:update(dt)
     Curlew.Floaty1:update(dt)
     Curlew.Floaty2:update(dt)
     Curlew.Dock[1]:update(dt)
@@ -146,8 +149,12 @@ function Level:drawForeground()
     Curlew.Floaty2_front:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
 end
 
-function Level:drawBackground()love.graphics.polygon("fill", self.Dock[1].body:getWorldPoints(self.Dock[1].shape:getPoints()))
-    Curlew.base:draw(0,0)
+function Level:drawWater()
+    Curlew.Water:draw(0,0)
+end
+
+function Level:drawShadedBackground()
+    Curlew.Water:draw(0,0)
     for i = 2, 5 do
         Curlew.Dock[i]:draw(self.Dock[i].body:getX(), self.Dock[i].body:getY(), self.Dock[i].body:getAngle(), 1, 1, self.Dock.x[i], self.Dock.y[i])
     end
@@ -172,6 +179,17 @@ function Level:drawBackground()love.graphics.polygon("fill", self.Dock[1].body:g
         love.graphics.polygon("fill", self.Floaty2_arm.body:getWorldPoints(self.Floaty2_arm.shape:getPoints()))
         love.graphics.setColor(1, 1, 1, 1)
     end
+    love.graphics.setColor(1, 1, 1, 1)
+end
+
+function Level:drawBackground()
+    Curlew.Background:draw(0,0)
+    for i = 2, 5 do
+        Curlew.Dock[i]:draw(self.Dock[i].body:getX(), self.Dock[i].body:getY(), self.Dock[i].body:getAngle(), 1, 1, self.Dock.x[i], self.Dock.y[i])
+    end
+    Curlew.Dock[1]:draw(self.Dock[1].body:getX(), self.Dock[1].body:getY(), 0, 1, 1, self.Dock.x[1], self.Dock.y[1])
+    Curlew.Floaty1:draw(self.Floaty1.body:getX(),self.Floaty1.body:getY()-5, 0, 1, 1, 34, 128)
+    Curlew.Floaty2:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
     love.graphics.setColor(1, 1, 1, 1)
 end
 

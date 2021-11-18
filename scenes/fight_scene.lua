@@ -17,6 +17,8 @@ function fight_scene:load()
 
     -- Load canvas
     self.canvas = love.graphics.newCanvas(WindowWidth, WindowHeight)
+    self.canvas1 = love.graphics.newCanvas(WindowWidth, WindowHeight)
+    self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
 
     -- Import level
     local level = "curlew"
@@ -40,6 +42,7 @@ function fight_scene:load()
     self.fight_timer = 0
     self.fight_timer2 = 0
     self.fight = false
+    self.delta = 0
 
     -- Set players to nil
     player1 = nil
@@ -75,6 +78,14 @@ function fight_scene:update(dt, gameState)
     Level:update(dt)
     -- Apply shader if Curlew level
     if Level.name == "curlew" then
+        self.eff:send("image2", self.canvas2)
+        self.eff:send("normal_map", Level.normal_map)
+        self.delta = self.delta - dt*0.03
+        if self.delta < -1.0 then
+            self.delta = 0.0
+        end
+        self.eff:send("d", self.delta)
+        --self.eff:send("time", love.timer:getTime())
         self.eff:send("dock2_y", Level.Dock[2].body:getY()/(WindowHeight/GlobalScale))
         self.eff:send("dock3_y", Level.Dock[3].body:getY()/(WindowHeight/GlobalScale))
         self.eff:send("dock4_y", Level.Dock[4].body:getY()/(WindowHeight/GlobalScale))
@@ -83,16 +94,19 @@ function fight_scene:update(dt, gameState)
         self.eff:send("float1_x", Level.Floaty1.body:getX()/(WindowWidth/GlobalScale))
         self.eff:send("float2_y", Level.Floaty2.body:getY()/(WindowHeight/GlobalScale))
         self.eff:send("float2_x", Level.Floaty2.body:getX()/(WindowWidth/GlobalScale))
+        --self.eff:send("Debug", Debug);
     end
     CheckKeys()
 end
 
 function fight_scene:draw(sx, sy)
-    love.graphics.setCanvas(self.canvas)
+    -- Activate canvas
+    love.graphics.setCanvas(self.canvas1)
+    -- Draw background to have shader applied to it
     love.graphics.clear()
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    Level:drawBackground()
+    Level:drawShadedBackground()
     if player1 ~= nil then
         player1:draw()
     end
@@ -102,22 +116,33 @@ function fight_scene:draw(sx, sy)
     Level:drawForeground()
     self:drawFight()
     love.graphics.pop()
-
-    if Debug then
-        if player1 ~= nil then
-            love.graphics.print("xVel: "..player1.xVel, 20, 100)
-            love.graphics.print("yVel: "..player1.yVel, 20, 120)
-            love.graphics.print("MouseX: "..love.mouse:getX(), 20, 140)
-            love.graphics.print("MouseY: "..love.mouse:getY(), 20, 160)
-        end
-    end
+    -- Draw canvas
     love.graphics.setCanvas()
     -- Apply shader if Curlew level
     if Level.name == "curlew" then
         love.graphics.setShader(self.eff)
     end
-    love.graphics.draw(self.canvas, 0, 0)
+    love.graphics.setCanvas(self.canvas2)
+    love.graphics.push()
+    love.graphics.scale(sx, sy)
+    Level:drawWater()
+    love.graphics.pop()
+    love.graphics.setCanvas()
+    love.graphics.draw(self.canvas1, 0, 0)
     love.graphics.setShader()
+    --love.graphics.setCanvas(self.canvas)
+    love.graphics.push()
+    love.graphics.scale(sx, sy)
+    Level:drawBackground()
+    if player1 ~= nil then
+        player1:draw()
+    end
+    if player2 ~= nil then
+        player2:draw()
+    end
+    self:drawFight()
+    love.graphics.pop()
+    --love.graphics.draw(self.canvas, 0, 0)
 end
 
 function fight_scene:incrementTimers(dt)
