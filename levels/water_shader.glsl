@@ -41,15 +41,22 @@ number speed = 0.01;
     return pixel;
 } */
 
-vec4 displacement_map(in Image image, in Image normal_map, inout vec2 uvs, in float n) {
+vec4 displacement_map(in Image image, in Image normal_map, inout vec2 uvs, in float n, in bool is_canvas) {
     uvs.x -= d;
     vec4 pixel = Texel(normal_map, uvs);
+    //return pixel;
     uvs.x += d;
-    vec2 adjustment = uvs + (pixel.rb - vec2(0.5, 0.5))/n;
+    vec2 adjustment = (pixel.rb - vec2(0.5, 0.5))/n;
+    //vec2 adjustment = 0.01*(pixel.rb - vec2(0.5, 0.5))/n;
+    if (is_canvas) {
+        uvs.x = love_PixelCoord.x/love_ScreenSize.x;
+        uvs.y = love_PixelCoord.y/love_ScreenSize.y;
+        adjustment.x = adjustment.x/love_ScreenSize.x;
+        adjustment.y = adjustment.x/love_ScreenSize.y;
+    }
     float avg_color = (pixel.r + pixel.g + pixel.b)/3.0;
-    //uvs.x = uvs.x/love_ScreenSize.x;
-    //uvs.y = 1-uvs.y/love_ScreenSize.y;
-    pixel = Texel(image, adjustment);
+    pixel = Texel(image, uvs+adjustment);
+    //return pixel * vec4(uvs.y, 0, 0, 1);
     return pixel;
     vec4 new_color = vec4(1.0, 1.0, 1.0, 1.0);
     if (n > 0) {
@@ -78,11 +85,10 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
         if(uy > dock_y0) {
             uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
             uvs = vec2(ux, uy);
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
         }
         else {
-            vec2 sc = vec2(screen_coords.x/love_ScreenSize.x, 1-screen_coords.y/love_ScreenSize.y);
-            pixel = displacement_map(image2, normal_map, sc, n);
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
             //pixel = Texel(image2, uvs);
         }
         
@@ -102,13 +108,12 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             else {
                 uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, n);
+                pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             }
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            //pixel = displacement_map(image2, normal_map, uvs, n);
-            pixel = Texel(image2, uvs);
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
     }
     // Patch 3
@@ -119,8 +124,11 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
         if(uy > dock_y0) {
             uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
             uvs = vec2(ux, uy);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
         }
-        pixel = displacement_map(image, normal_map, uvs, n);
+        else {
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
+        }
         //return vec4(0.0, 0.5, 0.0, 0.7);
     }
     // Patch 4
@@ -137,11 +145,11 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             else {
                 uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, n);
+                pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             }
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
             //return vec4(0.0, 0.5, 0.0, 0.7);
     }
@@ -159,12 +167,12 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             else {
                 uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, n);
+                pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             }
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
     }
     // Middle Patch
@@ -173,7 +181,9 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
     y1 = dock_y0;
     if (ux > x1 && ux < x2) {
         if(uy < y1) {
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
+        } else {
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
             //return vec4(0.0, 0.5, 0.0, 0.7);
     }
@@ -191,12 +201,12 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             else {
                 uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, n);
+                pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             }
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
     }
     // Patch 7
@@ -213,12 +223,12 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             else {
                 uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, n);
+                pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             }
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
         }
     }
     // Patch 8
@@ -232,7 +242,7 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             uvs = vec2(ux, uy);
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
-        pixel = displacement_map(image, normal_map, uvs, n);
+        pixel = displacement_map(image, normal_map, uvs, n, bool(false));
     }
     // Patch 9
     x1 = 0.8264 + dx_float2;
@@ -249,12 +259,12 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             else {
                 uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, n);
+                pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             }
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
         }
     }
     // Patch 10
@@ -266,17 +276,17 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             if (uy < y1 + dy1 + ((0.1/(x2-x1))*(ux-x1)) ) {
                 uy = y1 - (uy - y1) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, 100);
+                pixel = displacement_map(image, normal_map, uvs, 100, bool(true));
             }
             else {
                 uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
                 uvs = vec2(ux, uy);
-                pixel = displacement_map(image, normal_map, uvs, n);
+                pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             }
             //return vec4(0.5, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
         }
     }
     // Patch 11
@@ -288,7 +298,7 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
             uvs = vec2(ux, uy);
         }
-        pixel = displacement_map(image, normal_map, uvs, n);
+        pixel = displacement_map(image, normal_map, uvs, n, bool(false));
         //return vec4(0.0, 0.5, 0.0, 0.7);
     }
 
