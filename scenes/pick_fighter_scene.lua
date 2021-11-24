@@ -54,20 +54,22 @@ function pickFighterScene:load()
     ResetInputs()
 end
 
-function pickFighterScene:update(dt, gameState)
+function pickFighterScene:update(dt, GameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
     self:processDelay()
     self:incrementTimers(dt)
     self:updateCharacters(dt)
     if KeysPressed["enter"] == true then
-        gameState.player1 = self.chars[self.player1]
-        gameState.player2 = self.chars[self.player2]
-        gameState:setFightScene()
+        GameState.player1 = self.chars[self.player1]
+        GameState.player2 = self.chars[self.player2]
+        GameState.scenes.fightScene:load()
+        GameState:setFightScene()
     end
     if ButtonsPressed[1]["start"] == true then
-        gameState.player1 = self.chars[self.player1]
-        gameState.player2 = self.chars[self.player2]
-        gameState:setFightScene()
+        GameState.player1 = self.chars[self.player1]
+        GameState.player2 = self.chars[self.player2]
+        GameState.scenes.fightScene:load(GameState)
+        GameState:setFightScene()
     end
 end
 
@@ -184,6 +186,25 @@ function pickFighterScene:updateCharacters(dt)
             self.move = true
             self.move_timer = 0
         end
+        if KeysPressed["d"] ~= nil and not self.move then
+            self.player1 = self.player1 + 1
+            if self.player1 == self.player2 then
+                self.player1 = self.player1 + 1
+            elseif self.player1 > #self.chars then
+                self.player1 = self.player1 - 1
+            end
+            self.move = true
+            self.move_timer = 0
+        elseif KeysPressed["a"] ~= nil and not self.move then
+            self.player1 = self.player1 - 1
+            if self.player1 == self.player2 then
+                self.player1 = self.player1 - 1
+            elseif self.player2 < 1 then
+                self.player1 = self.player1 + 1
+            end
+            self.move = true
+            self.move_timer = 0
+        end
     end
     if not self.selected2 then
         if AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] > 0 and not self.move then
@@ -194,6 +215,21 @@ function pickFighterScene:updateCharacters(dt)
             self.move = true
             self.move_timer = 0
         elseif AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] < 0 and not self.move then
+            self.player2 = self.player2 - 1
+            if self.player2 == self.player1 then
+                self.player2 = self.player2 - 1
+            end
+            self.move = true
+            self.move_timer = 0
+        end
+        if KeysPressed["kp3"] ~= nil and not self.move then
+            self.player2 = self.player2 + 1
+            if self.player2 == self.player1 then
+                self.player2 = self.player2 + 1
+            end
+            self.move = true
+            self.move_timer = 0
+        elseif KeysPressed["kp1"] ~= nil and not self.move then
             self.player2 = self.player2 - 1
             if self.player2 == self.player1 then
                 self.player2 = self.player2 - 1

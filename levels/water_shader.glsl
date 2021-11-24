@@ -47,8 +47,8 @@ vec4 displacement_map(in Image image, in Image normal_map, inout vec2 uvs, in fl
     uvs.x += d;
     vec2 adjustment = uvs + (pixel.rb - vec2(0.5, 0.5))/n;
     float avg_color = (pixel.r + pixel.g + pixel.b)/3.0;
-    uvs.x = uvs.x/love_ScreenSize.x;
-    uvs.y = 1-uvs.y/love_ScreenSize.y;
+    //uvs.x = uvs.x/love_ScreenSize.x;
+    //uvs.y = 1-uvs.y/love_ScreenSize.y;
     pixel = Texel(image, adjustment);
     return pixel;
     vec4 new_color = vec4(1.0, 1.0, 1.0, 1.0);
@@ -81,8 +81,9 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             pixel = displacement_map(image, normal_map, uvs, n);
         }
         else {
-            vec2 sc = vec2(screen_coords.x/love_ScreenSize.x, screen_coords.y/love_ScreenSize.y);
+            vec2 sc = vec2(screen_coords.x/love_ScreenSize.x, 1-screen_coords.y/love_ScreenSize.y);
             pixel = displacement_map(image2, normal_map, sc, n);
+            //pixel = Texel(image2, uvs);
         }
         
         //return vec4(0.0, 0.5, 0.0, 0.7);
@@ -106,7 +107,8 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image2, normal_map, uvs, n);
+            //pixel = displacement_map(image2, normal_map, uvs, n);
+            pixel = Texel(image2, uvs);
         }
     }
     // Patch 3

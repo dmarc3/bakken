@@ -1,10 +1,13 @@
 local peachy = require("3rd/peachy/peachy")
+local player = require"characters/player"
 
 Level = {}
 Level.__index = Level
 
-function Level:load()
+function Level:load(player1, player2, canvas)
     self.name = "curlew"
+    self.canvas = canvas
+    self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
     -- Dock dimensions
     self.Dock = {}
     self.Dock.x = {121, 71, 89, 153, 170}
@@ -12,6 +15,10 @@ function Level:load()
     self.Dock.w = {41, 13, 22, 22, 13}
     self.Dock.h = {10, 10, 10, 10, 10}
     self.Dock.m = {1000, 300, 640, 640, 300}
+    -- Load shader
+    local water_effect = love.filesystem.read("levels/water_shader.glsl")
+    self.eff = love.graphics.newShader(water_effect)
+    self.delta = 0
     -- Create Dock
     self.Base = {}
     for i = 1, #self.Dock.x do
@@ -136,6 +143,12 @@ function Level:load()
     self.y2 = WindowHeight/GlobalScale*0.1
     -- self.y2 = WindowHeight/GlobalScale*-100
     self.displacedMass = 0
+
+    -- Load players
+    self.player1 = player:new(1, player1, Level.x1, Level.y1)
+    self.player1:load()
+    self.player2 = player:new(2, player2, Level.x2, Level.y2)
+    self.player2:load()
 end
 
 function Level:update(dt)
@@ -143,6 +156,56 @@ function Level:update(dt)
     Curlew.Floaty1:update(dt)
     Curlew.Floaty2:update(dt)
     Curlew.Dock[1]:update(dt)
+    self.player1:update(dt)
+    self.player2:update(dt)
+    self.eff:send("image2", self.canvas2)
+    self.eff:send("normal_map", self.normal_map)
+    self.delta = self.delta - dt*0.03
+    if self.delta < -1.0 then
+        self.delta = 0.0
+    end
+    self.eff:send("d", self.delta)
+    self.eff:send("dock2_y", self.Dock[2].body:getY()/(WindowHeight/GlobalScale))
+    self.eff:send("dock3_y", self.Dock[3].body:getY()/(WindowHeight/GlobalScale))
+    self.eff:send("dock4_y", self.Dock[4].body:getY()/(WindowHeight/GlobalScale))
+    self.eff:send("dock5_y", self.Dock[5].body:getY()/(WindowHeight/GlobalScale))
+    self.eff:send("float1_y", self.Floaty1.body:getY()/(WindowHeight/GlobalScale))
+    self.eff:send("float1_x", self.Floaty1.body:getX()/(WindowWidth/GlobalScale))
+    self.eff:send("float2_y", self.Floaty2.body:getY()/(WindowHeight/GlobalScale))
+    self.eff:send("float2_x", self.Floaty2.body:getX()/(WindowWidth/GlobalScale))
+end
+
+function Level:draw(sx, sy)
+    -- Activate Canvas
+    love.graphics.setCanvas(self.canvas)
+    love.graphics.clear()
+    -- Draw background to have shader applied to it
+    love.graphics.push()
+    love.graphics.scale(sx, sy)
+    self:drawShadedBackground()
+    self.player1:draw()
+    self.player2:draw()
+    self:drawForeground()
+    love.graphics.pop()
+    -- Draw Canvas
+    love.graphics.setCanvas()
+    love.graphics.setShader(self.eff)
+    love.graphics.setCanvas(self.canvas2)
+    love.graphics.push()
+    love.graphics.scale(sx, sy)
+    self:drawWater()
+    love.graphics.pop()
+    love.graphics.setCanvas()
+    love.graphics.draw(self.canvas, 0, 0)
+    -- Remove shader and draw background water
+    love.graphics.setShader()
+    love.graphics.push()
+    love.graphics.scale(sx, sy)
+    self:drawBackground()
+    self.player1:draw()
+    self.player2:draw()
+    self:drawForeground()
+    love.graphics.pop()
 end
 
 function Level:drawForeground()

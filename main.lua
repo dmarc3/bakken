@@ -71,9 +71,11 @@ function love.load()
     love.graphics.setColor(1, 1, 1, 1)
     -- Gamestate and scene handling
     GameState.current:load()
-    for _, scene in pairs(GameState.scenes) do
+    GameState.scenes.titleScene:load()
+    GameState.scenes.pickFighterScene:load()
+   --[[  for _, scene in pairs(GameState.scenes) do
         scene:load()
-    end
+    end ]]
 end
 
 -- A primary callback of LÖVE that is called continuously
