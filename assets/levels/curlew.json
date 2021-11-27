@@ -78,7 +78,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 500
+    "duration": 50
    },
    {
     "filename": "curlew 9.aseprite",
@@ -107,7 +107,8 @@
   "size": { "w": 2640, "h": 160 },
   "scale": "1",
   "frameTags": [
-   { "name": "idle", "from": 0, "to": 1, "direction": "forward" },
+   { "name": "water", "from": 0, "to": 0, "direction": "forward" },
+   { "name": "background", "from": 1, "to": 1, "direction": "forward" },
    { "name": "dock1", "from": 2, "to": 2, "direction": "forward" },
    { "name": "dock2", "from": 3, "to": 3, "direction": "forward" },
    { "name": "dock3", "from": 4, "to": 4, "direction": "forward" },
