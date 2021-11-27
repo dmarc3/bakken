@@ -25,7 +25,12 @@ function Player:new(id, char, x, y)
         airborne = peachy.new(instance.asepriteMeta, instance.spritesheet, "airborne"),
         land = peachy.new(instance.asepriteMeta, instance.spritesheet, "land"),
         hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "hit"),
-        --hit = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
+        kneel = peachy.new(instance.asepriteMeta, instance.spritesheet, "kneel"),
+        kneel_enter = peachy.new(instance.asepriteMeta, instance.spritesheet, "kneel_enter"),
+        kneel_exit = peachy.new(instance.asepriteMeta, instance.spritesheet, "kneel_exit"),
+        dead = peachy.new(instance.asepriteMeta, instance.spritesheet, "dead"),
+        victory = peachy.new(instance.asepriteMeta, instance.spritesheet, "victory"),
+        victory_idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "victory_idle"),
         block = peachy.new(instance.asepriteMeta, instance.spritesheet, "block"),
         block_start = peachy.new(instance.asepriteMeta, instance.spritesheet, "block start"),
         block_end = peachy.new(instance.asepriteMeta, instance.spritesheet, "block end"),
@@ -155,6 +160,12 @@ function Player:load()
     self.land_timer = 0
     self.damaged = false
     self.damage_timer = 0
+    self.kneel_enter = false
+    self.kneel = false
+    self.kneel_exit = false
+    self.kneel_duration = 0.5
+    self.kneel_timer = 0
+    self.kneel_delay = 5.0
     self.sprinting = false
     self.sprint_timer = 0
     self.sprint_dt = 0.3
@@ -186,9 +197,16 @@ function Player:load()
     self.health = 92
     self.move = false
     self.knocked_out = false
+    self.dead = false
+    self.dead_timer = 0.0
+    self.dead_duration = 1.15
+    self.victory = false
+    self.victory_timer = 0.0
+    self.victory_duration = 0.5
     self.invuln = false
     self.invuln_timer = 0
     self.reset_position = false
+    self.xoverride = false
 end
 
 function Player:draw()
@@ -237,6 +255,22 @@ function Player:setState()
         self.animationName = "airborne"
     elseif self.damaged then
         self.animationName = "hit"
+    elseif self.kneel_enter then
+        self.animationName = "kneel_enter"
+    elseif self.kneel_exit then
+        self.animationName = "kneel_exit"
+    elseif self.kneel then
+        self.animationName = "kneel"
+    elseif self.dead and self.dead_timer < self.dead_duration then
+        self.animationName = "dead"
+    elseif self.dead then
+        self.animationName = "dead"
+        self.animation[self.animationName]:setFrame(6)
+        self.animation[self.animationName]:pause()
+    elseif self.victory and self.victory_timer < self.victory_duration then
+        self.animationName = "victory"
+    elseif self.victory then
+        self.animationName = "victory_idle"
     elseif self.xVel == 0 then
         self.animationName = "idle"
     else
@@ -275,7 +309,7 @@ end
 function Player:update(dt)
     local current_frame = self.animation[self.animationName]:getFrame()
     local current_anim = self.animationName
-    -- Apply physics
+    -- Apply physicse
     self:syncPhysics()
     self:applyGravity(dt)
     -- Move Player
@@ -312,7 +346,10 @@ function Player:updateHealthBar(dt)
         self.hb_frame = 1
         self.hb_anim = false
         self.hb_anim_timer = 0
-        self.knocked_out = true
+        self.kneel = true
+    end
+    if self.hb_lives_frame == 3 and self.health == 0 then
+        self.dead = true
     end
     self.hb_animation:setFrame(self.hb_frame)
     self.hb_lives_animation:setFrame(self.hb_lives_frame)
@@ -358,7 +395,7 @@ function Player:moveJoystick(dt)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
-    else
+    elseif not self.xoverride then
         self:applyFriction(dt)
     end
 end
@@ -382,7 +419,7 @@ function Player:moveKeyboard(dt)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
-    else
+    elseif not self.xoverride then
         self:applyFriction(dt)
     end
 
@@ -446,6 +483,7 @@ function Player:damage(d)
     self.health = self.health - d
     if self.health < 0 then
         self.health = 0
+        self.knocked_out = true
     end
     self.hb_anim = true
     self.invuln = true
@@ -520,14 +558,14 @@ function Player:jump()
         end
     else
         if KeysPressed[self.j] == true and not self.attack and not self.blocking then
-            if self.grounded or self.graceTime > 0 then
-                self.yVel = self.jumpAmount
+            if self.grounded then
+                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 self.grounded = false
                 self.jumping = true
-                --self.graceTime = 0
-            elseif self.hasDoubleJump then
+            elseif self.hasDoubleJump and self.graceTime < 0 then
                 self.hasDoubleJump = false
-                self.yVel = self.jumpAmount
+                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
+                --self.yVel = self.jumpAmount
                 self.jumping = true
                 self.jump_timer = 0
             end
@@ -555,6 +593,30 @@ function Player:incrementTimers(dt)
     -- Sprint timer
     if self.start_sprint_timer then
         self.sprint_timer = self.sprint_timer + dt
+    end
+    -- Dead timer
+    if self.dead then
+        self.dead_timer = self.dead_timer + dt
+    end
+    -- Kneel timer
+    if self.kneel then
+        self.kneel_timer = self.kneel_timer + dt
+    end
+    if self.kneel and self.kneel_timer < self.kneel_duration then
+        self.kneel_enter = true
+    elseif self.kneel and self.kneel_timer > self.kneel_duration and self.kneel_timer < self.kneel_delay - self.kneel_duration then
+        self.kneel_enter = false
+    elseif self.kneel and self.kneel_timer > self.kneel_delay - self.kneel_duration and self.kneel_timer < self.kneel_delay then
+        self.kneel_exit = true
+    elseif self.kneel and self.kneel_timer > self.kneel_delay then
+        self.kneel = false
+        self.kneel_enter = false
+        self.kneel_exit = false
+        self.kneel_timer = 0
+    end
+    -- Victory timer
+    if self.victory then
+        self.victory_timer = self.victory_timer + dt
     end
     -- Damage timer
     if self.damaged then

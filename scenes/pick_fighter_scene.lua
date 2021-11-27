@@ -59,10 +59,12 @@ function pickFighterScene:update(dt, GameState)
     self:processDelay()
     self:incrementTimers(dt)
     self:updateCharacters(dt)
-    if KeysPressed["enter"] == true then
-        GameState.player1 = self.chars[self.player1]
-        GameState.player2 = self.chars[self.player2]
-        GameState.scenes.fightScene:load()
+    if KeysPressed["return"] == true then
+        --GameState.player1 = self.chars[self.player1]
+        --GameState.player2 = self.chars[self.player2]
+        GameState.player1 = "drew"
+        GameState.player2 = "drew"
+        GameState.scenes.fightScene:load(GameState)
         GameState:setFightScene()
     end
     if ButtonsPressed[1]["start"] == true then
@@ -260,7 +262,19 @@ function pickFighterScene:selectCharacter()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
+    if KeysPressed["e"] == true then
+        self.selection1 = true
+        self.selected1 = true
+        self.animations.selection:setFrame(1)
+        self.animations.selection:play()
+    end
     if ButtonsPressed[2]["a"] == true then
+        self.selection2 = true
+        self.selected2 = true
+        self.animations.selection:setFrame(1)
+        self.animations.selection:play()
+    end
+    if KeysPressed["kp4"] == true then
         self.selection2 = true
         self.selected2 = true
         self.animations.selection:setFrame(1)
@@ -269,7 +283,13 @@ function pickFighterScene:selectCharacter()
     if ButtonsPressed[1]["b"] == true then
         self.selected1 = false
     end
+    if KeysPressed["q"] == true then
+        self.selected1 = false
+    end
     if ButtonsPressed[2]["b"] == true then
+        self.selected2 = false
+    end
+    if KeysPressed["kp6"] == true then
         self.selected2 = false
     end
 end

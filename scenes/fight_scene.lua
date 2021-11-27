@@ -21,7 +21,7 @@ function fight_scene:load(GameState)
     self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
 
     -- Import level
-    local level = "curlew"
+    local level = "bakke_backyard"
     Level = require("levels/"..level)
     Level:load(GameState.player1, GameState.player2, self.canvas)
     --[[ if Level.name == "curlew" then
@@ -51,52 +51,51 @@ end
   
 
 function fight_scene:update(dt, GameState)
-    -- Load players for the first time
-    if player1 == nil then
-        player1 = player:new(1, GameState.player1, Level.x1, Level.y1)
-        player1:load()
+    -- Check victory
+    if Level.player1.victory or Level.player2.victory then
+        ResetInputs()
     end
-    if Level.player2 == nil then
-        Level.player2 = player:new(2, GameState.Level.player2, Level.x2, Level.y2)
-        Level.player2:load()
-    end
-    -- print("Player 1 has mass of "..player1.physics.body:getMass())
-    -- print("Player 2 has mass of "..player2.physics.body:getMass())
     -- Increment Timers
     self:incrementTimers(dt)
     -- Supress controller inputs
-    if not self.fight or player1.knocked_out or Level.player2.knocked_out then
+    if not self.fight then
         ResetInputs()
-        if player1.knocked_out or Level.player2.knocked_out then
-            self:resetFighters(dt)
-        end
     end
+    self:resetFighters(dt)
     World:update(dt)
-    --player1:update(dt)
-    --player2:update(dt)
     self:updateFight(dt)
     Level:update(dt)
-    -- Apply shader if Curlew level
-    --[[ if Level.name == "curlew" then
-        self.eff:send("image2", self.canvas2)
-        self.eff:send("normal_map", Level.normal_map)
-        self.delta = self.delta - dt*0.03
-        if self.delta < -1.0 then
-            self.delta = 0.0
-        end
-        self.eff:send("d", self.delta)
-        --self.eff:send("time", love.timer:getTime())
-        self.eff:send("dock2_y", Level.Dock[2].body:getY()/(WindowHeight/GlobalScale))
-        self.eff:send("dock3_y", Level.Dock[3].body:getY()/(WindowHeight/GlobalScale))
-        self.eff:send("dock4_y", Level.Dock[4].body:getY()/(WindowHeight/GlobalScale))
-        self.eff:send("dock5_y", Level.Dock[5].body:getY()/(WindowHeight/GlobalScale))
-        self.eff:send("float1_y", Level.Floaty1.body:getY()/(WindowHeight/GlobalScale))
-        self.eff:send("float1_x", Level.Floaty1.body:getX()/(WindowWidth/GlobalScale))
-        self.eff:send("float2_y", Level.Floaty2.body:getY()/(WindowHeight/GlobalScale))
-        self.eff:send("float2_x", Level.Floaty2.body:getX()/(WindowWidth/GlobalScale))
-        --self.eff:send("Debug", Debug);
-    end ]]
     CheckKeys()
+end
+
+function fight_scene:resetFighters(dt)
+    -- Set both players to knocked_out if one is knocked_out
+    -- This triggers resetFighters function for both people
+    if Level.player1.knocked_out then
+        Level.player2.knocked_out = true
+    end
+    if Level.player2.knocked_out then
+        Level.player1.knocked_out = true
+    end
+    -- Reset player1
+    local attack_logic = Level.player2.knocked_out and not Level.player1.attack
+    local knock_out_logic = Level.player1.knocked_out
+    local kneel_logic = not Level.player1.kneel
+    if attack_logic and (knock_out_logic and kneel_logic) then
+        --print("Resetting player1...")
+        Level:resetFighters(dt, 1)
+        ResetInputs()
+    end
+    -- Reset player2
+    local attack_logic = Level.player1.knocked_out and not Level.player2.attack
+    local knock_out_logic = Level.player2.knocked_out
+    local kneel_logic = not Level.player2.kneel
+    --print("Knockout logic: "..tostring(knock_out_logic))
+    if attack_logic and (knock_out_logic and kneel_logic) then
+        --print("Resetting player2...")
+        Level:resetFighters(dt, 2)
+        ResetInputs()
+    end
 end
 
 function fight_scene:draw(sx, sy)
@@ -105,49 +104,6 @@ function fight_scene:draw(sx, sy)
     love.graphics.scale(sx, sy)
     self:drawFight()
     love.graphics.pop()
-    --[[ -- Activate canvas
-    love.graphics.setCanvas(self.canvas1)
-    -- Draw background to have shader applied to it
-    love.graphics.clear()
-    love.graphics.push()
-    love.graphics.scale(sx, sy)
-    Level:drawShadedBackground()
-    if player1 ~= nil then
-        player1:draw()
-    end
-    if player2 ~= nil then
-        player2:draw()
-    end
-    Level:drawForeground()
-    self:drawFight()
-    love.graphics.pop()
-    -- Draw canvas
-    love.graphics.setCanvas()
-    -- Apply shader if Curlew level
-    if Level.name == "curlew" then
-        love.graphics.setShader(self.eff)
-    end
-    love.graphics.setCanvas(self.canvas2)
-    love.graphics.push()
-    love.graphics.scale(sx, sy)
-    Level:drawWater()
-    love.graphics.pop()
-    love.graphics.setCanvas()
-    love.graphics.draw(self.canvas1, 0, 0)
-    love.graphics.setShader()
-    --love.graphics.setCanvas(self.canvas)
-    love.graphics.push()
-    love.graphics.scale(sx, sy)
-    Level:drawBackground()
-    if player1 ~= nil then
-        player1:draw()
-    end
-    if player2 ~= nil then
-        player2:draw()
-    end
-    self:drawFight()
-    love.graphics.pop()
-    --love.graphics.draw(self.canvas, 0, 0) ]]
 end
 
 function fight_scene:incrementTimers(dt)
@@ -176,51 +132,6 @@ function fight_scene:drawFight()
     end
 end
 
-function fight_scene:resetFighters(dt)
-    -- Reset player1
-    Level.player1.physics.fixture:setMask(2)
-    if Level.player1.x > Level.player1.x0 then
-        if Level.player1.joystick then
-            ButtonsPressed[Level.player1.id][Level.player1.left] = true
-        end
-    else
-        if Level.player1.joystick then
-            ButtonsPressed[Level.player1.id][Level.player1.right] = true
-        end
-    end
-    if math.abs(Level.player1.x - Level.player1.x0) < 0.05*Level.player1.x0 then
-        ButtonsPressed[Level.player1.id][Level.player1.left] = nil
-        ButtonsPressed[Level.player1.id][Level.player1.right] = nil
-        Level.player1.physics.body:setPosition(Level.player1.x0, Level.player1.y0)
-        Level.player1.xDir = 1.0
-    end
-    -- Reset player2
-    Level.player2.physics.fixture:setMask(2)
-    if Level.player2.x > Level.player2.x0 then
-        if Level.player2.joystick then
-            ButtonsPressed[Level.player2.id][Level.player2.left] = true
-        end
-    else
-        if Level.player2.joystick then
-            ButtonsPressed[Level.player2.id][Level.player2.right] = true
-        end
-    end
-    if math.abs(Level.player2.x - Level.player2.x0) < 0.05*Level.player2.x0 then
-        ButtonsPressed[Level.player2.id][Level.player2.left] = nil
-        ButtonsPressed[Level.player2.id][Level.player2.right] = nil
-        Level.player2.physics.body:setPosition(Level.player2.x0, Level.player2.y0)
-        Level.player2.xDir = -1.0
-    end
-    -- Switch boolean
-    if (Level.player1.x - Level.player1.x0 < 0.05*Level.player1.x0) and (Level.player2.x - Level.player2.x0 < 0.05*Level.player2.x0) then
-        Level.player1.knocked_out = false
-        Level.player2.knocked_out = false
-        Level.player1.physics.fixture:setMask()
-        Level.player2.physics.fixture:setMask()
-        self.fight = false
-    end
-end
-
 function ResetInputs()
     KeysPressed = {}
     ButtonsPressed = {}
@@ -237,9 +148,9 @@ function beginContact(a, b, collision)
     if (a:getUserData() == "sensor1" and b:getUserData() == "player2") or (b:getUserData() == "sensor1" and a:getUserData() == "player2") then
         if not Level.player2.invuln then
             if not Level.player2.blocking then
-                Level.player2:damage(10)
+                Level.player2:damage(50)
             else
-                Level.player2:damage(10*0.2)
+                Level.player2:damage(50*0.2)
             end
         end
     end
@@ -278,7 +189,7 @@ function CheckKeys(dt)
     Level.player2:attack_1()
     Level.player1:blocks()
     Level.player2:blocks()
-    --print(pconcat(AxisMoved[1]))
+    --print(pconcat(KeysPressed))
 end
 
 return fight_scene
