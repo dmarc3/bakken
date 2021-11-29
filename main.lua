@@ -14,6 +14,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 -- Define Local Parameters Here
 local titleScene = require"scenes/title_scene"
 local pickFighterScene = require"scenes/pick_fighter_scene"
+local pickLevelScene = require"scenes/pick_level_scene"
 local fightScene = require"scenes/fight_scene"
 -- Load gamepad mappings
 love.joystick.loadGamepadMappings("3rd/SDL_GameControllerDB/gamecontrollerdb.txt")
@@ -28,10 +29,12 @@ local GameState = {
     scenes = {
         titleScene = titleScene,
         pickFighterScene = pickFighterScene,
+        pickLevelScene = pickLevelScene,
         fightScene = fightScene,
     },
     player1 = "",
     player2 = "",
+    level = "",
     sx = GlobalScale,
     sy = GlobalScale
 }
@@ -59,6 +62,10 @@ end
 
 function GameState:setPickFighterScene()
     self.current = self.scenes.pickFighterScene
+end
+    
+function GameState:setPickLevelScene()
+    self.current = self.scenes.pickLevelScene
 end
 
 function GameState:setFightScene()

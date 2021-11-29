@@ -64,14 +64,14 @@ function pickFighterScene:update(dt, GameState)
         --GameState.player2 = self.chars[self.player2]
         GameState.player1 = "drew"
         GameState.player2 = "drew"
-        GameState.scenes.fightScene:load(GameState)
-        GameState:setFightScene()
+        GameState.scenes.pickLevelScene:load(GameState)
+        GameState:setPickLevelScene()
     end
     if ButtonsPressed[1]["start"] == true then
         GameState.player1 = self.chars[self.player1]
         GameState.player2 = self.chars[self.player2]
-        GameState.scenes.fightScene:load(GameState)
-        GameState:setFightScene()
+        GameState.scenes.pickLevelScene:load(GameState)
+        GameState:setPickLevelScene()
     end
 end
 

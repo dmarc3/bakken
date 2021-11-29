@@ -5,15 +5,15 @@ local player = require"characters/player"
 
 local fight_scene = scene:new("fight")
 
--- Gravity = 9.81
-Gravity = 10
-Meter = 64
-Friction = 5
-love.physics.setMeter(Meter)
+-- -- Gravity = 9.81
+-- Gravity = 10
+-- Meter = 64
+-- Friction = 5
+-- love.physics.setMeter(Meter)
 
 function fight_scene:load(GameState)
-    World = love.physics.newWorld(0, Meter*Gravity, false)
-    World:setCallbacks(beginContact, endContact)
+    -- World = love.physics.newWorld(0, Meter*Gravity, false)
+    -- World:setCallbacks(beginContact, endContact)
 
     -- Load canvas
     self.canvas = love.graphics.newCanvas(WindowWidth, WindowHeight)
@@ -21,13 +21,8 @@ function fight_scene:load(GameState)
     self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
 
     -- Import level
-    local level = "bakke_backyard"
-    Level = require("levels/"..level)
+    Level = require("levels/"..GameState.level)
     Level:load(GameState.player1, GameState.player2, self.canvas)
-    --[[ if Level.name == "curlew" then
-        local water_effect = love.filesystem.read("levels/water_shader.glsl")
-        self.eff = love.graphics.newShader(water_effect)
-    end ]]
 
     -- Import fight ui
     local spritesheet = love.graphics.newImage("assets/ui/fight.png")
@@ -99,7 +94,7 @@ function fight_scene:resetFighters(dt)
 end
 
 function fight_scene:draw(sx, sy)
-    Level:draw(sx, sy)
+    Level:draw(0, 0, sx, sy, true)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawFight()

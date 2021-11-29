@@ -7,15 +7,15 @@ Level.__index = Level
 function Level:load(player1, player2, canvas)
     self.name = "bakke_backyard"
     self.canvas = canvas
-    -- Create Ground and Walls
-    Ground = {}
-    Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
-    Ground.body:setUserData("ground")
-    Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
-    Ground.fixture = love.physics.newFixture(Ground.body, Ground.shape)
-    Ground.fixture:setFriction(Friction)
-    Ground.fixture:setUserData("ground")
-    Ground.y = WindowHeight/GlobalScale + 10
+    -- Create self.Ground and Walls
+    self.Ground = {}
+    self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+    self.Ground.body:setUserData("ground")
+    self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
+    self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
+    self.Ground.fixture:setFriction(Friction)
+    self.Ground.fixture:setUserData("ground")
+    self.Ground.y = WindowHeight/GlobalScale + 10
     Walls = {}
     Walls.left = {}
     Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
@@ -47,20 +47,20 @@ function Level:load(player1, player2, canvas)
     -- Define background
     local spritesheet = love.graphics.newImage("assets/levels/backyard.png")
     local asepriteMeta = "assets/levels/backyard.json"
-    Backyard = {}
-    Backyard.base = peachy.new(asepriteMeta, spritesheet, "idle")
-    Backyard.bush = peachy.new(asepriteMeta, spritesheet, "bush")
-    Backyard.tree = peachy.new(asepriteMeta, spritesheet, "tree")
-    Backyard.foreground = peachy.new(asepriteMeta, spritesheet, "foreground")
-    Backyard.toys = peachy.new(asepriteMeta, spritesheet, "toys")
-    Backyard.toys_top = peachy.new(asepriteMeta, spritesheet, "toys_top")
-    Backyard.toys_top_transparent = peachy.new(asepriteMeta, spritesheet, "toys_top_transparent")
-    Backyard.toys_bottom = peachy.new(asepriteMeta, spritesheet, "toys_bottom")
-    Backyard.sun = peachy.new(asepriteMeta, spritesheet, "sun")
-    Backyard.clouds1 = peachy.new(asepriteMeta, spritesheet, "clouds")
-    Backyard.clouds2 = peachy.new(asepriteMeta, spritesheet, "clouds")
-    Backyard.bird1 = peachy.new(asepriteMeta, spritesheet, "bird")
-    Backyard.bird2 = peachy.new(asepriteMeta, spritesheet, "bird")
+    self.Backyard = {}
+    self.Backyard.base = peachy.new(asepriteMeta, spritesheet, "idle")
+    self.Backyard.bush = peachy.new(asepriteMeta, spritesheet, "bush")
+    self.Backyard.tree = peachy.new(asepriteMeta, spritesheet, "tree")
+    self.Backyard.foreground = peachy.new(asepriteMeta, spritesheet, "foreground")
+    self.Backyard.toys = peachy.new(asepriteMeta, spritesheet, "toys")
+    self.Backyard.toys_top = peachy.new(asepriteMeta, spritesheet, "toys_top")
+    self.Backyard.toys_top_transparent = peachy.new(asepriteMeta, spritesheet, "toys_top_transparent")
+    self.Backyard.toys_bottom = peachy.new(asepriteMeta, spritesheet, "toys_bottom")
+    self.Backyard.sun = peachy.new(asepriteMeta, spritesheet, "sun")
+    self.Backyard.clouds1 = peachy.new(asepriteMeta, spritesheet, "clouds")
+    self.Backyard.clouds2 = peachy.new(asepriteMeta, spritesheet, "clouds")
+    self.Backyard.bird1 = peachy.new(asepriteMeta, spritesheet, "bird")
+    self.Backyard.bird2 = peachy.new(asepriteMeta, spritesheet, "bird")
     -- Define Constants
     self.x1 = WindowWidth/GlobalScale*0.2
     self.y1 = WindowHeight/GlobalScale*0.8
@@ -77,19 +77,19 @@ function Level:load(player1, player2, canvas)
 end
 
 function Level:update(dt)
-    Backyard.base:update(dt)
-    Backyard.bush:update(dt)
-    Backyard.tree:update(dt)
-    Backyard.foreground:update(dt)
-    Backyard.toys:update(dt)
-    Backyard.toys_top:update(dt)
-    Backyard.toys_top_transparent:update(dt)
-    Backyard.toys_bottom:update(dt)
-    Backyard.bird1:update(dt)
-    Backyard.bird2:update(dt)
-    Backyard.clouds1:update(dt)
-    Backyard.clouds2:update(dt)
-    Backyard.sun:update(dt)
+    self.Backyard.base:update(dt)
+    self.Backyard.bush:update(dt)
+    self.Backyard.tree:update(dt)
+    self.Backyard.foreground:update(dt)
+    self.Backyard.toys:update(dt)
+    self.Backyard.toys_top:update(dt)
+    self.Backyard.toys_top_transparent:update(dt)
+    self.Backyard.toys_bottom:update(dt)
+    self.Backyard.bird1:update(dt)
+    self.Backyard.bird2:update(dt)
+    self.Backyard.clouds1:update(dt)
+    self.Backyard.clouds2:update(dt)
+    self.Backyard.sun:update(dt)
     self.cloudx = self.cloudx - 0.02
     if self.cloudx < -WindowWidth/GlobalScale then
         self.cloudx = self.cloudx + WindowWidth/GlobalScale
@@ -103,7 +103,7 @@ function Level:update(dt)
     self.player2:update(dt)
 end
 
-function Level:draw(sx, sy)
+function Level:draw(x, y, sx, sy, option)
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -111,31 +111,33 @@ function Level:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawBackground()
-    self.player1:draw()
-    self.player2:draw()
+    if option then
+        self.player1:draw()
+        self.player2:draw()
+    end
     self:drawForeground()
     love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()
-    love.graphics.draw(self.canvas, 0, 0)
+    love.graphics.draw(self.canvas, x, y)
 end
 
 function Level:drawForeground()
-    Backyard.toys_bottom:draw(0,0)
-    Backyard.toys_top:draw(0,0)
+    self.Backyard.toys_bottom:draw(0,0)
+    self.Backyard.toys_top:draw(0,0)
 end
 
 function Level:drawBackground()
-    Backyard.base:draw(0,0)
-    Backyard.bush:draw(0,0)
-    Backyard.tree:draw(0,0)
-    Backyard.toys:draw(0,0)
-    Backyard.sun:draw(self.sunx, 0)
-    Backyard.clouds1:draw(self.cloudx,0)
-    Backyard.clouds2:draw(self.cloudx+WindowWidth/GlobalScale,0)
-    Backyard.bird1:draw(self.birdx, 0)
-    Backyard.bird2:draw(self.birdx+2*WindowWidth/GlobalScale, 0)
-    Backyard.foreground:draw(0,0)
+    self.Backyard.base:draw(0,0)
+    self.Backyard.bush:draw(0,0)
+    self.Backyard.tree:draw(0,0)
+    self.Backyard.toys:draw(0,0)
+    self.Backyard.sun:draw(self.sunx, 0)
+    self.Backyard.clouds1:draw(self.cloudx,0)
+    self.Backyard.clouds2:draw(self.cloudx+WindowWidth/GlobalScale,0)
+    self.Backyard.bird1:draw(self.birdx, 0)
+    self.Backyard.bird2:draw(self.birdx+2*WindowWidth/GlobalScale, 0)
+    self.Backyard.foreground:draw(0,0)
     if Debug then
         --[[ love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
         love.graphics.setColor(0.1, 0.1, 0.1, 1)
@@ -143,7 +145,7 @@ function Level:drawBackground()
         love.graphics.setColor(0, 0, 0, 0.5)
         love.graphics.polygon("fill", Toys.body:getWorldPoints(Toys.shape:getPoints()))
         love.graphics.polygon("fill", Roof.body:getWorldPoints(Roof.shape:getPoints()))
-        gx, gy = Ground.body:getPosition()
+        gx, gy = self.Ground.body:getPosition()
         love.graphics.rectangle("fill", gx-WindowWidth/GlobalScale/2, gy-10, WindowWidth/GlobalScale, 20)
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.rectangle("fill", gx, gy, 1, 1)

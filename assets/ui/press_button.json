@@ -37,8 +37,8 @@
    }
  ],
  "meta": {
-  "app": "http://www.aseprite.org/",
-  "version": "1.2.29-x64",
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.30-x64",
   "image": "press_button.png",
   "format": "RGBA8888",
   "size": { "w": 256, "h": 32 },
