@@ -24,6 +24,8 @@ function pickLevelScene:load(GameState)
     Levels[1]:load(GameState.player1, GameState.player2, self.canvas)
     Levels[2] = require("levels/"..self.levels[2])
     Levels[2]:load(GameState.player1, GameState.player2, self.canvas)
+    Levels[3] = require("levels/"..self.levels[3])
+    Levels[3]:load(GameState.player1, GameState.player2, self.canvas)
 
     self.y = {10, 30, 50}
     self.animations = {}
