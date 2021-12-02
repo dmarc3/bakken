@@ -175,7 +175,7 @@ function Level:update(dt)
     self.eff:send("float2_x", self.Floaty2.body:getX()/(WindowWidth/GlobalScale))
 end
 
-function Level:draw(sx, sy)
+function Level:draw(x, y, sx, sy, option)
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -183,37 +183,46 @@ function Level:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawShadedBackground()
-    self.player1:draw()
-    self.player2:draw()
+    if option then
+        self.player1:draw()
+        self.player2:draw()
+    end
     self:drawForeground()
+    if not option then
+        self:drawBackground()
+    end
     love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()
-    love.graphics.setShader(self.eff)
+    if option then
+        love.graphics.setShader(self.eff)
+    end
     love.graphics.setCanvas(self.canvas2)
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    self:drawWater()
+    self:drawWater(x, y)
     love.graphics.pop()
     love.graphics.setCanvas()
-    love.graphics.draw(self.canvas, 0, 0)
+    love.graphics.draw(self.canvas, x, y)
     -- Remove shader and draw background water
     love.graphics.setShader()
-    love.graphics.push()
-    love.graphics.scale(sx, sy)
-    self:drawBackground()
-    self.player1:draw()
-    self.player2:draw()
-    self:drawForeground()
-    love.graphics.pop()
+    if option then
+        love.graphics.push()
+        love.graphics.scale(sx, sy)
+        self:drawBackground()
+        self.player1:draw()
+        self.player2:draw()
+        self:drawForeground()
+        love.graphics.pop()
+    end
 end
 
 function Level:drawForeground()
     Curlew.Floaty2_front:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
 end
 
-function Level:drawWater()
-    Curlew.Water:draw(0,0)
+function Level:drawWater(x, y)
+    Curlew.Water:draw(x, y)
 end
 
 function Level:drawShadedBackground()
@@ -246,7 +255,7 @@ function Level:drawShadedBackground()
 end
 
 function Level:drawBackground()
-    Curlew.Background:draw(0,0)
+    Curlew.Background:draw(0, 0)
     for i = 2, 5 do
         Curlew.Dock[i]:draw(self.Dock[i].body:getX(), self.Dock[i].body:getY(), self.Dock[i].body:getAngle(), 1, 1, self.Dock.x[i], self.Dock.y[i])
     end

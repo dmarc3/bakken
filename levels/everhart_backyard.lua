@@ -35,6 +35,17 @@ function Level:load(player1, player2, canvas)
     local asepriteMeta = "assets/levels/everhart_backyard.json"
     self.Backyard = {}
     self.Backyard.base = peachy.new(asepriteMeta, spritesheet, "idle")
+    -- Define Lee grilling
+    self.Lee = {}
+    self.Lee.burger_in = peachy.new(asepriteMeta, spritesheet, "burger_in")
+    self.Lee.burger_flip = peachy.new(asepriteMeta, spritesheet, "burger_flip")
+    self.Lee.burger_out = peachy.new(asepriteMeta, spritesheet, "burger_out")
+    self.Lee.beer = peachy.new(asepriteMeta, spritesheet, "beer")
+    self.lee_state = 1
+    self.lee_states = {"beer", "burger_in", "burger_flip", "burger_out"}
+    self.lee_accumulator = 0.0
+    self.dur = 10.0
+    self.duration = math.random()*self.dur+self.dur
     -- Define Constants
     self.x1 = WindowWidth/GlobalScale*0.2
     self.y1 = WindowHeight/GlobalScale*0.8
@@ -51,9 +62,23 @@ function Level:load(player1, player2, canvas)
 end
 
 function Level:update(dt)
+    print(self.lee_states[self.lee_state].." @ frame "..self.Lee[self.lee_states[self.lee_state]]:getFrame())
     self.Backyard.base:update(dt)
+    self:setLeeState(dt)
+    self.Lee[self.lee_states[self.lee_state]]:update(dt)
     self.player1:update(dt)
     self.player2:update(dt)
+end
+
+function Level:incrementTimers(dt)
+    self.lee_accumulator = self.lee_accumulator + dt
+    if self.lee_accumulator > self.duration then
+        self.lee_accumulator = 0.0
+        self.lee_state = self.lee_state + 1
+        if self.lee_state > 4 then
+            self.lee_state = 1
+        end
+    end
 end
 
 function Level:draw(x, y, sx, sy, option)
@@ -78,8 +103,35 @@ end
 function Level:drawForeground()
 end
 
+function Level:setLeeState(dt)
+    local current_state = self.lee_state
+    
+    self:incrementTimers(dt)
+
+    if self.lee_state == 2 or self.lee_state == 4 then
+        self.duration = 0.2
+    else
+        self.duration = math.random()*self.dur
+    end
+
+    -- Reset starting frame to 1 if state has changed
+    if current_state ~= self.lee_state then
+        -- print("Changing from "..current_state.." to "..self.lee_states[self.lee_state])
+        self.Lee[self.lee_states[self.lee_state]]:setFrame(1)
+    end
+end
+
 function Level:drawBackground()
     self.Backyard.base:draw(0,0)
+    if self.lee_states[self.lee_state] == "beer" then
+        self.Lee.beer:draw(0,0)
+    elseif self.lee_states[self.lee_state] == "burger_in" then
+        self.Lee.burger_in:draw(0,0)
+    elseif self.lee_states[self.lee_state] == "burger_out" then
+        self.Lee.burger_out:draw(0,0)
+    elseif self.lee_states[self.lee_state] == "burger_flip" then
+        self.Lee.burger_flip:draw(0,0)
+    end
 end
 
 function Level:resetFighters(dt, id)
