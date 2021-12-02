@@ -15,7 +15,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 2.aseprite",
@@ -24,7 +24,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 3.aseprite",
@@ -96,7 +96,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 100
    },
    {
     "filename": "everhart_backyard 11.aseprite",
@@ -105,7 +105,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 100
    },
    {
     "filename": "everhart_backyard 12.aseprite",
@@ -159,7 +159,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 200
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 18.aseprite",
@@ -168,7 +168,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 25
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 19.aseprite",
@@ -177,7 +177,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 25
+    "duration": 200
    },
    {
     "filename": "everhart_backyard 20.aseprite",
@@ -276,7 +276,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 25
    },
    {
     "filename": "everhart_backyard 31.aseprite",
@@ -285,7 +285,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 25
    },
    {
     "filename": "everhart_backyard 32.aseprite",
@@ -330,7 +330,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 37.aseprite",
@@ -339,7 +339,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 38.aseprite",
@@ -411,7 +411,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 100
    },
    {
     "filename": "everhart_backyard 46.aseprite",
@@ -420,7 +420,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 100
    },
    {
     "filename": "everhart_backyard 47.aseprite",
@@ -465,7 +465,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 52.aseprite",
@@ -474,7 +474,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 53.aseprite",
@@ -492,7 +492,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 100
    },
    {
     "filename": "everhart_backyard 55.aseprite",
@@ -510,7 +510,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 100
+    "duration": 400
    },
    {
     "filename": "everhart_backyard 57.aseprite",
@@ -519,7 +519,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 400
+    "duration": 100
    },
    {
     "filename": "everhart_backyard 58.aseprite",
@@ -528,7 +528,178 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
+    "duration": 100
+   },
+   {
+    "filename": "everhart_backyard 59.aseprite",
+    "frame": { "x": 14160, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
     "duration": 400
+   },
+   {
+    "filename": "everhart_backyard 60.aseprite",
+    "frame": { "x": 14400, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 400
+   },
+   {
+    "filename": "everhart_backyard 61.aseprite",
+    "frame": { "x": 14640, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 400
+   },
+   {
+    "filename": "everhart_backyard 62.aseprite",
+    "frame": { "x": 14880, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 400
+   },
+   {
+    "filename": "everhart_backyard 63.aseprite",
+    "frame": { "x": 15120, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 400
+   },
+   {
+    "filename": "everhart_backyard 64.aseprite",
+    "frame": { "x": 15360, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 65.aseprite",
+    "frame": { "x": 15600, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 66.aseprite",
+    "frame": { "x": 15840, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 67.aseprite",
+    "frame": { "x": 16080, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 68.aseprite",
+    "frame": { "x": 16320, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 69.aseprite",
+    "frame": { "x": 16560, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 70.aseprite",
+    "frame": { "x": 16800, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 71.aseprite",
+    "frame": { "x": 17040, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 72.aseprite",
+    "frame": { "x": 17280, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 73.aseprite",
+    "frame": { "x": 17520, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 74.aseprite",
+    "frame": { "x": 17760, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 75.aseprite",
+    "frame": { "x": 18000, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 76.aseprite",
+    "frame": { "x": 18240, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
+   },
+   {
+    "filename": "everhart_backyard 77.aseprite",
+    "frame": { "x": 18480, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 200
    }
  ],
  "meta": {
@@ -536,16 +707,27 @@
   "version": "1.2.30-x64",
   "image": "everhart_backyard.png",
   "format": "RGBA8888",
-  "size": { "w": 14160, "h": 160 },
+  "size": { "w": 18720, "h": 160 },
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 0, "direction": "forward" },
-   { "name": "burger_in", "from": 1, "to": 9, "direction": "forward" },
-   { "name": "burger_flip", "from": 10, "to": 35, "direction": "forward" },
-   { "name": "burger_out", "from": 36, "to": 44, "direction": "forward" },
-   { "name": "beer", "from": 45, "to": 58, "direction": "forward" }
+   { "name": "background", "from": 1, "to": 1, "direction": "forward" },
+   { "name": "clouds", "from": 2, "to": 2, "direction": "forward" },
+   { "name": "burger_in", "from": 3, "to": 11, "direction": "forward" },
+   { "name": "burger_flip", "from": 12, "to": 37, "direction": "forward" },
+   { "name": "burger_out", "from": 38, "to": 46, "direction": "forward" },
+   { "name": "beer", "from": 47, "to": 60, "direction": "forward" },
+   { "name": "smoke", "from": 61, "to": 63, "direction": "forward" },
+   { "name": "smoke_out", "from": 64, "to": 71, "direction": "forward" },
+   { "name": "smoke_in", "from": 72, "to": 77, "direction": "forward" }
   ],
   "layers": [
+   { "name": "sky", "opacity": 255, "blendMode": "normal" },
+   { "name": "hills", "opacity": 255, "blendMode": "normal" },
+   { "name": "distance_glare", "opacity": 93, "blendMode": "normal" },
+   { "name": "tree", "opacity": 255, "blendMode": "normal" },
+   { "name": "house", "opacity": 255, "blendMode": "normal" },
+   { "name": "clouds", "opacity": 255, "blendMode": "normal" },
    { "name": "ground", "opacity": 255, "blendMode": "normal" },
    { "name": "shed", "opacity": 255, "blendMode": "normal" },
    { "name": "plant", "opacity": 255, "blendMode": "normal" },
@@ -554,6 +736,7 @@
    { "name": "trampoline", "opacity": 255, "blendMode": "normal" },
    { "name": "trampoline_net", "opacity": 125, "blendMode": "normal" },
    { "name": "grill", "opacity": 255, "blendMode": "normal" },
+   { "name": "smoke", "opacity": 50, "blendMode": "normal" },
    { "name": "Lee", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [

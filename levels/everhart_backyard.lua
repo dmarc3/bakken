@@ -35,6 +35,9 @@ function Level:load(player1, player2, canvas)
     local asepriteMeta = "assets/levels/everhart_backyard.json"
     self.Backyard = {}
     self.Backyard.base = peachy.new(asepriteMeta, spritesheet, "idle")
+    self.Backyard.background = peachy.new(asepriteMeta, spritesheet, "background")
+    self.Backyard.clouds1 = peachy.new(asepriteMeta, spritesheet, "clouds")
+    self.Backyard.clouds2 = peachy.new(asepriteMeta, spritesheet, "clouds")
     -- Define Lee grilling
     self.Lee = {}
     self.Lee.burger_in = peachy.new(asepriteMeta, spritesheet, "burger_in")
@@ -43,6 +46,16 @@ function Level:load(player1, player2, canvas)
     self.Lee.beer = peachy.new(asepriteMeta, spritesheet, "beer")
     self.lee_state = 1
     self.lee_states = {"beer", "burger_in", "burger_flip", "burger_out"}
+    -- Define smoke
+    self.Smoke = {}
+    self.Smoke.smoke_in = peachy.new(asepriteMeta, spritesheet, "smoke_in")
+    self.Smoke.smoke = peachy.new(asepriteMeta, spritesheet, "smoke")
+    self.Smoke.smoke_out = peachy.new(asepriteMeta, spritesheet, "smoke_out")
+    self.smoke_state = 1
+    self.smoke_states = {"no_smoke", "smoke_in", "smoke", "smoke_out"}
+    self.smoke_delay = {0, 0.5, 0, 0.6}
+    self.smoke = false
+    self.smoke_timer = 0.0
     self.lee_accumulator = 0.0
     self.dur = 10.0
     self.duration = math.random()*self.dur+self.dur
@@ -62,22 +75,25 @@ function Level:load(player1, player2, canvas)
 end
 
 function Level:update(dt)
-    print(self.lee_states[self.lee_state].." @ frame "..self.Lee[self.lee_states[self.lee_state]]:getFrame())
+    --print(self.lee_states[self.lee_state].." @ frame "..self.Lee[self.lee_states[self.lee_state]]:getFrame())
     self.Backyard.base:update(dt)
     self:setLeeState(dt)
     self.Lee[self.lee_states[self.lee_state]]:update(dt)
+    if self.smoke_state > 1 then
+        self.Smoke[self.smoke_states[self.smoke_state]]:update(dt)
+    end
     self.player1:update(dt)
     self.player2:update(dt)
+    self.cloudx = self.cloudx - 0.02
+    if self.cloudx < -WindowWidth/GlobalScale then
+        self.cloudx = self.cloudx + WindowWidth/GlobalScale
+    end
 end
 
 function Level:incrementTimers(dt)
     self.lee_accumulator = self.lee_accumulator + dt
-    if self.lee_accumulator > self.duration then
-        self.lee_accumulator = 0.0
-        self.lee_state = self.lee_state + 1
-        if self.lee_state > 4 then
-            self.lee_state = 1
-        end
+    if self.smoke then
+        self.smoke_timer = self.smoke_timer + dt
     end
 end
 
@@ -107,11 +123,21 @@ function Level:setLeeState(dt)
     local current_state = self.lee_state
     
     self:incrementTimers(dt)
+    if self.lee_accumulator > self.duration then
+        self.lee_accumulator = 0.0
+        self.lee_state = self.lee_state + 1
+        if self.lee_state > 4 then
+            self.lee_state = 1
+        end
+    end
+
+    -- Change smoke state
+    self:setSmokeState(current_state, self.lee_state)
 
     if self.lee_state == 2 or self.lee_state == 4 then
-        self.duration = 0.2
+        self.duration = 0.9
     else
-        self.duration = math.random()*self.dur
+        self.duration = math.random()*self.dur+self.dur
     end
 
     -- Reset starting frame to 1 if state has changed
@@ -121,17 +147,50 @@ function Level:setLeeState(dt)
     end
 end
 
-function Level:drawBackground()
-    self.Backyard.base:draw(0,0)
-    if self.lee_states[self.lee_state] == "beer" then
-        self.Lee.beer:draw(0,0)
-    elseif self.lee_states[self.lee_state] == "burger_in" then
-        self.Lee.burger_in:draw(0,0)
-    elseif self.lee_states[self.lee_state] == "burger_out" then
-        self.Lee.burger_out:draw(0,0)
-    elseif self.lee_states[self.lee_state] == "burger_flip" then
-        self.Lee.burger_flip:draw(0,0)
+function Level:setSmokeState(old_state, new_state)
+    local current_state = self.smoke_state
+    
+    if old_state ~= new_state then
+        -- Increment smoke state
+        self.smoke_state = self.smoke_state + 1
+        self.smoke_timer = 0.0
+        if self.smoke_state > 4 then
+            self.smoke_state = 1
+        end
+        -- Check if smoke should be present
+        if new_state > 1 then
+            self.smoke = true
+        else
+            self.smoke = false
+        end
+        --print(self.smoke_states[self.smoke_state])
     end
+    --print(self.smoke_timer)
+
+    -- Reset starting frame to 1 if state has changed
+    if current_state ~= self.smoke_state and self.smoke_state > 1 then
+        -- print("Changing from "..current_state.." to "..self.lee_states[self.lee_state])
+        self.Smoke[self.smoke_states[self.smoke_state]]:setFrame(1)
+    end
+end
+
+function Level:drawBackground()
+    self.Backyard.background:draw(0,0)
+    self.Backyard.clouds1:draw(self.cloudx,0)
+    self.Backyard.clouds2:draw(self.cloudx+WindowWidth/GlobalScale,0)
+    self.Backyard.base:draw(0,0)
+    if self.smoke_state ~= 1 then
+        if self.smoke_timer < self.smoke_delay[self.smoke_state] then
+            if self.smoke_state - 1 > 1 then
+                self.Smoke[self.smoke_states[self.smoke_state-1]]:draw(0,0)
+            elseif self.smoke_state == 1 then
+                self.Smoke[self.smoke_states[4]]:draw(0,0)
+            end
+        else
+            self.Smoke[self.smoke_states[self.smoke_state]]:draw(0,0)
+        end
+    end
+    self.Lee[self.lee_states[self.lee_state]]:draw(0,0)
 end
 
 function Level:resetFighters(dt, id)
