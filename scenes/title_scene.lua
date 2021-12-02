@@ -14,10 +14,7 @@ function titleScene:load()
     self.phrase[1] = peachy.new(self.BG_SpriteSheetMeta, self.BG_SpriteSheet, "draw")
     self.phrase[2] = peachy.new(self.BG_SpriteSheetMeta, self.BG_SpriteSheet, "your")
     self.phrase[3] = peachy.new(self.BG_SpriteSheetMeta, self.BG_SpriteSheet, "weapon")
-    self.phrase.delay = {}
-    self.phrase.delay[1] = 0.5
-    self.phrase.delay[2] = 1.0
-    self.phrase.delay[3] = 1.5
+    self.phrase.delay = {1.1, 2.1, 3.1}
     self.start_timer = false
     self.timer = 0.0
     self.interact = false
@@ -25,7 +22,7 @@ function titleScene:load()
     self.PB_SpriteSheetMeta = "assets/ui/press_button.json"
     self.press_button = peachy.new(self.PB_SpriteSheetMeta, self.PB_SpriteSheet, "Idle")
     --self:loadChars("drew", "lilah")
-
+    self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
 end
 
 function titleScene:loadChars(p1, p2)
@@ -116,6 +113,9 @@ function titleScene:loadChars(p1, p2)
 end
 
 function titleScene:update(dt, gameState)
+    if self.title.x == 0 and not self.music:isPlaying() then
+        self.music:play()
+    end
     if not self.interact then
         ResetInputs()
     end
@@ -124,12 +124,20 @@ function titleScene:update(dt, gameState)
     for i = 1, 3 do
         self.phrase[i]:update(dt)
     end
-    self.press_button:update(dt)
+    if self.timer > self.phrase.delay[3] + 1 then
+      self.press_button:update(dt)
+    end
 
     if next(KeysPressed) ~= nil then
+        if self.music:isPlaying() then
+            self.music:stop()
+        end
         gameState:setPickFighterScene()
     end
     if next(ButtonsPressed[1]) ~= nil then
+        if self.music:isPlaying() then
+            self.music:stop()
+        end
         gameState:setPickFighterScene()
     end
     self:incrementTimers(dt)
@@ -145,15 +153,13 @@ function titleScene:draw(sx, sy)
     love.graphics.scale(sx, sy)
     love.graphics.setBackgroundColor(0.0, 0.0, 0.0, 1.0)
     self.title.image:draw(self.title.x, 0)
-    love.graphics.setColor(0.2, 0.2, 0.2, 1)
-    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 50, WindowWidth/GlobalScale, 50)
     love.graphics.setColor(1, 1, 1, 1)
     for i = 1, 3 do
         if self.timer > self.phrase.delay[i] then
             self.phrase[i]:draw()
         end
     end
-    if self.timer > self.phrase.delay[3] + 0.5 then
+    if self.timer > self.phrase.delay[3] + 1.05 then
         self.press_button:draw(WindowWidth/GlobalScale/2, WindowHeight/GlobalScale*0.8, 0, 1, 1, self.press_button:getWidth()/2, self.press_button:getHeight()/2)
         self.interact = true
     end
