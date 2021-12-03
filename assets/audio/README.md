@@ -43,9 +43,10 @@ these noises
 - [ ] Button press on title screen
 - [x] Confirming character/level selections
   - `assets/sfx/confirm_selection.ogg`
+- [ ] Un-confirm character/level selections
+  - same as confirm but descending
 - [x] Moving character/level selection noise
   - `assets/sfx/change_selection.ogg`
-- [ ] Invalid selection
+- [x] Invalid selection
   - `assets/sfx/invalid_selection.ogg`
-  - not sure if this will be applicable, but it kind of popped out of thin air when
-    I was making other effects
+  - general "don't do that!" ui noise

@@ -1,12 +1,8 @@
 local peachy = require"3rd/peachy/peachy"
 local scene = require"scene"
+local utils = require"utils"
 
 local pickFighterScene = scene:new("pickFigherScene")
-
-local function floor(x, min)
-    -- ensure x is greater than or equal to floor
-    return x < min and min or x
-end
 
 P1 = "drew"
 P2 = "lilah"
@@ -67,6 +63,7 @@ function pickFighterScene:load()
         self.joystick1 = nil
         self.joystick2 = nil
     end
+
     -- Reset Inputs on load
     ResetInputs()
 end
@@ -182,80 +179,45 @@ function pickFighterScene:updateCharacters(dt)
     self.animations.selection:update(dt)
     if not self.selected1 then
         if AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] > 0 and not self.move then
-            self.player1 = self.player1 + 1
-            if self.player1 == self.player2 then
-                self.player1 = self.player1 + 1
-            elseif self.player1 > #self.chars then
-                self.player1 = floor(self.player1 - 1, 1)
-            end
+            self.player1 = self:playerIncrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         elseif AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] < 0 and not self.move then
-            self.player1 = floor(self.player1 - 1, 1)
-            if self.player1 == self.player2 then
-                self.player1 = floor(self.player1 - 1, 1)
-            elseif self.player2 < 1 then
-                self.player1 = self.player1 + 1
-            end
+            self.player1 = self:playerDecrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         end
         if KeysPressed["d"] ~= nil and not self.move then
-            self.player1 = self.player1 + 1
-            if self.player1 == self.player2 then
-                self.player1 = self.player1 + 1
-            elseif self.player1 > #self.chars then
-                self.player1 = floor(self.player1 - 1, 1)
-            end
+            self.player1 = self:playerIncrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         elseif KeysPressed["a"] ~= nil and not self.move then
-            self.player1 = floor(self.player1 - 1, 1)
-            if self.player1 == self.player2 then
-                self.player1 = floor(self.player1 - 1, 1)
-            elseif self.player2 < 1 then
-                self.player1 = self.player1 + 1
-            end
+            self.player1 = self:playerDecrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         end
     end
     if not self.selected2 then
         if AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] > 0 and not self.move then
-            self.player2 = self.player2 + 1
-            if self.player2 == self.player1 then
-                self.player2 = self.player2 + 1
-            end
+            self.player2 = self:playerIncrement(self.player2, self.player1)
             self.move = true
             self.move_timer = 0
         elseif AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] < 0 and not self.move then
-            self.player2 = floor(self.player2 - 1, 1)
-            if self.player2 == self.player1 then
-                self.player2 = floor(self.player2 - 1, 1)
-            end
+            self.player1 = self:playerDecrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         end
         if KeysPressed["kp3"] ~= nil and not self.move then
-            self.player2 = self.player2 + 1
-            if self.player2 == self.player1 then
-                self.player2 = self.player2 + 1
-            end
+            self.player2 = self:playerIncrement(self.player2, self.player1)
             self.move = true
             self.move_timer = 0
         elseif KeysPressed["kp1"] ~= nil and not self.move then
-            self.player2 = floor(self.player2 - 1, 1)
-            if self.player2 == self.player1 then
-                self.player2 = floor(self.player2 - 1, 1)
-            end
+            self.player2 = self:playerDecrement(self.player2, self.player1)
             self.move = true
             self.move_timer = 0
         end
     end
     if self.move then
-        if not self.sfx.change_sel:isPlaying() then
-            self.sfx.change_sel:play()
-        end
         self.move_timer = self.move_timer + dt
         if self.move_timer > 0.3 then
             self.move_timer = 0
@@ -280,6 +242,7 @@ function pickFighterScene:selectCharacter()
     if KeysPressed["e"] == true then
         self.selection1 = true
         self.selected1 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
@@ -322,6 +285,50 @@ function pickFighterScene:processDelay()
         self.selected2 = false
         ResetInputs()
     end
+end
+
+function pickFighterScene:playerIncrement(player, other_player)
+    -- increment player position, if possible, and play sfx accordingly
+    local validMove = true
+    if player + 1 == other_player then
+        if other_player == #self.chars then
+            validMove = false
+        else
+            player = player + 2
+        end
+    elseif player + 1 > #self.chars then
+        validMove = false
+    else
+        player = player + 1
+    end
+    if validMove then
+        utils.snplay(self.sfx.change_sel)
+    else
+        utils.snplay(self.sfx.invalid_sel)
+    end
+    return player
+end
+
+function pickFighterScene:playerDecrement(player, other_player)
+    -- decrement player position, if possible, and play sfx accordingly
+    local validMove = true
+    if player - 1 == other_player then
+        if other_player == 1 then
+            validMove = false
+        else
+            player = player - 2
+        end
+    elseif player - 1 < 1 then
+        validMove = false
+    else
+        player = player - 1
+    end
+    if validMove then
+        utils.snplay(self.sfx.change_sel)
+    else
+        utils.snplay(self.sfx.invalid_sel)
+    end
+    return player
 end
 
 function ResetInputs()
