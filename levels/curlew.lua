@@ -194,15 +194,16 @@ function Level:draw(x, y, sx, sy, option)
     love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()
-    if option then
-        love.graphics.setShader(self.eff)
-    end
     love.graphics.setCanvas(self.canvas2)
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    self:drawWater(x, y)
+    self:drawWater()
     love.graphics.pop()
     love.graphics.setCanvas()
+    self.canvas2:newImageData():encode("png", "canvas2.png")
+    if option then
+        love.graphics.setShader(self.eff)
+    end
     love.graphics.draw(self.canvas, x, y)
     -- Remove shader and draw background water
     love.graphics.setShader()
@@ -221,8 +222,8 @@ function Level:drawForeground()
     Curlew.Floaty2_front:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
 end
 
-function Level:drawWater(x, y)
-    Curlew.Water:draw(x, y)
+function Level:drawWater()
+    Curlew.Water:draw()
 end
 
 function Level:drawShadedBackground()

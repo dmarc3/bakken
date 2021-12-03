@@ -49,18 +49,18 @@ vec4 displacement_map(in Image image, in Image normal_map, inout vec2 uvs, in fl
     vec2 adjustment = (pixel.rb - vec2(0.5, 0.5))/n;
     //vec2 adjustment = 0.01*(pixel.rb - vec2(0.5, 0.5))/n;
     if (is_canvas) {
-        uvs.x = love_PixelCoord.x/love_ScreenSize.x;
-        uvs.y = love_PixelCoord.y/love_ScreenSize.y;
-        adjustment.x = adjustment.x/love_ScreenSize.x;
-        adjustment.y = adjustment.x/love_ScreenSize.y;
+        // uvs.x = love_PixelCoord.x/love_ScreenSize.x;
+        // uvs.y = love_PixelCoord.y/love_ScreenSize.y;
+        // adjustment.x = adjustment.x/love_ScreenSize.x;
+        // adjustment.y = adjustment.x/love_ScreenSize.y;
     }
     float avg_color = (pixel.r + pixel.g + pixel.b)/3.0;
     pixel = Texel(image, uvs+adjustment);
     //return pixel * vec4(uvs.y, 0, 0, 1);
-    return pixel;
+    // return pixel;
     vec4 new_color = vec4(1.0, 1.0, 1.0, 1.0);
     if (n > 0) {
-        new_color = vec4(avg_color, avg_color, 1.0, 1.0);
+        new_color = vec4(pixel.r/avg_color, pixel.g/avg_color, 0.7, 1.0);
     }
     return pixel * new_color;
 }
@@ -89,7 +89,6 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
         }
         else {
             pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
-            //pixel = Texel(image2, uvs);
         }
         
         //return vec4(0.0, 0.5, 0.0, 0.7);
@@ -181,8 +180,6 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
     y1 = dock_y0;
     if (ux > x1 && ux < x2) {
         if(uy < y1) {
-            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
-        } else {
             pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
             //return vec4(0.0, 0.5, 0.0, 0.7);
@@ -228,7 +225,7 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
     }
     // Patch 8
@@ -240,9 +237,13 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
         if(uy > dock_y0) {
             uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
             uvs = vec2(ux, uy);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
             //return vec4(0.0, 0.5, 0.0, 0.7);
+        } else {
+            // return vec4(0.0, 0.5, 0.0, 0.7);
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
-        pixel = displacement_map(image, normal_map, uvs, n, bool(false));
+        
     }
     // Patch 9
     x1 = 0.8264 + dx_float2;
@@ -264,7 +265,8 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             //return vec4(0.0, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
+            // pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
     }
     // Patch 10
@@ -286,7 +288,7 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
             //return vec4(0.5, 0.5, 0.0, 0.7);
         }
         else {
-            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
     }
     // Patch 11
@@ -297,8 +299,11 @@ vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {
         if(uy > dock_y0) {
             uy = dock_y0 - dy2 - (uy - dock_y0) ;//* tan(water_angle);
             uvs = vec2(ux, uy);
+            pixel = displacement_map(image, normal_map, uvs, n, bool(false));
+        } else {
+            pixel = displacement_map(image2, normal_map, uvs, n, bool(true));
         }
-        pixel = displacement_map(image, normal_map, uvs, n, bool(false));
+        
         //return vec4(0.0, 0.5, 0.0, 0.7);
     }
 
