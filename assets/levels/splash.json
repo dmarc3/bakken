@@ -1,0 +1,109 @@
+{ "frames": [
+   {
+    "filename": "splash 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 1.aseprite",
+    "frame": { "x": 32, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 2.aseprite",
+    "frame": { "x": 64, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 3.aseprite",
+    "frame": { "x": 96, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 4.aseprite",
+    "frame": { "x": 128, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 5.aseprite",
+    "frame": { "x": 160, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 6.aseprite",
+    "frame": { "x": 192, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 7.aseprite",
+    "frame": { "x": 224, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 8.aseprite",
+    "frame": { "x": 256, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   },
+   {
+    "filename": "splash 9.aseprite",
+    "frame": { "x": 288, "y": 0, "w": 32, "h": 9 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 9 },
+    "sourceSize": { "w": 32, "h": 9 },
+    "duration": 50
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.30-x64",
+  "image": "splash.png",
+  "format": "RGBA8888",
+  "size": { "w": 320, "h": 9 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "splash", "from": 0, "to": 9, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "splash", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

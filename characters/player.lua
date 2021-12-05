@@ -210,8 +210,6 @@ function Player:load()
 end
 
 function Player:draw()
-    self.hb_animation:draw(self.hb_x, self.hb_y)
-    self.hb_lives_animation:draw(self.hb_x, self.hb_y)
     if self.animationName == "a1" then
         self.animation[self.animationName]:draw(self.original_x,
                                                 self.y,
@@ -234,6 +232,11 @@ function Player:draw()
     if Debug then
         self:drawBody()
     end
+end
+
+function Player:drawHealthBar()
+    self.hb_animation:draw(self.hb_x, self.hb_y)
+    self.hb_lives_animation:draw(self.hb_x, self.hb_y)
 end
 
 function Player:setState()

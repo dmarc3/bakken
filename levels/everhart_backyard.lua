@@ -111,6 +111,12 @@ function Level:draw(x, y, sx, sy, option)
     end
     self:drawForeground()
     love.graphics.pop()
+    -- Draw Player Health Bars
+    love.graphics.push()
+    love.graphics.scale(sx, sy)
+    self.player1:drawHealthBar()
+    self.player2:drawHealthBar()
+    love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()
     love.graphics.draw(self.canvas, x, y)

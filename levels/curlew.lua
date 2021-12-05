@@ -133,14 +133,26 @@ function Level:load(player1, player2, canvas)
     Curlew.Floaty1 = peachy.new(asepriteMeta, spritesheet, "floaty1")
     Curlew.Floaty2 = peachy.new(asepriteMeta, spritesheet, "floaty2")
     Curlew.Floaty2_front = peachy.new(asepriteMeta, spritesheet, "floaty2_front")
+    -- Define splash
+    local spritesheet = love.graphics.newImage("assets/levels/splash.png")
+    local asepriteMeta = "assets/levels/splash.json"
+    self.Splash = {}
+    self.Splash = peachy.new(asepriteMeta, spritesheet, "splash")
+    self.splash = false
+    self.splash_timer = 0.0
+    self.splash_duration = 0.5
+    self.splash_count = 0
+    self.splash_x = 0.0
+    self.splash_y = 0.8*WindowHeight/GlobalScale
+    -- Define normal_map
     self.normal_map = love.graphics.newImage("assets/levels/normal_map.png")
     self.normal_map:setWrap("repeat")
     -- Define Constants
-    self.x1 = WindowWidth/GlobalScale*0.33
-    self.y1 = WindowHeight/GlobalScale*0.1
+    self.x1 = WindowWidth/GlobalScale*0.12
+    self.y1 = WindowHeight/GlobalScale*0.7
     -- self.y1 = WindowHeight/GlobalScale*-100
-    self.x2 = WindowWidth/GlobalScale*0.7
-    self.y2 = WindowHeight/GlobalScale*0.1
+    self.x2 = WindowWidth/GlobalScale*0.9
+    self.y2 = WindowHeight/GlobalScale*0.7
     -- self.y2 = WindowHeight/GlobalScale*-100
     self.displacedMass = 0
 
@@ -173,6 +185,9 @@ function Level:update(dt)
     self.eff:send("float1_x", self.Floaty1.body:getX()/(WindowWidth/GlobalScale))
     self.eff:send("float2_y", self.Floaty2.body:getY()/(WindowHeight/GlobalScale))
     self.eff:send("float2_x", self.Floaty2.body:getX()/(WindowWidth/GlobalScale))
+    self:detectFall()
+    self:incrementTimers(dt)
+    self.Splash:update(dt)
 end
 
 function Level:draw(x, y, sx, sy, option)
@@ -200,7 +215,6 @@ function Level:draw(x, y, sx, sy, option)
     self:drawWater()
     love.graphics.pop()
     love.graphics.setCanvas()
-    self.canvas2:newImageData():encode("png", "canvas2.png")
     if option then
         love.graphics.setShader(self.eff)
     end
@@ -211,10 +225,37 @@ function Level:draw(x, y, sx, sy, option)
         love.graphics.push()
         love.graphics.scale(sx, sy)
         self:drawBackground()
-        self.player1:draw()
-        self.player2:draw()
+        if self.player1.y/(WindowHeight/GlobalScale) < 0.8 then
+            self.player1:draw()
+        end
+        if self.player2.y/(WindowHeight/GlobalScale) < 0.8 then
+            self.player2:draw()
+        end
         self:drawForeground()
         love.graphics.pop()
+    end
+    -- Draw Player Health Bars
+    love.graphics.push()
+    love.graphics.scale(sx, sy)
+    self.player1:drawHealthBar()
+    self.player2:drawHealthBar()
+    love.graphics.pop()
+    -- Draw splash
+    if self.splash then
+        love.graphics.push()
+        love.graphics.scale(sx, sy)
+        self.Splash:draw(self.splash_x-self.Splash:getWidth()/2, self.splash_y)
+        love.graphics.pop()
+    end
+end
+
+function Level:incrementTimers(dt)
+    if self.splash then
+        self.splash_timer = self.splash_timer + dt
+    end
+    if self.splash_timer > self.splash_duration then
+        self.splash = false
+        self.splash_timer = 0.0
     end
 end
 
@@ -264,6 +305,81 @@ function Level:drawBackground()
     Curlew.Floaty1:draw(self.Floaty1.body:getX(),self.Floaty1.body:getY()-5, 0, 1, 1, 34, 128)
     Curlew.Floaty2:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
     love.graphics.setColor(1, 1, 1, 1)
+end
+
+function Level:detectFall()
+    if self.player1.y/(WindowHeight/GlobalScale) > 5.0 then
+        self.player1.y = self.player1.y0*WindowHeight/GlobalScale
+        self.player1.x = self.player1.x0
+        self.player1.physics.body:setPosition(self.player1.x0, self.player1.y0*WindowHeight/GlobalScale)
+        self.player1.physics.body:setLinearVelocity(0, 0)
+        self.player1.health = 0
+        self.player1.knocked_out = true
+        self.player1.fall = true
+    elseif self.player1.y/(WindowHeight/GlobalScale) > 0.8 and self.splash_timer < self.splash_duration and self.splash_count == 0 then
+        self.splash = true
+        self.splash_count = self.splash_count + 1
+        self.splash_x = self.player1.x
+        self.Splash:setFrame(1)
+    end
+    if self.player2.y/(WindowHeight/GlobalScale) > 5.0 then
+        self.player2.y = self.player2.y0*WindowHeight/GlobalScale
+        self.player2.x = self.player2.x0
+        self.player2.physics.body:setPosition(self.player2.x0, self.player2.y0*WindowHeight/GlobalScale)
+        self.player2.physics.body:setLinearVelocity(0, 0)
+        self.player2.health = 0
+        self.player2.knocked_out = true
+        self.player2.fall = true
+    elseif self.player2.y/(WindowHeight/GlobalScale) > 0.8 and self.splash_timer < self.splash_duration and self.splash_count == 0 then
+        self.splash = true
+        self.splash_count = self.splash_count + 1
+        self.splash_x = self.player2.x
+        self.Splash:setFrame(1)
+    end
+end
+
+function Level:resetFighters(dt, id)
+    local dx = 1.0
+    local x1 = Level.player1.x0
+    local x2 = Level.player2.x0
+    if id == 1 then
+        -- Reset player1
+        Level.player1.xoverride = true
+        Level.player1.physics.body:setPosition(x1, Level.player1.y0)
+        Level.player1.physics.body:setLinearVelocity(0, 0)
+        Level.player1.xVel = 0
+        Level.player1.xDir = 1.0
+        Level.player1.xoverride = false
+    else
+        -- Reset player2
+        Level.player2.xoverride = true
+        Level.player2.physics.body:setPosition(x2, Level.player2.y0)
+        Level.player2.physics.body:setLinearVelocity(0, 0)
+        Level.player2.xVel = 0
+        Level.player2.xDir = -1.0
+        Level.player2.xoverride = false
+    end
+    if self.splash_count > 0 then
+        self.splash_count = self.splash_count - 1
+    end
+    -- Switch boolean
+    if math.abs(Level.player1.x - x1) < dx and math.abs(Level.player2.x - x2) < dx then
+        Level.player1.knocked_out = false
+        Level.player1.xVel = 0
+        Level.player1.xDir = 1.0
+        Level.player1.physics.fixture:setMask()
+        Level.player2.knocked_out = false
+        Level.player2.xVel = 0
+        Level.player2.xDir = -1.0
+        Level.player2.physics.fixture:setMask()
+        if Level.player2.dead then
+            print("Player 1 is victorious!")
+            Level.player1.victory = true
+        elseif Level.player1.dead then
+            print("Player 2 is victorious!")
+            Level.player2.victory = true
+        end
+    end
 end
 
 return Level
