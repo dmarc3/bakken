@@ -1,6 +1,9 @@
 local peachy = require("3rd/peachy/peachy")
 local json = require("3rd/json/json")
 
+-- seed rng with unix epoch
+math.randomseed(os.time())
+
 Player = {}
 Player.__index = Player
 
@@ -13,7 +16,7 @@ function Player:new(id, char, x, y)
     else
         instance.enemy_id = 1
     end
-    
+
     -- Process character
     instance.spritesheet = love.graphics.newImage("assets/characters/"..char..".png")
     instance.asepriteMeta = "assets/characters/"..char..".json"
@@ -58,6 +61,27 @@ function Player:new(id, char, x, y)
     instance.block_start = block_start
     instance.block = block
     instance.block_end = block_end
+    -- sfx
+    instance.sfx = {
+        -- we have a matrix of attack sounds, `hiya_X_pY.ogg`
+        -- X is one of three variations, to mix things up
+        -- Y (sfx_pitch) is one of eight pitches for each X, matching a given character
+        -- below is a vector slice of that matrix for that character
+        -- NOTE: Since these aren't statically defined, they won't work
+        -- if this game is converted to a HTML game with love.js or similar
+        attack = {
+            love.audio.newSource(
+                "assets/audio/sfx/attack/hiya_1_p" .. sfx_pitch .. ".ogg", "static"
+            ),
+            love.audio.newSource(
+                "assets/audio/sfx/attack/hiya_2_p" .. sfx_pitch .. ".ogg", "static"
+            ),
+            love.audio.newSource(
+                "assets/audio/sfx/attack/hiya_3_p" .. sfx_pitch .. ".ogg", "static"
+            )
+        }
+    }
+    instance.sfx_attack_num = 1  -- start with hiya_1
 
 
     -- Process controller
@@ -128,7 +152,6 @@ function Player:new(id, char, x, y)
             instance.a = "kp4"
             instance.b = "kp6"
         end
-        
     end
     instance.xVel = 0
     instance.yVel = 0
@@ -299,9 +322,7 @@ function Player:setState()
 end
 
 function Player:drawBody()
-    love.graphics.setColor(1, 1, 1, 0.25)
-                
-                love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(1, 1, 1)
     bx, by = self.physics.body:getPosition()
     love.graphics.setColor(self.red, self.green, self.blue, 0.8)
     love.graphics.polygon("fill", self.physics.body:getWorldPoints(self.physics.shape:getPoints()))
@@ -584,6 +605,10 @@ function Player:attack_1()
         end
     else
         if KeysPressed[self.a] == true then
+            if not self.sfx.attack[self.sfx_attack_num]:isPlaying() then
+                self.sfx_attack_num = math.random(1, 3)
+                self.sfx.attack[self.sfx_attack_num]:play()
+            end
             self.attack = true
         end
     end

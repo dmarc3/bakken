@@ -62,4 +62,4 @@ block_end={f1=12,
 		   f2=12,
 		   f3=12}
 
-
+sfx_pitch = "1"
