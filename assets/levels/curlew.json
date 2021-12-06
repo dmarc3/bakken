@@ -120,6 +120,7 @@
   ],
   "layers": [
    { "name": "water", "opacity": 255, "blendMode": "normal" },
+   { "name": "reference", "opacity": 255, "blendMode": "normal" },
    { "name": "background", "opacity": 255, "blendMode": "normal" },
    { "name": "dock", "opacity": 255, "blendMode": "normal" },
    { "name": "floaty1", "opacity": 255, "blendMode": "normal" },
