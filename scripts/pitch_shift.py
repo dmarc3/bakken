@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Script to batch pitch shift a list of input files by multiple factors.
+Script to batch pitch shift a list of input files by a list of factors.
 Preserves tempo and sample rate.
 
 Since all the kiddos are of different ages, we can take a few character sfx
