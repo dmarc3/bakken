@@ -1,4 +1,5 @@
 local peachy = require"3rd/peachy/peachy"
+local utils = require"utils"
 local scene = require"scene"
 
 local pickLevelScene = scene:new("pickLevelScene")
@@ -55,6 +56,18 @@ function pickLevelScene:load(GameState)
         self.joystick1 = nil
         self.joystick2 = nil
     end
+    -- load sfx
+    self.sfx = {
+        change_sel = love.audio.newSource(
+            "assets/audio/sfx/change_selection.ogg", "static"
+        ),
+        invalid_sel = love.audio.newSource(
+            "assets/audio/sfx/invalid_selection.ogg", "static"
+        ),
+        accept_all = love.audio.newSource(
+            "assets/audio/sfx/accept_all.ogg", "static"
+        )
+    }
     -- Reset Inputs on load
     ResetInputs()
 end
@@ -64,12 +77,14 @@ function pickLevelScene:update(dt, GameState)
     self:incrementTimers(dt)
     self:updateLevel(dt)
     if KeysPressed["return"] == true then
+        self.sfx.accept_all:play()
         self:deleteBodies()
         GameState.level = self.levels[self.level]
         GameState.scenes.fightScene:load(GameState)
         GameState:setFightScene()
     end
     if ButtonsPressed[1]["start"] == true then
+        self.sfx.accept_all:play()
         self:deleteBodies()
         GameState.level = self.levels[self.level]
         GameState.scenes.fightScene:load(GameState)
@@ -109,16 +124,23 @@ end
 function pickLevelScene:updateLevel(dt)
     if KeysPressed["s"] and not self.move then
         self.level = self.level + 1
-        self.move = true
+        if self.level > 3 then
+            self.sfx.invalid_sel:play()
+            self.level = 3
+        else
+            utils.snplay(self.sfx.change_sel)
+            self.move = true
+        end
     end
     if KeysPressed["w"] and not self.move then
         self.level = self.level - 1
-        self.move = true
-    end
-    if self.level > 3 then
-        self.level = 3
-    elseif self.level == 0 then
-        self.level = 1
+        if self.level == 0 then
+            self.sfx.invalid_sel:play()
+            self.level = 1
+        else
+            utils.snplay(self.sfx.change_sel)
+            self.move = true
+        end
     end
     for i, level in pairs(self.levels) do
         self.animations[level].not_selected:update(dt)

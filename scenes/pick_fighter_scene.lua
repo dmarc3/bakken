@@ -1,5 +1,6 @@
 local peachy = require"3rd/peachy/peachy"
 local scene = require"scene"
+local utils = require"utils"
 
 local pickFighterScene = scene:new("pickFigherScene")
 
@@ -40,6 +41,26 @@ function pickFighterScene:load()
     self.move_timer = 0
     self.delay = true
     self.delay_timer = 0
+    -- load sfx
+    self.sfx = {
+        change_sel = love.audio.newSource(
+            "assets/audio/sfx/change_selection.ogg", "static"
+        )
+        ,
+        confirm_sel = love.audio.newSource(
+            "assets/audio/sfx/confirm_selection.ogg", "static"
+        )
+        ,
+        undo_sel = love.audio.newSource(
+            "assets/audio/sfx/undo_selection.ogg", "static"
+        ),
+        invalid_sel = love.audio.newSource(
+            "assets/audio/sfx/invalid_selection.ogg", "static"
+        ),
+        accept_all = love.audio.newSource(
+            "assets/audio/sfx/accept_all.ogg", "static"
+        )
+    }
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
     if joystickcount == 2 then
@@ -50,6 +71,7 @@ function pickFighterScene:load()
         self.joystick1 = nil
         self.joystick2 = nil
     end
+
     -- Reset Inputs on load
     ResetInputs()
 end
@@ -59,17 +81,12 @@ function pickFighterScene:update(dt, GameState)
     self:processDelay()
     self:incrementTimers(dt)
     self:updateCharacters(dt)
-    if KeysPressed["return"] == true then
-        --GameState.player1 = self.chars[self.player1]
-        --GameState.player2 = self.chars[self.player2]
+    if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
+        self.sfx.accept_all:play()
+        -- GameState.player1 = self.chars[self.player1]
+        -- GameState.player2 = self.chars[self.player2]
         GameState.player1 = "drew"
         GameState.player2 = "drew"
-        GameState.scenes.pickLevelScene:load(GameState)
-        GameState:setPickLevelScene()
-    end
-    if ButtonsPressed[1]["start"] == true then
-        GameState.player1 = self.chars[self.player1]
-        GameState.player2 = self.chars[self.player2]
         GameState.scenes.pickLevelScene:load(GameState)
         GameState:setPickLevelScene()
     end
@@ -170,72 +187,40 @@ function pickFighterScene:updateCharacters(dt)
     self.animations.selection:update(dt)
     if not self.selected1 then
         if AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] > 0 and not self.move then
-            self.player1 = self.player1 + 1
-            if self.player1 == self.player2 then
-                self.player1 = self.player1 + 1
-            elseif self.player1 > #self.chars then
-                self.player1 = self.player1 - 1
-            end
+            self.player1 = self:playerIncrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         elseif AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] < 0 and not self.move then
-            self.player1 = self.player1 - 1
-            if self.player1 == self.player2 then
-                self.player1 = self.player1 - 1
-            elseif self.player2 < 1 then
-                self.player1 = self.player1 + 1
-            end
+            self.player1 = self:playerDecrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         end
         if KeysPressed["d"] ~= nil and not self.move then
-            self.player1 = self.player1 + 1
-            if self.player1 == self.player2 then
-                self.player1 = self.player1 + 1
-            elseif self.player1 > #self.chars then
-                self.player1 = self.player1 - 1
-            end
+            self.player1 = self:playerIncrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         elseif KeysPressed["a"] ~= nil and not self.move then
-            self.player1 = self.player1 - 1
-            if self.player1 == self.player2 then
-                self.player1 = self.player1 - 1
-            elseif self.player2 < 1 then
-                self.player1 = self.player1 + 1
-            end
+            self.player1 = self:playerDecrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         end
     end
     if not self.selected2 then
         if AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] > 0 and not self.move then
-            self.player2 = self.player2 + 1
-            if self.player2 == self.player1 then
-                self.player2 = self.player2 + 1
-            end
+            self.player2 = self:playerIncrement(self.player2, self.player1)
             self.move = true
             self.move_timer = 0
         elseif AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] < 0 and not self.move then
-            self.player2 = self.player2 - 1
-            if self.player2 == self.player1 then
-                self.player2 = self.player2 - 1
-            end
+            self.player1 = self:playerDecrement(self.player1, self.player2)
             self.move = true
             self.move_timer = 0
         end
         if KeysPressed["kp3"] ~= nil and not self.move then
-            self.player2 = self.player2 + 1
-            if self.player2 == self.player1 then
-                self.player2 = self.player2 + 1
-            end
+            self.player2 = self:playerIncrement(self.player2, self.player1)
             self.move = true
             self.move_timer = 0
         elseif KeysPressed["kp1"] ~= nil and not self.move then
-            self.player2 = self.player2 - 1
-            if self.player2 == self.player1 then
-                self.player2 = self.player2 - 1
-            end
+            self.player2 = self:playerDecrement(self.player2, self.player1)
             self.move = true
             self.move_timer = 0
         end
@@ -259,38 +244,46 @@ function pickFighterScene:selectCharacter()
     if ButtonsPressed[1]["a"] == true then
         self.selection1 = true
         self.selected1 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
     if KeysPressed["e"] == true then
         self.selection1 = true
         self.selected1 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
     if ButtonsPressed[2]["a"] == true then
         self.selection2 = true
         self.selected2 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
     if KeysPressed["kp4"] == true then
         self.selection2 = true
         self.selected2 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
     if ButtonsPressed[1]["b"] == true then
         self.selected1 = false
+        self.sfx.undo_sel:play()
     end
     if KeysPressed["q"] == true then
         self.selected1 = false
+        self.sfx.undo_sel:play()
     end
     if ButtonsPressed[2]["b"] == true then
         self.selected2 = false
+        self.sfx.undo_sel:play()
     end
     if KeysPressed["kp6"] == true then
         self.selected2 = false
+        self.sfx.undo_sel:play()
     end
 end
 
@@ -307,6 +300,50 @@ function pickFighterScene:processDelay()
         self.selected2 = false
         ResetInputs()
     end
+end
+
+function pickFighterScene:playerIncrement(player, other_player)
+    -- increment player position, if possible, and play sfx accordingly
+    local validMove = true
+    if player + 1 == other_player then
+        if other_player == #self.chars then
+            validMove = false
+        else
+            player = player + 2
+        end
+    elseif player + 1 > #self.chars then
+        validMove = false
+    else
+        player = player + 1
+    end
+    if validMove then
+        utils.snplay(self.sfx.change_sel)
+    else
+        utils.snplay(self.sfx.invalid_sel)
+    end
+    return player
+end
+
+function pickFighterScene:playerDecrement(player, other_player)
+    -- decrement player position, if possible, and play sfx accordingly
+    local validMove = true
+    if player - 1 == other_player then
+        if other_player == 1 then
+            validMove = false
+        else
+            player = player - 2
+        end
+    elseif player - 1 < 1 then
+        validMove = false
+    else
+        player = player - 1
+    end
+    if validMove then
+        utils.snplay(self.sfx.change_sel)
+    else
+        utils.snplay(self.sfx.invalid_sel)
+    end
+    return player
 end
 
 function ResetInputs()
