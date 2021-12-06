@@ -23,6 +23,7 @@ function titleScene:load()
     self.press_button = peachy.new(self.PB_SpriteSheetMeta, self.PB_SpriteSheet, "Idle")
     --self:loadChars("drew", "lilah")
     self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
+    self.sfx_start = love.audio.newSource("assets/audio/sfx/accept_all.ogg", "static")
 end
 
 function titleScene:loadChars(p1, p2)
@@ -132,12 +133,14 @@ function titleScene:update(dt, gameState)
         if self.music:isPlaying() then
             self.music:stop()
         end
+        self.sfx_start:play()
         gameState:setPickFighterScene()
     end
     if next(ButtonsPressed[1]) ~= nil then
         if self.music:isPlaying() then
             self.music:stop()
         end
+        self.sfx_start:play()
         gameState:setPickFighterScene()
     end
     self:incrementTimers(dt)

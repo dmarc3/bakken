@@ -36,15 +36,16 @@
 
 ### UI
 
-I will largely leave this up to you... I have no idea how difficult it is to generate
-these noises
-
-- [ ] Change scene noise
-- [ ] Button press on title screen
+- [x] Change scene noise
+  - `assets/sfx/accept_all.ogg`
+  - scene changes when accepting current selections, hence the filename
+- [x] Button press on title screen
+  - `assets/sfx/accept_all.ogg`
+  - reusing this one for now, open to doing something else though
 - [x] Confirming character/level selections
   - `assets/sfx/confirm_selection.ogg`
-- [ ] Un-confirm character/level selections
-  - same as confirm but descending
+- [x] Un-confirm character/level selections
+  - `assets/sfx/undo_selection.ogg`
 - [x] Moving character/level selection noise
   - `assets/sfx/change_selection.ogg`
 - [x] Invalid selection
