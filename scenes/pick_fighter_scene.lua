@@ -44,14 +44,22 @@ function pickFighterScene:load()
     -- load sfx
     self.sfx = {
         change_sel = love.audio.newSource(
-            "assets/audio/sfx/change_selection.ogg", "static")
+            "assets/audio/sfx/change_selection.ogg", "static"
+        )
         ,
         confirm_sel = love.audio.newSource(
-            "assets/audio/sfx/confirm_selection.ogg", "static")
+            "assets/audio/sfx/confirm_selection.ogg", "static"
+        )
         ,
+        undo_sel = love.audio.newSource(
+            "assets/audio/sfx/undo_selection.ogg", "static"
+        ),
         invalid_sel = love.audio.newSource(
-            "assets/audio/sfx/invalid_selection.ogg", "static")
-        ,
+            "assets/audio/sfx/invalid_selection.ogg", "static"
+        ),
+        accept_all = love.audio.newSource(
+            "assets/audio/sfx/accept_all.ogg", "static"
+        )
     }
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
@@ -74,7 +82,7 @@ function pickFighterScene:update(dt, GameState)
     self:incrementTimers(dt)
     self:updateCharacters(dt)
     if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
-        self.sfx.confirm_sel:play()
+        self.sfx.accept_all:play()
         -- GameState.player1 = self.chars[self.player1]
         -- GameState.player2 = self.chars[self.player2]
         GameState.player1 = "drew"
@@ -236,6 +244,7 @@ function pickFighterScene:selectCharacter()
     if ButtonsPressed[1]["a"] == true then
         self.selection1 = true
         self.selected1 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
@@ -249,26 +258,32 @@ function pickFighterScene:selectCharacter()
     if ButtonsPressed[2]["a"] == true then
         self.selection2 = true
         self.selected2 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
     if KeysPressed["kp4"] == true then
         self.selection2 = true
         self.selected2 = true
+        self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
     if ButtonsPressed[1]["b"] == true then
         self.selected1 = false
+        self.sfx.undo_sel:play()
     end
     if KeysPressed["q"] == true then
         self.selected1 = false
+        self.sfx.undo_sel:play()
     end
     if ButtonsPressed[2]["b"] == true then
         self.selected2 = false
+        self.sfx.undo_sel:play()
     end
     if KeysPressed["kp6"] == true then
         self.selected2 = false
+        self.sfx.undo_sel:play()
     end
 end
 
