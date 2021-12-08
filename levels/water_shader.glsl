@@ -57,12 +57,15 @@ vec4 displacement_map(in Image image, in Image normal_map, inout vec2 uvs, in fl
     float avg_color = (pixel.r + pixel.g + pixel.b)/3.0;
     pixel = Texel(image, uvs+adjustment);
     //return pixel * vec4(uvs.y, 0, 0, 1);
-    // return pixel;
-    vec4 new_color = vec4(1.0, 1.0, 1.0, 1.0);
-    if (n > 0) {
-        new_color = vec4(pixel.r/avg_color, pixel.g/avg_color, 0.7, 1.0);
-    }
-    return pixel * new_color;
+    //return pixel;
+    // float gd = 1-pixel.g;
+    // if (n > 0) {
+    //     // new_color = vec4(pixel.r/avg_color, pixel.g/avg_color, 0.7, 1.0);
+    //     if (uvs.y < 0.5) {
+    //         pixel.g = pixel.g+gd*uvs.y;
+    //     }
+    // }
+    return pixel;
 }
 
 vec4 effect(vec4 color, Image image, vec2 uvs, vec2 screen_coords) {

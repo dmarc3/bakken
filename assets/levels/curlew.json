@@ -120,8 +120,10 @@
   ],
   "layers": [
    { "name": "water", "opacity": 255, "blendMode": "normal" },
-   { "name": "reference", "opacity": 255, "blendMode": "normal" },
+   { "name": "sky", "opacity": 255, "blendMode": "normal" },
    { "name": "background", "opacity": 255, "blendMode": "normal" },
+   { "name": "shadow", "opacity": 35, "blendMode": "normal" },
+   { "name": "dim_water", "opacity": 160, "blendMode": "normal" },
    { "name": "dock", "opacity": 255, "blendMode": "normal" },
    { "name": "floaty1", "opacity": 255, "blendMode": "normal" },
    { "name": "floaty2", "opacity": 255, "blendMode": "normal" }
