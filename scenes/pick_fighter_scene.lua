@@ -86,7 +86,7 @@ function pickFighterScene:update(dt, GameState)
         -- GameState.player1 = self.chars[self.player1]
         -- GameState.player2 = self.chars[self.player2]
         GameState.player1 = "drew"
-        GameState.player2 = "drew"
+        GameState.player2 = "lilah"
         GameState.scenes.pickLevelScene:load(GameState)
         GameState:setPickLevelScene()
     end
