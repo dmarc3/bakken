@@ -1,4 +1,4 @@
-GlobalScale = 4
+GlobalScale = 6
 function love.conf(t)
     t.window.width = 240 * GlobalScale
     t.window.height = 160 * GlobalScale

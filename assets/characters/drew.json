@@ -594,7 +594,7 @@
    { "name": "kneel_exit", "from": 22, "to": 24, "direction": "forward" },
    { "name": "couch_idle", "from": 25, "to": 26, "direction": "forward" },
    { "name": "attack 1", "from": 27, "to": 35, "direction": "forward" },
-   { "name": "walk forward", "from": 36, "to": 41, "direction": "forward" },
+   { "name": "walk_forward", "from": 36, "to": 41, "direction": "forward" },
    { "name": "jump", "from": 42, "to": 46, "direction": "forward" },
    { "name": "airborne", "from": 47, "to": 48, "direction": "forward" },
    { "name": "land", "from": 49, "to": 51, "direction": "forward" },

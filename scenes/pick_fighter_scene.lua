@@ -83,10 +83,10 @@ function pickFighterScene:update(dt, GameState)
     self:updateCharacters(dt)
     if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
         self.sfx.accept_all:play()
-        -- GameState.player1 = self.chars[self.player1]
-        -- GameState.player2 = self.chars[self.player2]
-        GameState.player1 = "drew"
-        GameState.player2 = "lilah"
+        GameState.player1 = self.chars[self.player1]
+        GameState.player2 = self.chars[self.player2]
+        -- GameState.player1 = "drew"
+        -- GameState.player2 = "lilah"
         GameState.scenes.pickLevelScene:load(GameState)
         GameState:setPickLevelScene()
     end

@@ -23,7 +23,7 @@ function Player:new(id, char, x, y)
     instance.animation = {
         idle = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
         --walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "idle"),
-        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk forward"),
+        walk = peachy.new(instance.asepriteMeta, instance.spritesheet, "walk_forward"),
         jump = peachy.new(instance.asepriteMeta, instance.spritesheet, "jump"),
         airborne = peachy.new(instance.asepriteMeta, instance.spritesheet, "airborne"),
         land = peachy.new(instance.asepriteMeta, instance.spritesheet, "land"),

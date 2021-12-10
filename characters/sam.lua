@@ -9,10 +9,20 @@ function samHitbox(xDir)
             9*xDir, -4}
 end
 
-xorigin=12
-body_width_pad=0.25
+function samHurtbox()
+	return {-2, 14,
+			-6, 13,
+			-6, 13,
+			-6, -12,
+			6, -12,
+			6, 13,
+			2, 14}
+end
+
+xorigin=21
+body_width_pad=0.375
 body_height_pad=0.45
-x_shift_pad=0.585
+x_shift_pad=0.5
 idle_duration=0.6
 attack_1_duration=1.16
 jump_duration=0.4
@@ -22,10 +32,10 @@ damage_duration=0.5
 block_start_dur=0.40
 block_end_dur=0.45
 
-idle={f1={x=12},
-	  f2={x=12},
-	  f3={x=12},
-	  f4={x=12}}
+idle={f1={x=21},
+	  f2={x=21},
+	  f3={x=21},
+	  f4={x=21}}
 a1={f1={dx=0,hit=false},
     f2={dx=-1,hit=false},
     f3={dx=0,hit=false},
@@ -37,18 +47,18 @@ a1={f1={dx=0,hit=false},
 			body=nil,
 			shape=nil,
 			fixture=nil}}
---[[ walk={f1={x=16},
-	  f2={x=16},
-	  f3={x=16},
-	  f4={x=16},
-	  f5={x=16},
-	  f6={x=16}} ]]
-block_start={f1=12,
-		     f2=12,
-			 f3=12}
-block={f1=12}
-block_end={f1=12,
-		   f2=12,
-		   f3=12}
+walk={f1={x=21},
+	  f2={x=21},
+	  f3={x=21},
+	  f4={x=21},
+	  f5={x=21},
+	  f6={x=21}}
+block_start={f1=21,
+		     f2=21,
+			 f3=21}
+block={f1=21}
+block_end={f1=21,
+		   f2=21,
+		   f3=21}
 
 

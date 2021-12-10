@@ -538,7 +538,7 @@
    { "name": "kneel_enter", "from": 16, "to": 18, "direction": "forward" },
    { "name": "idle", "from": 19, "to": 22, "direction": "forward" },
    { "name": "attack 1", "from": 23, "to": 28, "direction": "forward" },
-   { "name": "walk forward", "from": 29, "to": 35, "direction": "forward" },
+   { "name": "walk_forward", "from": 29, "to": 35, "direction": "forward" },
    { "name": "jump", "from": 36, "to": 39, "direction": "forward" },
    { "name": "airborne", "from": 40, "to": 41, "direction": "forward" },
    { "name": "land", "from": 42, "to": 45, "direction": "forward" },

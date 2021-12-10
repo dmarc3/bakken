@@ -15,7 +15,7 @@ function lilahHurtbox()
 			6, -12,
 			6, 13,
 			2, 14}
-		end
+end
 
 xorigin=21
 body_width_pad=0.3
