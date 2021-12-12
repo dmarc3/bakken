@@ -44,26 +44,28 @@ function Player:new(id, char, x, y)
     instance.animationName = "idle"
     instance.width = instance.animation[instance.animationName]:getWidth()
     instance.height = instance.animation[instance.animationName]:getHeight()
-    require("characters/"..char)
-    instance.xorigin = xorigin
-    instance.block_start_dur = block_start_dur
-    instance.block_end_dur = block_end_dur
-    instance.body_width_pad = body_width_pad
-    instance.body_height_pad = body_height_pad
-    instance.x_shift_pad = x_shift_pad
-    instance.idle_duration = idle_duration
-    instance.attack_1_duration = attack_1_duration
-    instance.jump_duration = jump_duration
-    instance.airborne_duration = airborne_duration
-    instance.land_duration = land_duration
-    instance.damage_duration = damage_duration
-    instance.idle = idle
-    instance.a1 = a1
-    instance.walk = walk
-    instance.block_start = block_start
-    instance.block = block
-    instance.block_end = block_end
+    -- import values from character files
+    instance.charsheet = require("characters/" .. char)
+    instance.xorigin = instance.charsheet.xorigin
+    instance.block_start_dur = instance.charsheet.block_start_dur
+    instance.block_end_dur = instance.charsheet.block_end_dur
+    instance.body_width_pad = instance.charsheet.body_width_pad
+    instance.body_height_pad = instance.charsheet.body_height_pad
+    instance.x_shift_pad = instance.charsheet.x_shift_pad
+    instance.idle_duration = instance.charsheet.idle_duration
+    instance.attack_1_duration = instance.charsheet.attack_1_duration
+    instance.jump_duration = instance.charsheet.jump_duration
+    instance.airborne_duration = instance.charsheet.airborne_duration
+    instance.land_duration = instance.charsheet.land_duration
+    instance.damage_duration = instance.charsheet.damage_duration
+    instance.idle = instance.charsheet.idle
+    instance.a1 = instance.charsheet.a1
+    instance.walk = instance.charsheet.walk
+    instance.block_start = instance.charsheet.block_start
+    instance.block = instance.charsheet.block
+    instance.block_end = instance.charsheet.block_end
     -- sfx
+    local sfx_pitch = instance.charsheet.sfx_pitch
     instance.sfx = {
         -- below represents a matrix of attack_1 sounds, `attack_1_vX_pY.ogg`
         -- X is one of two variations, to mix things up
@@ -80,14 +82,17 @@ function Player:new(id, char, x, y)
             ),
         },
         block = love.audio.newSource(
-                "assets/audio/sfx/block/block_p" .. sfx_pitch .. ".ogg", "static"
+            "assets/audio/sfx/block/block_p" .. sfx_pitch .. ".ogg", "static"
         ),
         single_jump = love.audio.newSource(
-                "assets/audio/sfx/jump/single_jump_p" .. sfx_pitch .. ".ogg", "static"
+            "assets/audio/sfx/jump/single_jump_p" .. sfx_pitch .. ".ogg", "static"
         ),
         double_jump = love.audio.newSource(
-                "assets/audio/sfx/jump/double_jump_p" .. sfx_pitch .. ".ogg", "static"
+            "assets/audio/sfx/jump/double_jump_p" .. sfx_pitch .. ".ogg", "static"
         ),
+        kneel = love.audio.newSource(
+            "assets/audio/sfx/kneel/kneel_breath_p" .. sfx_pitch .. ".ogg", "static"
+        )
     }
     instance.sfx_attack_variation = 1  -- start with attack_1_v1
 
@@ -217,9 +222,7 @@ function Player:load()
     self.physics.body:setUserData("player"..self.id)
     self.physics.bw = self.body_width_pad*self.width
     self.physics.bh = self.body_height_pad*self.height
-    local vertices = _G[self.char.."Hurtbox"]()
-    -- self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
-    self.physics.shape = love.physics.newPolygonShape(vertices)
+    self.physics.shape = love.physics.newPolygonShape(self.a1.hurtbox.vertices)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     self.physics.fixture:setUserData("player"..self.id)
     self.physics.fixture:setCategory(2)
@@ -527,7 +530,6 @@ function Player:drawHitBox(anim)
     local current_frame = self.animation[self.animationName]:getFrame()
     if self.animationName == "a1" then
         if self[self.animationName]["f"..tostring(current_frame)]["hit"] then
-            self.a1.hitbox.vertices = _G[self.char.."Hitbox"](self.xDir)
             self.a1.hitbox.body = love.physics.newBody(World, self.x, self.y, "static")
             self.a1.hitbox.body:setFixedRotation(true)
             self.a1.hitbox.body:setUserData("player"..self.id.."_a1")
@@ -644,6 +646,7 @@ function Player:incrementTimers(dt)
         self.kneel_enter = true
     elseif self.kneel and self.kneel_timer > self.kneel_duration and self.kneel_timer < self.kneel_delay - self.kneel_duration then
         self.kneel_enter = false
+        self:trigger_sfx("kneel")
     elseif self.kneel and self.kneel_timer > self.kneel_delay - self.kneel_duration and self.kneel_timer < self.kneel_delay then
         self.kneel_exit = true
     elseif self.kneel and self.kneel_timer > self.kneel_delay then
@@ -817,6 +820,8 @@ function Player:trigger_sfx(sfx_type)
         utils.pplay(self.sfx.single_jump)
     elseif sfx_type == "double_jump" then
         utils.pplay(self.sfx.double_jump)
+    elseif sfx_type == "kneel" then
+        utils.pplay(self.sfx.kneel)
     end
 end
 
