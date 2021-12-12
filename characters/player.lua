@@ -1,6 +1,8 @@
 local peachy = require("3rd/peachy/peachy")
 local json = require("3rd/json/json")
 
+local utils = require("utils")
+
 -- seed rng with unix epoch
 math.randomseed(os.time())
 
@@ -63,25 +65,31 @@ function Player:new(id, char, x, y)
     instance.block_end = block_end
     -- sfx
     instance.sfx = {
-        -- we have a matrix of attack sounds, `hiya_X_pY.ogg`
-        -- X is one of three variations, to mix things up
-        -- Y (sfx_pitch) is one of eight pitches for each X, matching a given character
+        -- below represents a matrix of attack_1 sounds, `attack_1_vX_pY.ogg`
+        -- X is one of two variations, to mix things up
+        -- Y (sfx_pitch) is one of 10 pitches for each X, matching a given character
         -- below is a vector slice of that matrix for that character
         -- NOTE: Since these aren't statically defined, they won't work
         -- if this game is converted to a HTML game with love.js or similar
-        attack = {
+        attack_1 = {
             love.audio.newSource(
-                "assets/audio/sfx/attack/hiya_1_p" .. sfx_pitch .. ".ogg", "static"
+                "assets/audio/sfx/attack/attack_1_v1_p" .. sfx_pitch .. ".ogg", "static"
             ),
             love.audio.newSource(
-                "assets/audio/sfx/attack/hiya_2_p" .. sfx_pitch .. ".ogg", "static"
+                "assets/audio/sfx/attack/attack_1_v2_p" .. sfx_pitch .. ".ogg", "static"
             ),
-            love.audio.newSource(
-                "assets/audio/sfx/attack/hiya_3_p" .. sfx_pitch .. ".ogg", "static"
-            )
-        }
+        },
+        block = love.audio.newSource(
+                "assets/audio/sfx/block/block_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        single_jump = love.audio.newSource(
+                "assets/audio/sfx/jump/single_jump_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        double_jump = love.audio.newSource(
+                "assets/audio/sfx/jump/double_jump_p" .. sfx_pitch .. ".ogg", "static"
+        ),
     }
-    instance.sfx_attack_num = 1  -- start with hiya_1
+    instance.sfx_attack_variation = 1  -- start with attack_1_v1
 
 
     -- Process controller
@@ -172,8 +180,8 @@ function Player:load()
     self.vel = 80
     self.jump_vel = 475
     self.hasDoubleJump = true
-    self.graceTime = 0
     self.graceDuration = 0.2
+    self.graceTime = self.graceDuration
     self.attack = false
     self.attack_timer = 0
     self.jumping = false
@@ -572,26 +580,30 @@ function Player:jump()
                 --self.yVel = self.jumpAmount
                 self.grounded = false
                 self.jumping = true
+                self:trigger_sfx("single_jump")
             elseif self.hasDoubleJump and self.graceTime < 0 then
                 self.hasDoubleJump = false
                 self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 --self.yVel = self.jumpAmount
                 self.jumping = true
                 self.jump_timer = 0
+                self:trigger_sfx("double_jump")
             end
         end
     else
         if KeysPressed[self.j] == true and not self.attack and not self.blocking then
             if self.grounded then
-                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 self.grounded = false
+                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 self.jumping = true
+                self:trigger_sfx("single_jump")
             elseif self.hasDoubleJump and self.graceTime < 0 then
                 self.hasDoubleJump = false
                 self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 --self.yVel = self.jumpAmount
                 self.jumping = true
                 self.jump_timer = 0
+                self:trigger_sfx("double_jump")
             end
         end
     end
@@ -602,14 +614,12 @@ function Player:attack_1()
     if self.joystick then
         if ButtonsPressed[self.id][self.a] == true then
             self.attack = true
+            self:trigger_sfx("attack_1")
         end
     else
         if KeysPressed[self.a] == true then
-            if not self.sfx.attack[self.sfx_attack_num]:isPlaying() then
-                self.sfx_attack_num = math.random(1, 3)
-                self.sfx.attack[self.sfx_attack_num]:play()
-            end
             self.attack = true
+            self:trigger_sfx("attack_1")
         end
     end
     if not current_attack and self.attack then
@@ -725,18 +735,20 @@ function Player:blocks()
         if AxisMoved[self.id][self.b] == nil then
             self.blocking = false
         elseif AxisMoved[self.id][self.b] > 0.5 then
+            self:trigger_sfx("block")  -- keep this above `self.blocking = true`
             self.blocking = true
         else
             self.blocking = false
         end
     else
         if KeysPressed[self.b] == true then
+            self:trigger_sfx("block")  -- keep this above `self.blocking = true`
             self.blocking = true
         else
             self.blocking = false
         end
     end
-    
+
     -- Detect if block has ended
     if cur_block == true and self.blocking == false then
         self.end_block = true
@@ -789,6 +801,23 @@ function Player:endContact(a, b, collision)
 			self.grounded = false
 		end
 	end
+end
+
+function Player:trigger_sfx(sfx_type)
+    if sfx_type == "attack_1" then
+        if not self.sfx.attack_1[self.sfx_attack_variation]:isPlaying() then
+            self.sfx_attack_variation = math.random(1, 2)
+            self.sfx.attack_1[self.sfx_attack_variation]:play()
+        end
+    elseif sfx_type == "block" then
+        if not self.blocking then
+            utils.pplay(self.sfx.block)
+        end
+    elseif sfx_type == "single_jump" then
+        utils.pplay(self.sfx.single_jump)
+    elseif sfx_type == "double_jump" then
+        utils.pplay(self.sfx.double_jump)
+    end
 end
 
 return Player

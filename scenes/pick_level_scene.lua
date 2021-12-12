@@ -59,13 +59,13 @@ function pickLevelScene:load(GameState)
     -- load sfx
     self.sfx = {
         change_sel = love.audio.newSource(
-            "assets/audio/sfx/change_selection.ogg", "static"
+            "assets/audio/sfx/ui/change_selection.ogg", "static"
         ),
         invalid_sel = love.audio.newSource(
-            "assets/audio/sfx/invalid_selection.ogg", "static"
+            "assets/audio/sfx/ui/invalid_selection.ogg", "static"
         ),
         accept_all = love.audio.newSource(
-            "assets/audio/sfx/accept_all.ogg", "static"
+            "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
     -- Reset Inputs on load

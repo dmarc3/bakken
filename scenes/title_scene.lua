@@ -23,7 +23,7 @@ function titleScene:load()
     self.press_button = peachy.new(self.PB_SpriteSheetMeta, self.PB_SpriteSheet, "Idle")
     --self:loadChars("drew", "lilah")
     self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
-    self.sfx_start = love.audio.newSource("assets/audio/sfx/accept_all.ogg", "static")
+    self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
 end
 
 function titleScene:loadChars(p1, p2)

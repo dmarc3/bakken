@@ -44,21 +44,21 @@ function pickFighterScene:load()
     -- load sfx
     self.sfx = {
         change_sel = love.audio.newSource(
-            "assets/audio/sfx/change_selection.ogg", "static"
+            "assets/audio/sfx/ui/change_selection.ogg", "static"
         )
         ,
         confirm_sel = love.audio.newSource(
-            "assets/audio/sfx/confirm_selection.ogg", "static"
+            "assets/audio/sfx/ui/confirm_selection.ogg", "static"
         )
         ,
         undo_sel = love.audio.newSource(
-            "assets/audio/sfx/undo_selection.ogg", "static"
+            "assets/audio/sfx/ui/undo_selection.ogg", "static"
         ),
         invalid_sel = love.audio.newSource(
-            "assets/audio/sfx/invalid_selection.ogg", "static"
+            "assets/audio/sfx/ui/invalid_selection.ogg", "static"
         ),
         accept_all = love.audio.newSource(
-            "assets/audio/sfx/accept_all.ogg", "static"
+            "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
     -- Process controller
