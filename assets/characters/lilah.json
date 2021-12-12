@@ -6,7 +6,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 400
+    "duration": 200
    },
    {
     "filename": "lilah 1.aseprite",
@@ -15,7 +15,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 400
+    "duration": 100
    },
    {
     "filename": "lilah 2.aseprite",
@@ -51,7 +51,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 100
    },
    {
     "filename": "lilah 6.aseprite",
@@ -69,7 +69,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 100
    },
    {
     "filename": "lilah 8.aseprite",
@@ -87,7 +87,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 100
    },
    {
     "filename": "lilah 10.aseprite",
@@ -96,7 +96,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "lilah 11.aseprite",
@@ -105,7 +105,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 400
+    "duration": 150
    },
    {
     "filename": "lilah 12.aseprite",
@@ -114,7 +114,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 400
+    "duration": 150
    },
    {
     "filename": "lilah 13.aseprite",
@@ -123,7 +123,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 105
    },
    {
     "filename": "lilah 14.aseprite",
@@ -132,7 +132,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 105
    },
    {
     "filename": "lilah 15.aseprite",
@@ -141,7 +141,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "lilah 16.aseprite",
@@ -150,7 +150,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "lilah 17.aseprite",
@@ -159,7 +159,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 50
    },
    {
     "filename": "lilah 18.aseprite",
@@ -168,7 +168,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "lilah 19.aseprite",
@@ -177,7 +177,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 150
    },
    {
     "filename": "lilah 20.aseprite",
@@ -186,7 +186,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    {
     "filename": "lilah 21.aseprite",
@@ -204,7 +204,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "lilah 23.aseprite",
@@ -213,7 +213,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 38
    },
    {
     "filename": "lilah 24.aseprite",
@@ -222,7 +222,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 100
+    "duration": 38
    },
    {
     "filename": "lilah 25.aseprite",
@@ -231,7 +231,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
+    "duration": 38
    },
    {
     "filename": "lilah 26.aseprite",
@@ -240,7 +240,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 100
+    "duration": 38
    },
    {
     "filename": "lilah 27.aseprite",
@@ -258,7 +258,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 100
+    "duration": 150
    },
    {
     "filename": "lilah 29.aseprite",
@@ -276,7 +276,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
+    "duration": 400
    },
    {
     "filename": "lilah 31.aseprite",
@@ -285,7 +285,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
+    "duration": 400
    },
    {
     "filename": "lilah 32.aseprite",
@@ -294,7 +294,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 105
+    "duration": 150
    },
    {
     "filename": "lilah 33.aseprite",
@@ -303,7 +303,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 105
+    "duration": 150
    },
    {
     "filename": "lilah 34.aseprite",
@@ -312,7 +312,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
+    "duration": 200
    },
    {
     "filename": "lilah 35.aseprite",
@@ -321,7 +321,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
+    "duration": 125
    },
    {
     "filename": "lilah 36.aseprite",
@@ -330,7 +330,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 50
+    "duration": 125
    },
    {
     "filename": "lilah 37.aseprite",
@@ -339,182 +339,11 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
     "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
+    "duration": 125
    },
    {
     "filename": "lilah 38.aseprite",
     "frame": { "x": 1900, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
-   },
-   {
-    "filename": "lilah 39.aseprite",
-    "frame": { "x": 1950, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
-   },
-   {
-    "filename": "lilah 40.aseprite",
-    "frame": { "x": 2000, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
-   },
-   {
-    "filename": "lilah 41.aseprite",
-    "frame": { "x": 2050, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
-   },
-   {
-    "filename": "lilah 42.aseprite",
-    "frame": { "x": 2100, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 38
-   },
-   {
-    "filename": "lilah 43.aseprite",
-    "frame": { "x": 2150, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 38
-   },
-   {
-    "filename": "lilah 44.aseprite",
-    "frame": { "x": 2200, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 38
-   },
-   {
-    "filename": "lilah 45.aseprite",
-    "frame": { "x": 2250, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 38
-   },
-   {
-    "filename": "lilah 46.aseprite",
-    "frame": { "x": 2300, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
-   },
-   {
-    "filename": "lilah 47.aseprite",
-    "frame": { "x": 2350, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
-   },
-   {
-    "filename": "lilah 48.aseprite",
-    "frame": { "x": 2400, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
-   },
-   {
-    "filename": "lilah 49.aseprite",
-    "frame": { "x": 2450, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 400
-   },
-   {
-    "filename": "lilah 50.aseprite",
-    "frame": { "x": 2500, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 400
-   },
-   {
-    "filename": "lilah 51.aseprite",
-    "frame": { "x": 2550, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
-   },
-   {
-    "filename": "lilah 52.aseprite",
-    "frame": { "x": 2600, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 150
-   },
-   {
-    "filename": "lilah 53.aseprite",
-    "frame": { "x": 2650, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 200
-   },
-   {
-    "filename": "lilah 54.aseprite",
-    "frame": { "x": 2700, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 125
-   },
-   {
-    "filename": "lilah 55.aseprite",
-    "frame": { "x": 2750, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 125
-   },
-   {
-    "filename": "lilah 56.aseprite",
-    "frame": { "x": 2800, "y": 0, "w": 50, "h": 34 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
-    "sourceSize": { "w": 50, "h": 34 },
-    "duration": 125
-   },
-   {
-    "filename": "lilah 57.aseprite",
-    "frame": { "x": 2850, "y": 0, "w": 50, "h": 34 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 34 },
@@ -527,25 +356,19 @@
   "version": "1.2.30-x64",
   "image": "lilah.png",
   "format": "RGBA8888",
-  "size": { "w": 2900, "h": 34 },
+  "size": { "w": 1950, "h": 34 },
   "scale": "1",
   "frameTags": [
-   { "name": "victory_idle", "from": 0, "to": 1, "direction": "forward" },
-   { "name": "victory", "from": 2, "to": 4, "direction": "forward" },
-   { "name": "dead", "from": 5, "to": 10, "direction": "forward" },
-   { "name": "kneel", "from": 11, "to": 12, "direction": "forward" },
-   { "name": "kneel_exit", "from": 13, "to": 15, "direction": "forward" },
-   { "name": "kneel_enter", "from": 16, "to": 18, "direction": "forward" },
-   { "name": "idle", "from": 19, "to": 22, "direction": "forward" },
-   { "name": "attack 1", "from": 23, "to": 28, "direction": "forward" },
-   { "name": "walk_forward", "from": 29, "to": 35, "direction": "forward" },
-   { "name": "jump", "from": 36, "to": 39, "direction": "forward" },
-   { "name": "airborne", "from": 40, "to": 41, "direction": "forward" },
-   { "name": "land", "from": 42, "to": 45, "direction": "forward" },
-   { "name": "block start", "from": 46, "to": 48, "direction": "forward" },
-   { "name": "block", "from": 49, "to": 50, "direction": "forward" },
-   { "name": "block end", "from": 51, "to": 53, "direction": "forward" },
-   { "name": "hit", "from": 54, "to": 57, "direction": "forward" }
+   { "name": "idle", "from": 0, "to": 3, "direction": "forward" },
+   { "name": "attack 1", "from": 4, "to": 9, "direction": "forward" },
+   { "name": "walk forward", "from": 10, "to": 16, "direction": "forward" },
+   { "name": "jump", "from": 17, "to": 20, "direction": "forward" },
+   { "name": "airborne", "from": 21, "to": 22, "direction": "forward" },
+   { "name": "land", "from": 23, "to": 26, "direction": "forward" },
+   { "name": "block start", "from": 27, "to": 29, "direction": "forward" },
+   { "name": "block", "from": 30, "to": 31, "direction": "forward" },
+   { "name": "block end", "from": 32, "to": 34, "direction": "forward" },
+   { "name": "hit", "from": 35, "to": 38, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
