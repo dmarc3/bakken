@@ -1,21 +1,25 @@
 local function hitbox(xDir)
-	return {0, 0,
-	        -8*xDir, -18,
-	        8*xDir, -14,
-	        21*xDir, -4,
-	        21*xDir, 0,
-	        17*xDir, 5,
-	        8*xDir, 10,
-	        -8*xDir, 13}
+	return {
+		0, 0,
+	    -8*xDir, -18,
+	    8*xDir, -14,
+	    21*xDir, -4,
+	    21*xDir, 0,
+	    17*xDir, 5,
+	    8*xDir, 10,
+	    -8*xDir, 13
+	}
 end
 
 local function hurtbox()
-	return {-2, 12,
-			-6, 11,
-			-6, -11,
-			6, -11,
-			6, 11,
-			2, 12}
+	return {
+		-2, 12,
+		-6, 11,
+		-6, -11,
+		6, -11,
+		6, 11,
+		2, 12
+	}
 end
 
 return {
