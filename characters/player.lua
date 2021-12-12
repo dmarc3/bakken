@@ -1,6 +1,11 @@
 local peachy = require("3rd/peachy/peachy")
 local json = require("3rd/json/json")
 
+local utils = require("utils")
+
+-- seed rng with unix epoch
+math.randomseed(os.time())
+
 Player = {}
 Player.__index = Player
 
@@ -13,7 +18,7 @@ function Player:new(id, char, x, y)
     else
         instance.enemy_id = 1
     end
-    
+
     -- Process character
     instance.spritesheet = love.graphics.newImage("assets/characters/"..char..".png")
     instance.asepriteMeta = "assets/characters/"..char..".json"
@@ -39,25 +44,57 @@ function Player:new(id, char, x, y)
     instance.animationName = "idle"
     instance.width = instance.animation[instance.animationName]:getWidth()
     instance.height = instance.animation[instance.animationName]:getHeight()
-    require("characters/"..char)
-    instance.xorigin = xorigin
-    instance.block_start_dur = block_start_dur
-    instance.block_end_dur = block_end_dur
-    instance.body_width_pad = body_width_pad
-    instance.body_height_pad = body_height_pad
-    instance.x_shift_pad = x_shift_pad
-    instance.idle_duration = idle_duration
-    instance.attack_1_duration = attack_1_duration
-    instance.jump_duration = jump_duration
-    instance.airborne_duration = airborne_duration
-    instance.land_duration = land_duration
-    instance.damage_duration = damage_duration
-    instance.idle = idle
-    instance.a1 = a1
-    instance.walk = walk
-    instance.block_start = block_start
-    instance.block = block
-    instance.block_end = block_end
+    -- import values from character files
+    instance.charsheet = require("characters/" .. char)
+    instance.xorigin = instance.charsheet.xorigin
+    instance.block_start_dur = instance.charsheet.block_start_dur
+    instance.block_end_dur = instance.charsheet.block_end_dur
+    instance.body_width_pad = instance.charsheet.body_width_pad
+    instance.body_height_pad = instance.charsheet.body_height_pad
+    instance.x_shift_pad = instance.charsheet.x_shift_pad
+    instance.idle_duration = instance.charsheet.idle_duration
+    instance.attack_1_duration = instance.charsheet.attack_1_duration
+    instance.jump_duration = instance.charsheet.jump_duration
+    instance.airborne_duration = instance.charsheet.airborne_duration
+    instance.land_duration = instance.charsheet.land_duration
+    instance.damage_duration = instance.charsheet.damage_duration
+    instance.idle = instance.charsheet.idle
+    instance.a1 = instance.charsheet.a1
+    instance.walk = instance.charsheet.walk
+    instance.block_start = instance.charsheet.block_start
+    instance.block = instance.charsheet.block
+    instance.block_end = instance.charsheet.block_end
+    -- sfx
+    local sfx_pitch = instance.charsheet.sfx_pitch
+    instance.sfx = {
+        -- below represents a matrix of attack_1 sounds, `attack_1_vX_pY.ogg`
+        -- X is one of two variations, to mix things up
+        -- Y (sfx_pitch) is one of 10 pitches for each X, matching a given character
+        -- below is a vector slice of that matrix for that character
+        -- NOTE: Since these aren't statically defined, they won't work
+        -- if this game is converted to a HTML game with love.js or similar
+        attack_1 = {
+            love.audio.newSource(
+                "assets/audio/sfx/attack/attack_1_v1_p" .. sfx_pitch .. ".ogg", "static"
+            ),
+            love.audio.newSource(
+                "assets/audio/sfx/attack/attack_1_v2_p" .. sfx_pitch .. ".ogg", "static"
+            ),
+        },
+        block = love.audio.newSource(
+            "assets/audio/sfx/block/block_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        single_jump = love.audio.newSource(
+            "assets/audio/sfx/jump/single_jump_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        double_jump = love.audio.newSource(
+            "assets/audio/sfx/jump/double_jump_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        kneel = love.audio.newSource(
+            "assets/audio/sfx/kneel/kneel_breath_p" .. sfx_pitch .. ".ogg", "static"
+        )
+    }
+    instance.sfx_attack_variation = 1  -- start with attack_1_v1
 
 
     -- Process controller
@@ -128,7 +165,6 @@ function Player:new(id, char, x, y)
             instance.a = "kp4"
             instance.b = "kp6"
         end
-        
     end
     instance.xVel = 0
     instance.yVel = 0
@@ -149,8 +185,8 @@ function Player:load()
     self.vel = 80
     self.jump_vel = 475
     self.hasDoubleJump = true
-    self.graceTime = 0
     self.graceDuration = 0.2
+    self.graceTime = self.graceDuration
     self.attack = false
     self.attack_timer = 0
     self.jumping = false
@@ -186,9 +222,7 @@ function Player:load()
     self.physics.body:setUserData("player"..self.id)
     self.physics.bw = self.body_width_pad*self.width
     self.physics.bh = self.body_height_pad*self.height
-    local vertices = _G[self.char.."Hurtbox"]()
-    -- self.physics.shape = love.physics.newRectangleShape(self.physics.bw, self.physics.bh)
-    self.physics.shape = love.physics.newPolygonShape(vertices)
+    self.physics.shape = love.physics.newPolygonShape(self.a1.hurtbox.vertices)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     self.physics.fixture:setUserData("player"..self.id)
     self.physics.fixture:setCategory(2)
@@ -299,9 +333,7 @@ function Player:setState()
 end
 
 function Player:drawBody()
-    love.graphics.setColor(1, 1, 1, 0.25)
-                
-                love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(1, 1, 1)
     bx, by = self.physics.body:getPosition()
     love.graphics.setColor(self.red, self.green, self.blue, 0.8)
     love.graphics.polygon("fill", self.physics.body:getWorldPoints(self.physics.shape:getPoints()))
@@ -498,7 +530,6 @@ function Player:drawHitBox(anim)
     local current_frame = self.animation[self.animationName]:getFrame()
     if self.animationName == "a1" then
         if self[self.animationName]["f"..tostring(current_frame)]["hit"] then
-            self.a1.hitbox.vertices = _G[self.char.."Hitbox"](self.xDir)
             self.a1.hitbox.body = love.physics.newBody(World, self.x, self.y, "static")
             self.a1.hitbox.body:setFixedRotation(true)
             self.a1.hitbox.body:setUserData("player"..self.id.."_a1")
@@ -551,26 +582,30 @@ function Player:jump()
                 --self.yVel = self.jumpAmount
                 self.grounded = false
                 self.jumping = true
+                self:trigger_sfx("single_jump")
             elseif self.hasDoubleJump and self.graceTime < 0 then
                 self.hasDoubleJump = false
                 self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 --self.yVel = self.jumpAmount
                 self.jumping = true
                 self.jump_timer = 0
+                self:trigger_sfx("double_jump")
             end
         end
     else
         if KeysPressed[self.j] == true and not self.attack and not self.blocking then
             if self.grounded then
-                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 self.grounded = false
+                self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 self.jumping = true
+                self:trigger_sfx("single_jump")
             elseif self.hasDoubleJump and self.graceTime < 0 then
                 self.hasDoubleJump = false
                 self.physics.body:applyLinearImpulse(0, -Gravity*self.physics.body:getMass()*20)
                 --self.yVel = self.jumpAmount
                 self.jumping = true
                 self.jump_timer = 0
+                self:trigger_sfx("double_jump")
             end
         end
     end
@@ -581,10 +616,12 @@ function Player:attack_1()
     if self.joystick then
         if ButtonsPressed[self.id][self.a] == true then
             self.attack = true
+            self:trigger_sfx("attack_1")
         end
     else
         if KeysPressed[self.a] == true then
             self.attack = true
+            self:trigger_sfx("attack_1")
         end
     end
     if not current_attack and self.attack then
@@ -609,6 +646,7 @@ function Player:incrementTimers(dt)
         self.kneel_enter = true
     elseif self.kneel and self.kneel_timer > self.kneel_duration and self.kneel_timer < self.kneel_delay - self.kneel_duration then
         self.kneel_enter = false
+        self:trigger_sfx("kneel")
     elseif self.kneel and self.kneel_timer > self.kneel_delay - self.kneel_duration and self.kneel_timer < self.kneel_delay then
         self.kneel_exit = true
     elseif self.kneel and self.kneel_timer > self.kneel_delay then
@@ -700,18 +738,20 @@ function Player:blocks()
         if AxisMoved[self.id][self.b] == nil then
             self.blocking = false
         elseif AxisMoved[self.id][self.b] > 0.5 then
+            self:trigger_sfx("block")  -- keep this above `self.blocking = true`
             self.blocking = true
         else
             self.blocking = false
         end
     else
         if KeysPressed[self.b] == true then
+            self:trigger_sfx("block")  -- keep this above `self.blocking = true`
             self.blocking = true
         else
             self.blocking = false
         end
     end
-    
+
     -- Detect if block has ended
     if cur_block == true and self.blocking == false then
         self.end_block = true
@@ -764,6 +804,25 @@ function Player:endContact(a, b, collision)
 			self.grounded = false
 		end
 	end
+end
+
+function Player:trigger_sfx(sfx_type)
+    if sfx_type == "attack_1" then
+        if not self.sfx.attack_1[self.sfx_attack_variation]:isPlaying() then
+            self.sfx_attack_variation = math.random(1, 2)
+            self.sfx.attack_1[self.sfx_attack_variation]:play()
+        end
+    elseif sfx_type == "block" then
+        if not self.blocking then
+            utils.pplay(self.sfx.block)
+        end
+    elseif sfx_type == "single_jump" then
+        utils.pplay(self.sfx.single_jump)
+    elseif sfx_type == "double_jump" then
+        utils.pplay(self.sfx.double_jump)
+    elseif sfx_type == "kneel" then
+        utils.pplay(self.sfx.kneel)
+    end
 end
 
 return Player
