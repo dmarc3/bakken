@@ -74,5 +74,5 @@ return {
 		f2 = 21,
 		f3 = 21
 	},
-	sfx_pitch = "1.25"
+	sfx_pitch = "1.15"
 }
