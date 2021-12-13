@@ -8,8 +8,8 @@ P1 = "drew"
 P2 = "lilah"
 
 function pickFighterScene:load()
-    self.chars = {"drew", "lilah", "sam"}
-    self.chars_spacing = {12, 21, 9}
+    self.chars = {"drew", "lilah", "sam", "miller"}
+    self.chars_xspacing = {12, 21, 21, 15}
     self.animations = {}
     for _, char in pairs(self.chars) do
         local spritesheet = love.graphics.newImage("assets/characters/"..char..".png")
@@ -122,7 +122,7 @@ function pickFighterScene:drawCharacters()
     local spacing = 50
     local scale = 1
     for i, char in pairs(self.chars) do
-        self.animations[char].idle:draw(x0+(i-1)*spacing, y0, 0, scale, scale, self.chars_spacing[i], self.animations[char].idle:getHeight()/2)
+        self.animations[char].idle:draw(x0+(i-1)*spacing, y0, 0, scale, scale, self.chars_xspacing[i], self.animations[char].idle:getHeight()/2)
         if i == self.player1 then
             if self.selected1 then
                 self.animations.player1_selected:draw(x0+(i-1)*spacing, y0, 0, scale, scale, self.animations.player1_selected:getWidth()/2, self.animations.player1_selected:getHeight()/2)
@@ -160,8 +160,8 @@ function pickFighterScene:drawCharacters()
     local xchar = 70
     local ychar = 110
     local scale = 2
-    self.animations[self.chars[self.player1]].idle:draw(xchar, ychar, 0, scale, scale,self.chars_spacing[self.player1], self.animations[self.chars[self.player1]].idle:getHeight()/2)
-    self.animations[self.chars[self.player2]].idle:draw(WindowWidth/GlobalScale-xchar, ychar, 0, -scale, scale, self.chars_spacing[self.player2], self.animations[self.chars[self.player2]].idle:getHeight()/2)
+    self.animations[self.chars[self.player1]].idle:draw(xchar, ychar, 0, scale, scale,self.chars_xspacing[self.player1], self.animations[self.chars[self.player1]].idle:getHeight()/2)
+    self.animations[self.chars[self.player2]].idle:draw(WindowWidth/GlobalScale-xchar, ychar, 0, -scale, scale, self.chars_xspacing[self.player2], self.animations[self.chars[self.player2]].idle:getHeight()/2)
 end
 
 function pickFighterScene:drawStage(option)

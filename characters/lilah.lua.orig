@@ -1,17 +1,19 @@
-local function hitbox(xDir)
-	return {
-		9*xDir, 0,
-        14*xDir, 4,
-        20*xDir, 6,
-	       xDir, 0,
-        23*xDir, -4,
-        20*xDir, -8,
-        13*xDir, -7,
-        9*xDir, -4
+function lilahHitbox(xDir)
+    return {
+		0, 0,
+		13*xDir, -14,
+		18*xDir, -6,
+		18*xDir, 0,
+		12*xDir, 7,
+		8*xDir, 10
 	}
 end
 
+<<<<<<< HEAD
 local function hurtbox()
+=======
+function lilahHurtbox ()
+>>>>>>> main
 	return {-2, 14,
 			-6, 13,
 			-6, 13,
@@ -23,17 +25,17 @@ end
 
 return {
 	xorigin = 21,
-	yorigin = 31,
-	body_width_pad = 0.375,
-	body_height_pad = 0.45,
+	yorigin = 18,
+	body_width_pad = 0.3,
+	body_height_pad = 0.75,
 	x_shift_pad = 0.5,
 	idle_duration = 0.6,
-	attack_1_duration = 1.16,
-	jump_duration = 0.4,
+	attack_1_duration = 0.9,
+	jump_duration = 0.5,
 	airborne_duration = 0.8,
-	land_duration = 0.2,
+	land_duration = 0.15,
 	damage_duration = 0.5,
-	block_start_dur = 0.40,
+	block_start_dur = 0.45,
 	block_end_dur = 0.45,
 	idle = {
 		f1 = {x = 21},
@@ -42,21 +44,28 @@ return {
 		f4 = {x = 21}
 	},
 	a1 = {
-		f1 = {dx = 0,hit = false},
-	    f2 = {dx = -1,hit = false},
-	    f3 = {dx = 0,hit = false},
-	    f4 = {dx = 0,hit = false},
-	    f5 = {dx = 0,hit = true},
-	    f6 = {dx = 0,hit = false},
-	    f7 = {dx = 1,hit = false},
+		f1 = {dx = 0, hit = false},
+	    f2 = {dx = -2, hit = false},
+	    f3 = {dx = 0, hit = false},
+	    f4 = {dx = 4, hit = true},
+	    f5 = {dx = 0, hit = false},
+	    f6 = {dx = -2, hit = false},
 		hitbox = {
+<<<<<<< HEAD
 			vertices = hitbox,
+=======
+			vertices = lilahHitbox(1),
+>>>>>>> main
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
+<<<<<<< HEAD
 			vertices = hurtbox
+=======
+			vertices = lilahHurtbox()
+>>>>>>> main
 		}
 	},
 	walk = {
@@ -69,7 +78,7 @@ return {
 	},
 	block_start = {
 		f1 = 21,
-		f2 = 21,
+	    f2 = 21,
 		f3 = 21
 	},
 	block = {f1 = 21},
@@ -78,5 +87,5 @@ return {
 		f2 = 21,
 		f3 = 21
 	},
-	sfx_pitch = "1.25"
+	sfx_pitch = "1.15"
 }

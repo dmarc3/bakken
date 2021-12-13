@@ -1,17 +1,17 @@
-local function hitbox(xDir)
+function millerHitbox(xDir)
 	return {
 		0, 0,
-	    -8*xDir, -18,
-	    8*xDir, -14,
-	    21*xDir, -4,
-	    21*xDir, 0,
-	    17*xDir, 5,
-	    8*xDir, 10,
-	    -8*xDir, 13
+	    -12*xDir, 0,
+	    -10*xDir, -8,
+	    0, -10,
+		12*xDir, -6,
+	    16*xDir, 0,
+		16*xDir, 9,
+	    12*xDir, 13
 	}
 end
 
-local function hurtbox()
+function millerHurtbox()
 	return {
 		-2, 12,
 		-6, 11,
@@ -23,10 +23,10 @@ local function hurtbox()
 end
 
 return {
-	xorigin = 12,
-	yorigin = 29,
-	body_width_pad = 0.25,
-	body_height_pad = 0.38,
+	xorigin = 15,
+	yorigin = 23,
+	body_width_pad = 0.3333333333,
+	body_height_pad = 0.5897,
 	x_shift_pad = 0.585,
 	idle_duration = 0.6,
 	attack_1_duration = 1.16,
@@ -37,29 +37,25 @@ return {
 	block_start_dur = 0.40,
 	block_end_dur = 0.45,
 	idle = {
-		f1 = {x = 12},
-		f2 = {x = 12},
-		f3 = {x = 12},
-		f4 = {x = 12}
+		f1 = {x = 15},
+		f2 = {x = 15}
 	},
 	a1 = {
 		f1 = {dx = 0,hit = false},
-	    f2 = {dx = 4,hit = false},
+	    f2 = {dx = 0,hit = false},
 	    f3 = {dx = 0,hit = false},
-	    f4 = {dx = 0,hit = false},
-	    f5 = {dx = 6,hit = true},
-	    f6 = {dx = 0,hit = false},
-	    f7 = {dx = -9,hit = false},
-	    f8 = {dx = 0,hit = false},
-	    f9 = {dx = -1,hit = false},
+	    f4 = {dx = 1,hit = true},
+	    f5 = {dx = 0,hit = false},
+	    f6 = {dx = -1,hit = true},
+	    f7 = {dx = 0,hit = false},
 		hitbox = {
-			vertices = hitbox,
+			vertices = millerHitbox(1),
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
-			vertices = hurtbox
+			vertices = millerHurtbox()
 		}
 	},
 	walk = {

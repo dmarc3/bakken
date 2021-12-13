@@ -1,4 +1,4 @@
-local function hitbox(xDir)
+function samHitbox(xDir)
 	return {
 		9*xDir, 0,
         14*xDir, 4,
@@ -11,7 +11,7 @@ local function hitbox(xDir)
 	}
 end
 
-local function hurtbox()
+function samHurtbox()
 	return {-2, 14,
 			-6, 13,
 			-6, 13,
@@ -50,13 +50,21 @@ return {
 	    f6 = {dx = 0,hit = false},
 	    f7 = {dx = 1,hit = false},
 		hitbox = {
+<<<<<<< HEAD
 			vertices = hitbox,
+=======
+			vertices = samHitbox(1),
+>>>>>>> main
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
+<<<<<<< HEAD
 			vertices = hurtbox
+=======
+			vertices = samHurtbox()
+>>>>>>> main
 		}
 	},
 	walk = {

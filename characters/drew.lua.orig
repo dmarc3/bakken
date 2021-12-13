@@ -1,4 +1,4 @@
-local function hitbox(xDir)
+function drewHitbox(xDir)
 	return {
 		0, 0,
 	    -8*xDir, -18,
@@ -11,7 +11,7 @@ local function hitbox(xDir)
 	}
 end
 
-local function hurtbox()
+function drewHurtbox()
 	return {
 		-2, 12,
 		-6, 11,
@@ -53,13 +53,21 @@ return {
 	    f8 = {dx = 0,hit = false},
 	    f9 = {dx = -1,hit = false},
 		hitbox = {
+<<<<<<< HEAD
 			vertices = hitbox,
+=======
+			vertices = drewHitbox(1),
+>>>>>>> main
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
+<<<<<<< HEAD
 			vertices = hurtbox
+=======
+			vertices = drewHurtbox()
+>>>>>>> main
 		}
 	},
 	walk = {

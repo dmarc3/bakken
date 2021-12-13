@@ -9,7 +9,7 @@ local function hitbox(xDir)
 	}
 end
 
-local function hurtbox()
+local function hurtbox ()
 	return {-2, 14,
 			-6, 13,
 			-6, 13,
@@ -21,6 +21,7 @@ end
 
 return {
 	xorigin = 21,
+	yorigin = 18,
 	body_width_pad = 0.3,
 	body_height_pad = 0.75,
 	x_shift_pad = 0.5,
