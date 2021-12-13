@@ -47,6 +47,7 @@ function Player:new(id, char, x, y)
     -- import values from character files
     instance.charsheet = require("characters/" .. char)
     instance.xorigin = instance.charsheet.xorigin
+    instance.yorigin = instance.charsheet.yorigin
     instance.block_start_dur = instance.charsheet.block_start_dur
     instance.block_end_dur = instance.charsheet.block_end_dur
     instance.body_width_pad = instance.charsheet.body_width_pad
@@ -222,7 +223,9 @@ function Player:load()
     self.physics.body:setUserData("player"..self.id)
     self.physics.bw = self.body_width_pad*self.width
     self.physics.bh = self.body_height_pad*self.height
-    self.physics.shape = love.physics.newPolygonShape(self.a1.hurtbox.vertices)
+    local vertices = _G[self.char.."Hurtbox"]()
+    self.physics.shape = love.physics.newPolygonShape(vertices)
+    -- self.physics.shape = love.physics.newPolygonShape(self.a1.hurtbox.vertices)
     self.physics.fixture = love.physics.newFixture(self.physics.body, self.physics.shape)
     self.physics.fixture:setUserData("player"..self.id)
     self.physics.fixture:setCategory(2)
@@ -251,7 +254,8 @@ function Player:draw()
                                                 self.xDir,
                                                 1,
                                                 self.xorigin,
-                                                self.animation[self.animationName]:getHeight()/2)
+                                                self.animation[self.animationName]:getHeight()-self.yorigin)
+        -- self.animation[self.animationName]:getHeight()/2)
     else
         self.animation[self.animationName]:draw(self.x,
                                                 self.y,
@@ -259,7 +263,8 @@ function Player:draw()
                                                 self.xDir,
                                                 1,
                                                 self.xorigin,
-                                                self.animation[self.animationName]:getHeight()/2)
+                                                self.animation[self.animationName]:getHeight()-self.yorigin)
+        -- self.animation[self.animationName]:getHeight()/2)
     end
     self:drawHitBox("a1")
     -- end
@@ -530,6 +535,7 @@ function Player:drawHitBox(anim)
     local current_frame = self.animation[self.animationName]:getFrame()
     if self.animationName == "a1" then
         if self[self.animationName]["f"..tostring(current_frame)]["hit"] then
+            self.a1.hitbox.vertices = _G[self.char.."Hitbox"](self.xDir)
             self.a1.hitbox.body = love.physics.newBody(World, self.x, self.y, "static")
             self.a1.hitbox.body:setFixedRotation(true)
             self.a1.hitbox.body:setUserData("player"..self.id.."_a1")
@@ -538,7 +544,7 @@ function Player:drawHitBox(anim)
             self.a1.hitbox.fixture:setSensor(true)
             self.a1.hitbox.fixture:setUserData("sensor"..self.id)
             if Debug then
-                love.graphics.setColor(1, 1, 1, 0.25)
+                love.graphics.setColor(1, 1, 1, 0.8)
                 love.graphics.polygon("fill", self[anim].hitbox.body:getWorldPoints(self[anim].hitbox.shape:getPoints()))
                 love.graphics.setColor(1, 1, 1)
             end
