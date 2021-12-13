@@ -1,4 +1,4 @@
-function lilahHitbox(xDir)
+local function hitbox(xDir)
     return {
 		0, 0,
 		13*xDir, -14,
@@ -9,7 +9,7 @@ function lilahHitbox(xDir)
 	}
 end
 
-function lilahHurtbox ()
+local function hurtbox ()
 	return {-2, 14,
 			-6, 13,
 			-6, 13,
@@ -47,13 +47,13 @@ return {
 	    f5 = {dx = 0, hit = false},
 	    f6 = {dx = -2, hit = false},
 		hitbox = {
-			vertices = lilahHitbox(1),
+			vertices = hitbox,
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
-			vertices = lilahHurtbox()
+			vertices = hurtbox
 		}
 	},
 	walk = {
