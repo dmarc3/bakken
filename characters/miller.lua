@@ -1,4 +1,4 @@
-function millerHitbox(xDir)
+local function hitbox(xDir)
 	return {
 		0, 0,
 	    -12*xDir, 0,
@@ -11,7 +11,7 @@ function millerHitbox(xDir)
 	}
 end
 
-function millerHurtbox()
+local function hurtbox()
 	return {
 		-2, 12,
 		-6, 11,
@@ -49,13 +49,13 @@ return {
 	    f6 = {dx = -1,hit = true},
 	    f7 = {dx = 0,hit = false},
 		hitbox = {
-			vertices = millerHitbox(1),
+			vertices = hitbox,
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
-			vertices = millerHurtbox()
+			vertices = hurtbox
 		}
 	},
 	walk = {
