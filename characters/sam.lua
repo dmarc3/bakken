@@ -49,13 +49,13 @@ return {
 	    f6 = {dx = 0,hit = false},
 	    f7 = {dx = 1,hit = false},
 		hitbox = {
-			vertices = hitbox(1),
+			vertices = hitbox,
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
-			vertices = hurtbox()
+			vertices = hurtbox
 		}
 	},
 	walk = {

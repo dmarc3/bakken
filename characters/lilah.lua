@@ -9,7 +9,7 @@ local function hitbox(xDir)
 	}
 end
 
-local function hurtbox ()
+local function hurtbox()
 	return {-2, 14,
 			-6, 13,
 			-6, 13,
@@ -46,13 +46,13 @@ return {
 	    f5 = {dx = 0, hit = false},
 	    f6 = {dx = -2, hit = false},
 		hitbox = {
-			vertices = hitbox(1),
+			vertices = hitbox,
 			body = nil,
 			shape = nil,
 			fixture = nil
 		},
 		hurtbox = {
-			vertices = hurtbox()
+			vertices = hurtbox
 		}
 	},
 	walk = {
