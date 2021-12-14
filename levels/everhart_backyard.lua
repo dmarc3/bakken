@@ -7,6 +7,7 @@ Level.__index = Level
 function Level:load(player1, player2, canvas)
     self.name = "everhart_backyard"
     self.canvas = canvas
+    self.complete = false
     -- Create self.Ground and self.Walls
     self.Ground = {}
     self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
@@ -265,9 +266,11 @@ function Level:resetFighters(dt, id)
         if Level.player2.dead then
             print("Player 1 is victorious!")
             Level.player1.victory = true
+            Level.complete = true
         elseif Level.player1.dead then
             print("Player 2 is victorious!")
             Level.player2.victory = true
+            Level.complete = true
         end
     end
 end

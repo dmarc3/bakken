@@ -88,7 +88,6 @@ function titleScene:loadChars(chars, x)
 end
 
 function titleScene:update(dt, gameState)
-    print(self.lightning.timer)
     if self.title.x == 0 and not self.music:isPlaying() then
         self.music:play()
     end

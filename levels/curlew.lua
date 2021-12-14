@@ -8,6 +8,7 @@ function Level:load(player1, player2, canvas)
     self.name = "curlew"
     self.canvas = canvas
     self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
+    self.complete = false
     -- Dock dimensions
     self.Dock = {}
     self.Dock.x = {121, 71, 89, 153, 170}
@@ -375,9 +376,11 @@ function Level:resetFighters(dt, id)
         if Level.player2.dead then
             print("Player 1 is victorious!")
             Level.player1.victory = true
+            Level.complete = true
         elseif Level.player1.dead then
             print("Player 2 is victorious!")
             Level.player2.victory = true
+            Level.complete = true
         end
     end
 end

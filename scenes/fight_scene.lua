@@ -39,6 +39,13 @@ function fight_scene:load(GameState)
     self.fight = false
     self.delta = 0
 
+    -- Import player names
+    local spritesheet = love.graphics.newImage("assets/ui/names.png")
+    local asepriteMeta = "assets/ui/names.json"
+    Names = {}
+    Names.player1 = peachy.new(asepriteMeta, spritesheet, GameState.player1)
+    Names.player2 = peachy.new(asepriteMeta, spritesheet, GameState.player2)
+    Names.wins = peachy.new(asepriteMeta, spritesheet, "wins")
     -- Set players to nil
     --player1 = nil
     --player2 = nil
@@ -98,6 +105,9 @@ function fight_scene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawFight()
+    if Level.complete then
+        self:drawVictory()
+    end
     love.graphics.pop()
 end
 
@@ -124,6 +134,20 @@ function fight_scene:drawFight()
         love.graphics.setColor(1, 1, 1, 1)
     else
         self.fight = true
+    end
+end
+
+function fight_scene:drawVictory()
+    if Level.complete then
+        if Level.player1.dead then
+            Names.player2:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
+        end
+        if Level.player2.dead then
+            Names.player1:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
+        end
+        if Level.player1.dead or Level.player2.dead then
+            Names.wins:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.4)
+        end
     end
 end
 
