@@ -34,6 +34,42 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
     "duration": 100
+   },
+   {
+    "filename": "title_screen 4.aseprite",
+    "frame": { "x": 960, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 50
+   },
+   {
+    "filename": "title_screen 5.aseprite",
+    "frame": { "x": 1200, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 50
+   },
+   {
+    "filename": "title_screen 6.aseprite",
+    "frame": { "x": 1440, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 50
+   },
+   {
+    "filename": "title_screen 7.aseprite",
+    "frame": { "x": 1680, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 50
    }
  ],
  "meta": {
@@ -41,16 +77,17 @@
   "version": "1.2.30-x64",
   "image": "title_screen.png",
   "format": "RGBA8888",
-  "size": { "w": 960, "h": 160 },
+  "size": { "w": 1920, "h": 160 },
   "scale": "1",
   "frameTags": [
    { "name": "Idle", "from": 0, "to": 0, "direction": "forward" },
    { "name": "draw", "from": 1, "to": 1, "direction": "forward" },
    { "name": "your", "from": 2, "to": 2, "direction": "forward" },
-   { "name": "weapon", "from": 3, "to": 3, "direction": "forward" }
+   { "name": "weapon", "from": 3, "to": 3, "direction": "forward" },
+   { "name": "lightning", "from": 4, "to": 7, "direction": "forward" }
   ],
   "layers": [
-   { "name": "background", "opacity": 255, "blendMode": "normal" },
+   { "name": "lightning", "opacity": 255, "blendMode": "normal" },
    { "name": "phrase", "opacity": 255, "blendMode": "normal" },
    { "name": "title", "opacity": 255, "blendMode": "normal" }
   ],
