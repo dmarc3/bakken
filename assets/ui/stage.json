@@ -1,29 +1,29 @@
 { "frames": [
    {
     "filename": "stage 0.aseprite",
-    "frame": { "x": 0, "y": 0, "w": 50, "h": 58 },
+    "frame": { "x": 0, "y": 0, "w": 50, "h": 68 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
-    "sourceSize": { "w": 50, "h": 58 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 68 },
+    "sourceSize": { "w": 50, "h": 68 },
     "duration": 100
    },
    {
     "filename": "stage 1.aseprite",
-    "frame": { "x": 50, "y": 0, "w": 50, "h": 58 },
+    "frame": { "x": 50, "y": 0, "w": 50, "h": 68 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
-    "sourceSize": { "w": 50, "h": 58 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 68 },
+    "sourceSize": { "w": 50, "h": 68 },
     "duration": 100
    }
  ],
  "meta": {
-  "app": "http://www.aseprite.org/",
-  "version": "1.2.29-x64",
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.30-x64",
   "image": "stage.png",
   "format": "RGBA8888",
-  "size": { "w": 100, "h": 58 },
+  "size": { "w": 100, "h": 68 },
   "scale": "1",
   "frameTags": [
    { "name": "stage", "from": 0, "to": 0, "direction": "forward" },

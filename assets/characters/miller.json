@@ -330,7 +330,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 400
+    "duration": 63
    },
    {
     "filename": "miller 37.aseprite",
@@ -339,7 +339,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 75
+    "duration": 63
    },
    {
     "filename": "miller 38.aseprite",
@@ -348,7 +348,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 75
+    "duration": 63
    },
    {
     "filename": "miller 39.aseprite",
@@ -357,7 +357,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 75
+    "duration": 63
    },
    {
     "filename": "miller 40.aseprite",
@@ -366,7 +366,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 75
+    "duration": 63
    },
    {
     "filename": "miller 41.aseprite",
@@ -375,7 +375,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 75
+    "duration": 63
    },
    {
     "filename": "miller 42.aseprite",
@@ -384,7 +384,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 75
+    "duration": 63
    },
    {
     "filename": "miller 43.aseprite",
@@ -393,7 +393,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 75
+    "duration": 63
    },
    {
     "filename": "miller 44.aseprite",

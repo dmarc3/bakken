@@ -61,6 +61,60 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 59, "h": 12 },
     "sourceSize": { "w": 59, "h": 12 },
     "duration": 100
+   },
+   {
+    "filename": "names 7.aseprite",
+    "frame": { "x": 413, "y": 0, "w": 59, "h": 12 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 59, "h": 12 },
+    "sourceSize": { "w": 59, "h": 12 },
+    "duration": 100
+   },
+   {
+    "filename": "names 8.aseprite",
+    "frame": { "x": 472, "y": 0, "w": 59, "h": 12 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 59, "h": 12 },
+    "sourceSize": { "w": 59, "h": 12 },
+    "duration": 100
+   },
+   {
+    "filename": "names 9.aseprite",
+    "frame": { "x": 531, "y": 0, "w": 59, "h": 12 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 59, "h": 12 },
+    "sourceSize": { "w": 59, "h": 12 },
+    "duration": 100
+   },
+   {
+    "filename": "names 10.aseprite",
+    "frame": { "x": 590, "y": 0, "w": 59, "h": 12 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 59, "h": 12 },
+    "sourceSize": { "w": 59, "h": 12 },
+    "duration": 100
+   },
+   {
+    "filename": "names 11.aseprite",
+    "frame": { "x": 649, "y": 0, "w": 59, "h": 12 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 59, "h": 12 },
+    "sourceSize": { "w": 59, "h": 12 },
+    "duration": 100
+   },
+   {
+    "filename": "names 12.aseprite",
+    "frame": { "x": 708, "y": 0, "w": 59, "h": 12 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 59, "h": 12 },
+    "sourceSize": { "w": 59, "h": 12 },
+    "duration": 100
    }
  ],
  "meta": {
@@ -68,16 +122,22 @@
   "version": "1.2.30-x64",
   "image": "names.png",
   "format": "RGBA8888",
-  "size": { "w": 413, "h": 12 },
+  "size": { "w": 767, "h": 12 },
   "scale": "1",
   "frameTags": [
    { "name": "drew", "from": 0, "to": 0, "direction": "forward" },
-   { "name": "sam", "from": 1, "to": 1, "direction": "forward" },
-   { "name": "lilah", "from": 2, "to": 2, "direction": "forward" },
-   { "name": "miller", "from": 3, "to": 3, "direction": "forward" },
-   { "name": "abram", "from": 4, "to": 4, "direction": "forward" },
-   { "name": "averi", "from": 5, "to": 5, "direction": "forward" },
-   { "name": "wins", "from": 6, "to": 6, "direction": "forward" }
+   { "name": "drew_light", "from": 1, "to": 1, "direction": "forward" },
+   { "name": "sam", "from": 2, "to": 2, "direction": "forward" },
+   { "name": "sam_light", "from": 3, "to": 3, "direction": "forward" },
+   { "name": "lilah", "from": 4, "to": 4, "direction": "forward" },
+   { "name": "lilah_light", "from": 5, "to": 5, "direction": "forward" },
+   { "name": "miller", "from": 6, "to": 6, "direction": "forward" },
+   { "name": "miller_light", "from": 7, "to": 7, "direction": "forward" },
+   { "name": "abram", "from": 8, "to": 8, "direction": "forward" },
+   { "name": "abram_light", "from": 9, "to": 9, "direction": "forward" },
+   { "name": "averi", "from": 10, "to": 10, "direction": "forward" },
+   { "name": "averi_light", "from": 11, "to": 11, "direction": "forward" },
+   { "name": "wins", "from": 12, "to": 12, "direction": "forward" }
   ],
   "layers": [
    { "name": "names", "opacity": 255, "blendMode": "normal" }

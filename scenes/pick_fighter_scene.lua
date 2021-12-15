@@ -11,10 +11,15 @@ function pickFighterScene:load()
     self.chars = {"drew", "lilah", "sam", "miller"}
     self.chars_xspacing = {12, 21, 21, 15}
     self.animations = {}
+    self.animationName = "idle"
+    self.animationName1 = "idle"
+    self.animationName2 = "idle"
     for _, char in pairs(self.chars) do
         local spritesheet = love.graphics.newImage("assets/characters/"..char..".png")
         local asepriteMeta = "assets/characters/"..char..".json"
-        self.animations[char] = {idle = peachy.new(asepriteMeta, spritesheet, "idle")}
+        self.animations[char] = {idle = peachy.new(asepriteMeta, spritesheet, "idle"),
+                                 victory = peachy.new(asepriteMeta, spritesheet, "victory"),
+                                 victory_idle = peachy.new(asepriteMeta, spritesheet, "victory_idle")}
     end
     local spritesheet = love.graphics.newImage("assets/ui/character_box.png")
     local asepriteMeta = "assets/ui/character_box.json"
@@ -41,6 +46,8 @@ function pickFighterScene:load()
     self.move_timer = 0
     self.delay = true
     self.delay_timer = 0
+    self.victory_timer1 = 0
+    self.victory_timer2 = 0
     -- load sfx
     self.sfx = {
         change_sel = love.audio.newSource(
@@ -61,6 +68,17 @@ function pickFighterScene:load()
             "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
+    -- Import player names
+    local spritesheet = love.graphics.newImage("assets/ui/names.png")
+    local asepriteMeta = "assets/ui/names.json"
+    self.names = {}
+    for _, char in ipairs(self.chars) do
+        self.names[char] = peachy.new(asepriteMeta, spritesheet, char.."_light")
+    end
+    -- Import banner
+    local spritesheet = love.graphics.newImage("assets/ui/banner.png")
+    local asepriteMeta = "assets/ui/banner.json"
+    self.banner = peachy.new(asepriteMeta, spritesheet, "idle")
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
     if joystickcount == 2 then
@@ -100,13 +118,17 @@ function pickFighterScene:draw(sx, sy)
     self:drawStage(1)
     self:drawCharacters()
     self:drawStage(2)
+    love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
+    love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, 20)
+    love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
+    self.banner:draw(WindowWidth/GlobalScale*0.5 - self.banner:getWidth()/2, 5)
     love.graphics.pop()
 end
 
 function pickFighterScene:drawBackground()
-    love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
-    love.graphics.setColor(0.1, 0.1, 0.1, 1)
-    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 40, WindowWidth/GlobalScale, 40)
+    love.graphics.setBackgroundColor(0.2, 0.2, 0.2)
+    love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
+    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
     if Debug then
         love.graphics.setColor(0, 0, 0, 1)
         love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale-20, WindowWidth/GlobalScale, 20)
@@ -118,11 +140,12 @@ end
 
 function pickFighterScene:drawCharacters()
     local x0 = 40
-    local y0 = 30
+    local y0 = 135
     local spacing = 50
     local scale = 1
     for i, char in pairs(self.chars) do
-        self.animations[char].idle:draw(x0+(i-1)*spacing, y0, 0, scale, scale, self.chars_xspacing[i], self.animations[char].idle:getHeight()/2)
+        self.animations[char][self.animationName]:draw(x0+(i-1)*spacing, y0, 0, scale, scale, self.chars_xspacing[i], self.animations[char][self.animationName]:getHeight()/2)
+        
         if i == self.player1 then
             if self.selected1 then
                 self.animations.player1_selected:draw(x0+(i-1)*spacing, y0, 0, scale, scale, self.animations.player1_selected:getWidth()/2, self.animations.player1_selected:getHeight()/2)
@@ -158,16 +181,21 @@ function pickFighterScene:drawCharacters()
     end
     -- Draw Selected Characters
     local xchar = 70
-    local ychar = 110
-    local scale = 2
-    self.animations[self.chars[self.player1]].idle:draw(xchar, ychar, 0, scale, scale,self.chars_xspacing[self.player1], self.animations[self.chars[self.player1]].idle:getHeight()/2)
-    self.animations[self.chars[self.player2]].idle:draw(WindowWidth/GlobalScale-xchar, ychar, 0, -scale, scale, self.chars_xspacing[self.player2], self.animations[self.chars[self.player2]].idle:getHeight()/2)
+    local ychar = 64
+    local scale = 1.5
+    self.animations[self.chars[self.player1]][self.animationName1]:draw(xchar, ychar, 0, scale, scale,self.chars_xspacing[self.player1], self.animations[self.chars[self.player1]].idle:getHeight()/2)
+    self.animations[self.chars[self.player2]][self.animationName2]:draw(WindowWidth/GlobalScale-xchar, ychar, 0, -scale, scale, self.chars_xspacing[self.player2], self.animations[self.chars[self.player2]].idle:getHeight()/2)
+    love.graphics.setColor(221/255, 25/255, 29/255, 1.0)
+    self.names[self.chars[self.player1]]:draw(xchar-self.names[self.chars[self.player1]]:getWidth()/2, ychar+36)
+    love.graphics.setColor(48/255, 63/255, 159/255, 1.0)
+    self.names[self.chars[self.player2]]:draw(WindowWidth/GlobalScale-xchar-self.names[self.chars[self.player1]]:getWidth()/2, ychar+36)
+    love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 end
 
 function pickFighterScene:drawStage(option)
     local x0 = 70
-    local y0 = 110
-    local scale = 2
+    local y0 = 60
+    local scale = 1.5
     if option == 1 then
         self.animations.stage:draw(x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
         self.animations.stage:draw(WindowWidth/GlobalScale-x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
@@ -179,7 +207,13 @@ end
 
 function pickFighterScene:updateCharacters(dt)
     for i, char in pairs(self.chars) do
-        self.animations[char].idle:update(dt)
+        self.animations[char][self.animationName]:update(dt)
+    end
+    if self.animationName1 ~= "idle" then
+        self.animations[self.chars[self.player1]][self.animationName1]:update(dt)
+    end
+    if self.animationName2 ~= "idle" then
+        self.animations[self.chars[self.player2]][self.animationName2]:update(dt)
     end
     self.animations.not_hovering:update(dt)
     self.animations.player1:update(dt)
@@ -244,6 +278,8 @@ function pickFighterScene:selectCharacter()
     if ButtonsPressed[1]["a"] == true then
         self.selection1 = true
         self.selected1 = true
+        self.animationName1 = "victory"
+        self.animations[self.chars[self.player1]][self.animationName1]:setFrame(1)
         self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
@@ -251,6 +287,8 @@ function pickFighterScene:selectCharacter()
     if KeysPressed["e"] == true then
         self.selection1 = true
         self.selected1 = true
+        self.animationName1 = "victory"
+        self.animations[self.chars[self.player1]][self.animationName1]:setFrame(1)
         self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
@@ -258,6 +296,8 @@ function pickFighterScene:selectCharacter()
     if ButtonsPressed[2]["a"] == true then
         self.selection2 = true
         self.selected2 = true
+        self.animationName2 = "victory"
+        self.animations[self.chars[self.player2]][self.animationName2]:setFrame(1)
         self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
@@ -265,24 +305,30 @@ function pickFighterScene:selectCharacter()
     if KeysPressed["kp4"] == true then
         self.selection2 = true
         self.selected2 = true
+        self.animationName2 = "victory"
+        self.animations[self.chars[self.player2]][self.animationName2]:setFrame(1)
         self.sfx.confirm_sel:play()
         self.animations.selection:setFrame(1)
         self.animations.selection:play()
     end
     if ButtonsPressed[1]["b"] == true then
         self.selected1 = false
+        self.animationName1 = "idle"
         self.sfx.undo_sel:play()
     end
     if KeysPressed["q"] == true then
         self.selected1 = false
+        self.animationName1 = "idle"
         self.sfx.undo_sel:play()
     end
     if ButtonsPressed[2]["b"] == true then
         self.selected2 = false
+        self.animationName2 = "idle"
         self.sfx.undo_sel:play()
     end
     if KeysPressed["kp6"] == true then
         self.selected2 = false
+        self.animationName2 = "idle"
         self.sfx.undo_sel:play()
     end
 end
@@ -291,6 +337,34 @@ function pickFighterScene:incrementTimers(dt)
     self.delay_timer = self.delay_timer + dt
     if self.delay_timer > 0.25 then
         self.delay = false
+    end
+    -- Process player1 selection
+    if self.selected1 then
+        if self.victory_timer1 == 0.0 then
+            self.animations[self.chars[self.player1]][self.animationName1]:setFrame(1)
+        end
+        self.victory_timer1 = self.victory_timer1 + dt
+        if self.victory_timer1 < 0.5 then
+            self.animationName1 = "victory"
+        else
+            self.animationName1 = "victory_idle"
+        end
+    else
+        self.victory_timer1 = 0.0
+    end
+    -- Process player2 selection
+    if self.selected2 then
+        if self.victory_timer2 == 0.0 then
+            self.animations[self.chars[self.player2]][self.animationName2]:setFrame(1)
+        end
+        self.victory_timer2 = self.victory_timer2 + dt
+        if self.victory_timer2 < 0.5 then
+            self.animationName2 = "victory"
+        else
+            self.animationName2 = "victory_idle"
+        end
+    else
+        self.victory_timer2 = 0.0
     end
 end
 
