@@ -8,7 +8,7 @@ P1 = "drew"
 P2 = "lilah"
 
 function pickFighterScene:load()
-    self.chars = {"drew", "lilah", "sam", "miller"}
+    self.chars = {"drew", "lilah", "sam", "miller", "abram"}
     self.chars_xspacing = {12, 21, 21, 15}
     self.animations = {}
     self.animationName = "idle"
