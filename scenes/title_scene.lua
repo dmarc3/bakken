@@ -35,10 +35,40 @@ function titleScene:load()
     self:loadChars(chars, x)
     self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
     self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
+    self:loadCredits()
+end
+
+function titleScene:loadCredits()
+    self.credit_delay = 8.0
+    self.credit_timer = 0.0
+    self.credits_x = 0.2
+    self.credits_y = 0.35
+    self.credits_ascend = true
+    self.credits = {}
+    local spritesheet = love.graphics.newImage("assets/ui/credits.png")
+    local asepriteMeta = "assets/ui/credits.json"
+    self.credits.marcus = {}
+    self.credits.marcus.image = peachy.new(asepriteMeta, spritesheet, "marcus")
+    self.credits.marcus.alpha = 0.0
+    self.credits.erik = {}
+    self.credits.erik.image = peachy.new(asepriteMeta, spritesheet, "erik")
+    self.credits.erik.alpha = 0.0
+    self.credits.rusty = {}
+    self.credits.rusty.image = peachy.new(asepriteMeta, spritesheet, "rusty")
+    self.credits.rusty.alpha = 0.0
+    self.credits.madeleine = {}
+    self.credits.madeleine.image = peachy.new(asepriteMeta, spritesheet, "madeleine")
+    self.credits.madeleine.alpha = 0.0
+    self.credits.katherine = {}
+    self.credits.katherine.image = peachy.new(asepriteMeta, spritesheet, "katherine")
+    self.credits.katherine.alpha = 0.0
+    self.credits.made = {}
+    self.credits.made.image = peachy.new(asepriteMeta, spritesheet, "made")
+    self.credits.made.alpha = 0.0
+    self.love_logo = love.graphics.newImage("assets/ui/Love-logo.png")
 end
 
 function titleScene:loadChars(chars, x)
-
     -- Load Characters
     self.chars = {}
     for i, char in ipairs(chars) do
@@ -88,7 +118,8 @@ function titleScene:loadChars(chars, x)
 end
 
 function titleScene:update(dt, gameState)
-    if self.title.x == 0 and not self.music:isPlaying() then
+    self:updateCredits(dt)
+    if self.title.x == 0 and not self.music:isPlaying() and self.credit_timer >= self.credit_delay then
         self.music:play()
     end
     if not self.interact then
@@ -121,6 +152,84 @@ function titleScene:update(dt, gameState)
     self:incrementTimers(dt)
 end
 
+function titleScene:updateCredits(dt)
+    local dt_delay = 1.0
+    local dt_appear = self.credit_delay - dt_delay
+    local rate = 1.0
+    -- Phase credits in
+    if self.credits_ascend then
+        if self.credits.made.alpha < 0.5 then
+            self.credits.made.alpha = self.credits.made.alpha + rate*dt
+        elseif self.credits.marcus.alpha < 0.5 then
+            self.credits.made.alpha = self.credits.made.alpha + rate*dt
+            self.credits.marcus.alpha = self.credits.marcus.alpha + rate*dt
+        elseif self.credits.erik.alpha < 0.5 then
+            self.credits.made.alpha = self.credits.made.alpha + rate*dt
+            self.credits.marcus.alpha = self.credits.marcus.alpha + rate*dt
+            self.credits.erik.alpha = self.credits.erik.alpha + rate*dt
+        elseif self.credits.rusty.alpha < 0.5 then
+            self.credits.made.alpha = self.credits.made.alpha + rate*dt
+            self.credits.marcus.alpha = self.credits.marcus.alpha + rate*dt
+            self.credits.erik.alpha = self.credits.erik.alpha + rate*dt
+            self.credits.rusty.alpha = self.credits.rusty.alpha + rate*dt
+        elseif self.credits.madeleine.alpha < 0.5 then
+            self.credits.made.alpha = self.credits.made.alpha + rate*dt
+            self.credits.marcus.alpha = self.credits.marcus.alpha + rate*dt
+            self.credits.erik.alpha = self.credits.erik.alpha + rate*dt
+            self.credits.rusty.alpha = self.credits.rusty.alpha + rate*dt
+            self.credits.madeleine.alpha = self.credits.madeleine.alpha + rate*dt
+        elseif self.credits.katherine.alpha < 0.5 then
+            self.credits.made.alpha = self.credits.made.alpha + rate*dt
+            self.credits.marcus.alpha = self.credits.marcus.alpha + rate*dt
+            self.credits.erik.alpha = self.credits.erik.alpha + rate*dt
+            self.credits.rusty.alpha = self.credits.rusty.alpha + rate*dt
+            self.credits.madeleine.alpha = self.credits.madeleine.alpha + rate*dt
+            self.credits.katherine.alpha = self.credits.katherine.alpha + rate*dt
+        elseif self.credits.katherine.alpha < 1.0 then
+            self.credits.made.alpha = self.credits.made.alpha + rate*dt
+            self.credits.marcus.alpha = self.credits.marcus.alpha + rate*dt
+            self.credits.erik.alpha = self.credits.erik.alpha + rate*dt
+            self.credits.rusty.alpha = self.credits.rusty.alpha + rate*dt
+            self.credits.madeleine.alpha = self.credits.madeleine.alpha + rate*dt
+            self.credits.katherine.alpha = self.credits.katherine.alpha + rate*dt
+        end
+        -- Cap alpha at 1.0
+        if self.credits.made.alpha > 1.0 then self.credits.made.alpha = 1.0 end
+        if self.credits.marcus.alpha > 1.0 then self.credits.marcus.alpha = 1.0 end
+        if self.credits.erik.alpha > 1.0 then self.credits.erik.alpha = 1.0 end
+        if self.credits.rusty.alpha > 1.0 then self.credits.rusty.alpha = 1.0 end
+        if self.credits.madeleine.alpha > 1.0 then self.credits.madeleine.alpha = 1.0 end
+        if self.credits.katherine.alpha > 1.0 then self.credits.katherine.alpha = 1.0 end
+        local logic = self.credits.made.alpha == 1.0 
+        logic = logic and self.credits.marcus.alpha == 1.0 
+        logic = logic and self.credits.erik.alpha == 1.0
+        logic = logic and self.credits.rusty.alpha == 1.0
+        logic = logic and self.credits.madeleine.alpha == 1.0
+        logic = logic and self.credits.katherine.alpha == 1.0
+        if logic then
+            self.credits_ascend = false
+        end
+    end
+    
+    -- Phase credits out
+    if not self.credits_ascend then
+        if self.credit_timer > dt_appear then
+            self.credits.marcus.alpha = self.credits.marcus.alpha - rate*dt
+            self.credits.erik.alpha = self.credits.erik.alpha - rate*dt
+            self.credits.rusty.alpha = self.credits.rusty.alpha - rate*dt
+            self.credits.madeleine.alpha = self.credits.madeleine.alpha - rate*dt
+            self.credits.katherine.alpha = self.credits.katherine.alpha - rate*dt
+            self.credits.made.alpha = self.credits.made.alpha - rate*dt
+        end
+    end
+
+    self.credits.marcus.image:update(dt)
+    self.credits.erik.image:update(dt)
+    self.credits.rusty.image:update(dt)
+    self.credits.madeleine.image:update(dt)
+    self.credits.katherine.image:update(dt)
+end
+
 function titleScene:updateChars(dt)
     for i = 1, #self.chars do
         self.chars[i].animation[self.chars[i].animationName]:update(dt)    
@@ -131,6 +240,7 @@ function titleScene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     love.graphics.setBackgroundColor(0.05, 0.05, 0.05, 1.0)
+    self:drawCredits()
     self:drawLightning()
     self.title.image:draw(self.title.x, -WindowHeight/GlobalScale*0.1)
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
@@ -149,6 +259,24 @@ function titleScene:draw(sx, sy)
         self:drawFlash()
     end
     love.graphics.pop()
+end
+
+function titleScene:drawCredits()
+    local dx = 0.037
+    love.graphics.setColor(1.0, 1.0, 1.0, self.credits.made.alpha)
+    self.credits.made.image:draw(WindowWidth/GlobalScale*(self.credits_x-0.15), WindowHeight/GlobalScale*(self.credits_y-5*dx), 0, 0.75, 0.75)
+    love.graphics.draw(self.love_logo, WindowWidth/GlobalScale*(self.credits_x+0.153), WindowHeight/GlobalScale*(self.credits_y-6*dx), 0, 0.1, 0.1)
+    love.graphics.setColor(1.0, 1.0, 1.0, self.credits.marcus.alpha)
+    self.credits.marcus.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*self.credits_y, 0, 0.3, 0.3)
+    love.graphics.setColor(1.0, 1.0, 1.0, self.credits.erik.alpha)
+    self.credits.erik.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+dx), 0, 0.3, 0.3)
+    love.graphics.setColor(1.0, 1.0, 1.0, self.credits.rusty.alpha)
+    self.credits.rusty.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+2*dx), 0, 0.3, 0.3)
+    love.graphics.setColor(1.0, 1.0, 1.0, self.credits.madeleine.alpha)
+    self.credits.madeleine.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+3*dx), 0, 0.3, 0.3)
+    love.graphics.setColor(1.0, 1.0, 1.0, self.credits.katherine.alpha)
+    self.credits.katherine.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+4*dx), 0, 0.3, 0.3)
+    love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 end
 
 function titleScene:drawChars()
@@ -179,10 +307,12 @@ end
 
 function titleScene:updateTitle(dt)
     self.title.image:update(dt)
-    if self.title.x < 0 then
-        self.title.x = self.title.x + 5
-    else
-        self.start_timer = true
+    if self.credit_timer >= self.credit_delay then
+        if self.title.x < 0 then
+            self.title.x = self.title.x + 5
+        else
+            self.start_timer = true
+        end
     end
 end
 
@@ -208,6 +338,7 @@ function titleScene:updateLightning(dt)
 end
 
 function titleScene:incrementTimers(dt)
+    self.credit_timer = self.credit_timer + dt
     local previous_trigger = self.lightning.trigger
     if self.start_timer then
         self.timer = self.timer + dt
