@@ -51,7 +51,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
-    "duration": 150
+    "duration": 75
    },
    {
     "filename": "abram 6.aseprite",
@@ -619,6 +619,42 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
     "sourceSize": { "w": 48, "h": 42 },
     "duration": 100
+   },
+   {
+    "filename": "abram 69.aseprite",
+    "frame": { "x": 3312, "y": 0, "w": 48, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
+    "sourceSize": { "w": 48, "h": 42 },
+    "duration": 400
+   },
+   {
+    "filename": "abram 70.aseprite",
+    "frame": { "x": 3360, "y": 0, "w": 48, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
+    "sourceSize": { "w": 48, "h": 42 },
+    "duration": 400
+   },
+   {
+    "filename": "abram 71.aseprite",
+    "frame": { "x": 3408, "y": 0, "w": 48, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
+    "sourceSize": { "w": 48, "h": 42 },
+    "duration": 400
+   },
+   {
+    "filename": "abram 72.aseprite",
+    "frame": { "x": 3456, "y": 0, "w": 48, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 42 },
+    "sourceSize": { "w": 48, "h": 42 },
+    "duration": 400
    }
  ],
  "meta": {
@@ -626,7 +662,7 @@
   "version": "1.2.30-x64",
   "image": "abram.png",
   "format": "RGBA8888",
-  "size": { "w": 3312, "h": 42 },
+  "size": { "w": 3504, "h": 42 },
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 1, "direction": "forward" },
@@ -645,7 +681,9 @@
    { "name": "victory_idle", "from": 48, "to": 49, "direction": "forward" },
    { "name": "dead", "from": 50, "to": 56, "direction": "forward" },
    { "name": "hit", "from": 57, "to": 60, "direction": "forward" },
-   { "name": "sprint", "from": 61, "to": 68, "direction": "forward" }
+   { "name": "sprint", "from": 61, "to": 68, "direction": "forward" },
+   { "name": "sheathed", "from": 69, "to": 70, "direction": "forward" },
+   { "name": "crouch_idle", "from": 71, "to": 72, "direction": "forward" }
   ],
   "layers": [
    { "name": "legs", "opacity": 255, "blendMode": "normal" },
