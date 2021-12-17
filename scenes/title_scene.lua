@@ -36,6 +36,7 @@ function titleScene:load()
     self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
     self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
     self:loadCredits()
+    self:loadTransition()
 end
 
 function titleScene:loadCredits()
@@ -117,6 +118,20 @@ function titleScene:loadChars(chars, x)
     end
 end
 
+function titleScene:loadTransition()
+    local spritesheet = love.graphics.newImage("assets/ui/transition_in.png")
+    local asepriteMeta = "assets/ui/transition_in.json"
+    self.transition = {}
+    self.transition.inn = peachy.new(asepriteMeta, spritesheet, "in")
+    local spritesheet = love.graphics.newImage("assets/ui/bakken.png")
+    local asepriteMeta = "assets/ui/bakken.json"
+    self.transition.bakken = peachy.new(asepriteMeta, spritesheet, "bakken")
+    self.transition_out = false
+    self.transition_timer = 0.0
+    self.transition_duration = 1.5
+    self.bakken_duration = 0.3
+end
+
 function titleScene:update(dt, gameState)
     self:updateCredits(dt)
     if self.title.x == 0 and not self.music:isPlaying() and self.credit_timer >= self.credit_delay then
@@ -136,20 +151,25 @@ function titleScene:update(dt, gameState)
     end
 
     if next(KeysPressed) ~= nil then
-        if self.music:isPlaying() then
-            self.music:stop()
-        end
+        -- if self.music:isPlaying() then
+        --     self.music:stop()
+        -- end
         self.sfx_start:play()
-        gameState:setPickFighterScene()
+        self.transition_out = true
+        -- gameState:setPickFighterScene()
     end
     if next(ButtonsPressed[1]) ~= nil then
-        if self.music:isPlaying() then
-            self.music:stop()
-        end
+        -- if self.music:isPlaying() then
+        --     self.music:stop()
+        -- end
         self.sfx_start:play()
-        gameState:setPickFighterScene()
+        self.transition_out = true
+        -- gameState:setPickFighterScene()
     end
     self:incrementTimers(dt)
+    if self.transition_out then
+        self:updateTransition(dt, gameState)
+    end
 end
 
 function titleScene:updateCredits(dt)
@@ -236,6 +256,45 @@ function titleScene:updateChars(dt)
     end
 end
 
+function titleScene:updateTitle(dt)
+    self.title.image:update(dt)
+    if self.credit_timer >= self.credit_delay then
+        if self.title.x < 0 then
+            self.title.x = self.title.x + 5
+        else
+            self.start_timer = true
+        end
+    end
+end
+
+function titleScene:updateLightning(dt)
+    if self.lightning.trigger then
+        local old_frame = self.lightning.image:getFrame()
+        self.lightning.image:update(dt)
+        local new_frame = self.lightning.image:getFrame()
+        if new_frame < old_frame then
+            self.lightning.image:setFrame(4)
+        end
+        if self.lightning.timer < 0.2 then
+            self.lightning.alpha = 1.0
+        else
+            self.lightning.alpha = 1.0 - 1.2*(self.lightning.timer / self.lightning.duration)
+        end
+    end
+end
+
+function titleScene:updateTransition(dt, gameState)
+    -- self.transition.out:update(dt)
+    self.transition.inn:update(dt)
+    self.transition.bakken:update(dt)
+    if self.transition_timer > self.transition_duration then
+        if self.music:isPlaying() then
+            self.music:stop()
+        end
+        gameState:setPickFighterScene()
+    end
+end
+
 function titleScene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
@@ -257,6 +316,9 @@ function titleScene:draw(sx, sy)
     self:drawChars()
     if self.flash then
         self:drawFlash()
+    end
+    if self.transition_out then
+        self:drawTransition()
     end
     love.graphics.pop()
 end
@@ -305,35 +367,15 @@ function titleScene:drawLightning()
     end
 end
 
-function titleScene:updateTitle(dt)
-    self.title.image:update(dt)
-    if self.credit_timer >= self.credit_delay then
-        if self.title.x < 0 then
-            self.title.x = self.title.x + 5
-        else
-            self.start_timer = true
-        end
-    end
-end
-
 function titleScene:drawFlash()
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, WindowHeight/GlobalScale)
 end
 
-function titleScene:updateLightning(dt)
-    if self.lightning.trigger then
-        local old_frame = self.lightning.image:getFrame()
-        self.lightning.image:update(dt)
-        local new_frame = self.lightning.image:getFrame()
-        if new_frame < old_frame then
-            self.lightning.image:setFrame(4)
-        end
-        if self.lightning.timer < 0.2 then
-            self.lightning.alpha = 1.0
-        else
-            self.lightning.alpha = 1.0 - 1.2*(self.lightning.timer / self.lightning.duration)
-        end
+function titleScene:drawTransition()
+    self.transition.inn:draw(0, 0)
+    if self.transition_timer > self.bakken_duration then
+        self.transition.bakken:draw(WindowWidth/GlobalScale*0.05, WindowHeight/GlobalScale*0.9, 0, 0.5, 0.5)
     end
 end
 
@@ -369,6 +411,9 @@ function titleScene:incrementTimers(dt)
         self.flash = true
     else
         self.flash = false
+    end
+    if self.transition_out then
+        self.transition_timer = self.transition_timer + dt
     end
 end
 

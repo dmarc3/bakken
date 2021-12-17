@@ -16,6 +16,7 @@ local titleScene = require"scenes/title_scene"
 local pickFighterScene = require"scenes/pick_fighter_scene"
 local pickLevelScene = require"scenes/pick_level_scene"
 local fightScene = require"scenes/fight_scene"
+local transition = require"scenes/transition"
 -- Load gamepad mappings
 love.joystick.loadGamepadMappings("3rd/SDL_GameControllerDB/gamecontrollerdb.txt")
 
@@ -26,6 +27,7 @@ love.window.setIcon(icon)
 -- levels or scenes in our game.
 local GameState = {
     current = titleScene,
+    transition = transition,
     scenes = {
         titleScene = titleScene,
         pickFighterScene = pickFighterScene,
