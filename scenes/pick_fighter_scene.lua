@@ -8,8 +8,8 @@ P1 = "drew"
 P2 = "lilah"
 
 function pickFighterScene:load()
-    self.chars = {"drew", "lilah", "sam", "miller", "abram"}
-    self.chars_xspacing = {12, 21, 21, 15}
+    self.chars = {"drew", "lilah", "sam", "miller", "abram", "drew"}
+    self.chars_xspacing = {12, 21, 21, 15, 27, 12}
     self.animations = {}
     self.animationName = "idle"
     self.animationName1 = "idle"
@@ -139,10 +139,10 @@ function pickFighterScene:drawBackground()
 end
 
 function pickFighterScene:drawCharacters()
-    local x0 = 40
+    local x0 = 32
     local y0 = 135
-    local spacing = 50
-    local scale = 1
+    local spacing = 35
+    local scale = 0.75
     for i, char in pairs(self.chars) do
         self.animations[char][self.animationName]:draw(x0+(i-1)*spacing, y0, 0, scale, scale, self.chars_xspacing[i], self.animations[char][self.animationName]:getHeight()/2)
         
