@@ -90,6 +90,9 @@ function pickFighterScene:load()
         self.joystick2 = nil
     end
 
+    Transition_Out = require"scenes/transition_out"
+    Transition_Out:load()
+
     -- Reset Inputs on load
     ResetInputs()
 end
@@ -97,7 +100,6 @@ end
 function pickFighterScene:update(dt, GameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
     self:processDelay()
-    self:incrementTimers(dt)
     self:updateCharacters(dt)
     if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
         self.sfx.accept_all:play()
@@ -107,6 +109,10 @@ function pickFighterScene:update(dt, GameState)
         -- GameState.player2 = "lilah"
         GameState.scenes.pickLevelScene:load(GameState)
         GameState:setPickLevelScene()
+    end
+    self:incrementTimers(dt)
+    if Transition_Out.transition_out then
+        Transition_Out:update(dt)
     end
 end
 
@@ -122,6 +128,9 @@ function pickFighterScene:draw(sx, sy)
     love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, 20)
     love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
     self.banner:draw(WindowWidth/GlobalScale*0.5 - self.banner:getWidth()/2, 5)
+    if Transition_Out.transition_out then
+        Transition_Out:draw(0, 0)
+    end
     love.graphics.pop()
 end
 
@@ -365,6 +374,10 @@ function pickFighterScene:incrementTimers(dt)
         end
     else
         self.victory_timer2 = 0.0
+    end
+    -- print(Transition_Out.transition_timer.."    "..Transition_Out.transition.out:getFrame())
+    if Transition_Out.transition_out then
+        Transition_Out.transition_timer = Transition_Out.transition_timer + dt
     end
 end
 

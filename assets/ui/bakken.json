@@ -348,7 +348,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 39.aseprite",
@@ -357,7 +357,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 40.aseprite",
@@ -366,7 +366,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 41.aseprite",
@@ -375,7 +375,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 42.aseprite",
@@ -384,7 +384,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 43.aseprite",
@@ -393,7 +393,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 44.aseprite",
@@ -402,7 +402,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 45.aseprite",
@@ -411,7 +411,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 46.aseprite",
@@ -420,7 +420,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 47.aseprite",
@@ -429,7 +429,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 48.aseprite",
@@ -438,7 +438,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 49.aseprite",
@@ -447,7 +447,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 50.aseprite",
@@ -456,7 +456,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 51.aseprite",
@@ -465,7 +465,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    },
    {
     "filename": "bakken 52.aseprite",
@@ -474,7 +474,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 54, "h": 15 },
     "sourceSize": { "w": 54, "h": 15 },
-    "duration": 10
+    "duration": 8
    }
  ],
  "meta": {

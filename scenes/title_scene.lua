@@ -36,7 +36,8 @@ function titleScene:load()
     self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
     self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
     self:loadCredits()
-    self:loadTransition()
+    Transition_In = require"scenes/transition_in"
+    Transition_In:load("setPickFighterScene")
 end
 
 function titleScene:loadCredits()
@@ -118,20 +119,6 @@ function titleScene:loadChars(chars, x)
     end
 end
 
-function titleScene:loadTransition()
-    local spritesheet = love.graphics.newImage("assets/ui/transition_in.png")
-    local asepriteMeta = "assets/ui/transition_in.json"
-    self.transition = {}
-    self.transition.inn = peachy.new(asepriteMeta, spritesheet, "in")
-    local spritesheet = love.graphics.newImage("assets/ui/bakken.png")
-    local asepriteMeta = "assets/ui/bakken.json"
-    self.transition.bakken = peachy.new(asepriteMeta, spritesheet, "bakken")
-    self.transition_out = false
-    self.transition_timer = 0.0
-    self.transition_duration = 1.5
-    self.bakken_duration = 0.3
-end
-
 function titleScene:update(dt, gameState)
     self:updateCredits(dt)
     if self.title.x == 0 and not self.music:isPlaying() and self.credit_timer >= self.credit_delay then
@@ -151,24 +138,16 @@ function titleScene:update(dt, gameState)
     end
 
     if next(KeysPressed) ~= nil then
-        -- if self.music:isPlaying() then
-        --     self.music:stop()
-        -- end
         self.sfx_start:play()
-        self.transition_out = true
-        -- gameState:setPickFighterScene()
+        Transition_In.transition_in = true
     end
     if next(ButtonsPressed[1]) ~= nil then
-        -- if self.music:isPlaying() then
-        --     self.music:stop()
-        -- end
         self.sfx_start:play()
-        self.transition_out = true
-        -- gameState:setPickFighterScene()
+        Transition_In.transition_in = true
     end
     self:incrementTimers(dt)
-    if self.transition_out then
-        self:updateTransition(dt, gameState)
+    if Transition_In.transition_in then
+        Transition_In:update(dt, gameState, self.music)
     end
 end
 
@@ -283,18 +262,6 @@ function titleScene:updateLightning(dt)
     end
 end
 
-function titleScene:updateTransition(dt, gameState)
-    -- self.transition.out:update(dt)
-    self.transition.inn:update(dt)
-    self.transition.bakken:update(dt)
-    if self.transition_timer > self.transition_duration then
-        if self.music:isPlaying() then
-            self.music:stop()
-        end
-        gameState:setPickFighterScene()
-    end
-end
-
 function titleScene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
@@ -317,8 +284,8 @@ function titleScene:draw(sx, sy)
     if self.flash then
         self:drawFlash()
     end
-    if self.transition_out then
-        self:drawTransition()
+    if Transition_In.transition_in then
+        Transition_In:draw()
     end
     love.graphics.pop()
 end
@@ -372,13 +339,6 @@ function titleScene:drawFlash()
     love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, WindowHeight/GlobalScale)
 end
 
-function titleScene:drawTransition()
-    self.transition.inn:draw(0, 0)
-    if self.transition_timer > self.bakken_duration then
-        self.transition.bakken:draw(WindowWidth/GlobalScale*0.05, WindowHeight/GlobalScale*0.9, 0, 0.5, 0.5)
-    end
-end
-
 function titleScene:incrementTimers(dt)
     self.credit_timer = self.credit_timer + dt
     local previous_trigger = self.lightning.trigger
@@ -412,8 +372,8 @@ function titleScene:incrementTimers(dt)
     else
         self.flash = false
     end
-    if self.transition_out then
-        self.transition_timer = self.transition_timer + dt
+    if Transition_In.transition_in then
+        Transition_In.transition_timer = Transition_In.transition_timer + dt
     end
 end
 

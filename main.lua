@@ -16,7 +16,7 @@ local titleScene = require"scenes/title_scene"
 local pickFighterScene = require"scenes/pick_fighter_scene"
 local pickLevelScene = require"scenes/pick_level_scene"
 local fightScene = require"scenes/fight_scene"
-local transition = require"scenes/transition"
+
 -- Load gamepad mappings
 love.joystick.loadGamepadMappings("3rd/SDL_GameControllerDB/gamecontrollerdb.txt")
 
@@ -27,7 +27,6 @@ love.window.setIcon(icon)
 -- levels or scenes in our game.
 local GameState = {
     current = titleScene,
-    transition = transition,
     scenes = {
         titleScene = titleScene,
         pickFighterScene = pickFighterScene,
@@ -101,7 +100,6 @@ end
 
 -- A primary callback of LÖVE that is called continuously
 function love.draw()
-    -- print(GameState.current.name)
     GameState.current:draw(GameState.sx, GameState.sy)
     -- Only for debugging
     -- With (36, 24) grids are 20 pixels by 20 pixels

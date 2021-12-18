@@ -240,7 +240,16 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
     "sourceSize": { "w": 240, "h": 160 },
-    "duration": 850
+    "duration": 25
+   },
+   {
+    "filename": "transition_in 27.aseprite",
+    "frame": { "x": 6480, "y": 0, "w": 240, "h": 160 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 240, "h": 160 },
+    "sourceSize": { "w": 240, "h": 160 },
+    "duration": 1125
    }
  ],
  "meta": {
@@ -248,10 +257,10 @@
   "version": "1.2.30-x64",
   "image": "transition_in.png",
   "format": "RGBA8888",
-  "size": { "w": 6480, "h": 160 },
+  "size": { "w": 6720, "h": 160 },
   "scale": "1",
   "frameTags": [
-   { "name": "in", "from": 0, "to": 26, "direction": "forward" }
+   { "name": "in", "from": 0, "to": 27, "direction": "forward" }
   ],
   "layers": [
    { "name": "background", "opacity": 255, "blendMode": "normal" }
