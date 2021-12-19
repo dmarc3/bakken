@@ -27,6 +27,7 @@ love.window.setIcon(icon)
 -- levels or scenes in our game.
 local GameState = {
     current = titleScene,
+    last = titleScene.name,
     scenes = {
         titleScene = titleScene,
         pickFighterScene = pickFighterScene,
@@ -79,8 +80,8 @@ function love.load()
     love.graphics.setColor(1, 1, 1, 1)
     -- Gamestate and scene handling
     GameState.current:load()
-    GameState.scenes.titleScene:load()
-    GameState.scenes.pickFighterScene:load()
+    -- GameState.scenes.titleScene:load()
+    -- GameState.scenes.pickFighterScene:load()
    --[[  for _, scene in pairs(GameState.scenes) do
         scene:load()
     end ]]
@@ -95,6 +96,11 @@ function love.update(dt)
             dt = dt*Debug_Speed
         end
     end
+    -- if GameState.current.name ~= GameState.last then
+    --     GameState.last = GameState.current.name
+    --     print("loading from main")
+    --     GameState.current:load(GameState)
+    -- end
     GameState.current:update(dt, GameState)
 end
 

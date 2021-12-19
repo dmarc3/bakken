@@ -4,7 +4,7 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas)
+function Level:load(player1, player2, canvas, draw_players)
     self.name = "everhart_backyard"
     self.canvas = canvas
     self.complete = false
@@ -69,10 +69,13 @@ function Level:load(player1, player2, canvas)
     self.birdx = 100
     self.sunx = 0
     -- Load players
-    self.player1 = player:new(1, player1, Level.x1, Level.y1)
-    self.player1:load()
-    self.player2 = player:new(2, player2, Level.x2, Level.y2)
-    self.player2:load()
+    self.draw_players = draw_players
+    if self.draw_players then
+        self.player1 = player:new(1, player1, Level.x1, Level.y1)
+        self.player1:load()
+        self.player2 = player:new(2, player2, Level.x2, Level.y2)
+        self.player2:load()
+    end
 end
 
 function Level:update(dt)
@@ -83,8 +86,10 @@ function Level:update(dt)
     if self.smoke_state > 1 then
         self.Smoke[self.smoke_states[self.smoke_state]]:update(dt)
     end
-    self.player1:update(dt)
-    self.player2:update(dt)
+    if self.draw_players then
+        self.player1:update(dt)
+        self.player2:update(dt)
+    end
     self.cloudx = self.cloudx - 0.02
     if self.cloudx < -WindowWidth/GlobalScale then
         self.cloudx = self.cloudx + WindowWidth/GlobalScale
@@ -98,7 +103,7 @@ function Level:incrementTimers(dt)
     end
 end
 
-function Level:draw(x, y, sx, sy, option)
+function Level:draw(x, y, sx, sy)
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -106,7 +111,7 @@ function Level:draw(x, y, sx, sy, option)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawBackground()
-    if option then
+    if self.draw_players then
         self.player1:draw()
         self.player2:draw()
     end
@@ -115,8 +120,10 @@ function Level:draw(x, y, sx, sy, option)
     -- Draw Player Health Bars
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    self.player1:drawHealthBar()
-    self.player2:drawHealthBar()
+    if self.draw_players then
+        self.player1:drawHealthBar()
+        self.player2:drawHealthBar()
+    end
     love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()

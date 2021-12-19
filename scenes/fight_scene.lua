@@ -12,6 +12,7 @@ local fight_scene = scene:new("fight")
 -- love.physics.setMeter(Meter)
 
 function fight_scene:load(GameState)
+    print("Loading fight_scene")
     -- World = love.physics.newWorld(0, Meter*Gravity, false)
     -- World:setCallbacks(beginContact, endContact)
 
@@ -22,7 +23,7 @@ function fight_scene:load(GameState)
 
     -- Import level
     Level = require("levels/"..GameState.level)
-    Level:load(GameState.player1, GameState.player2, self.canvas)
+    Level:load(GameState.player1, GameState.player2, self.canvas, true)
 
     -- Import fight ui
     local spritesheet = love.graphics.newImage("assets/ui/fight.png")
