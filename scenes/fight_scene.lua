@@ -34,7 +34,7 @@ function fight_scene:load(GameState)
     Fight.x0 = Fight.x
     Fight.y0 = Fight.y
     Fight.kabam = peachy.new(asepriteMeta, spritesheet, "kabam")
-    self.fight_duration = 2.0
+    self.fight_duration = 1.5
     self.fight_timer = 0
     self.fight_timer2 = 0
     self.fight = false
