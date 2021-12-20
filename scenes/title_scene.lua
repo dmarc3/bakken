@@ -4,6 +4,7 @@ local scene = require"scene"
 local titleScene = scene:new("titleScene")
 
 function titleScene:load()
+    -- print("Loading titleScene")
     love.graphics.clear()
     self.BG_SpriteSheet = love.graphics.newImage("assets/ui/title_screen.png")
     self.BG_SpriteSheetMeta = "assets/ui/title_screen.json"
@@ -36,6 +37,8 @@ function titleScene:load()
     self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
     self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
     self:loadCredits()
+    Transition_In = require"scenes/transition_in"
+    Transition_In:load("setPickFighterScene")
 end
 
 function titleScene:loadCredits()
@@ -136,20 +139,17 @@ function titleScene:update(dt, gameState)
     end
 
     if next(KeysPressed) ~= nil then
-        if self.music:isPlaying() then
-            self.music:stop()
-        end
         self.sfx_start:play()
-        gameState:setPickFighterScene()
+        Transition_In.transition_in = true
     end
     if next(ButtonsPressed[1]) ~= nil then
-        if self.music:isPlaying() then
-            self.music:stop()
-        end
         self.sfx_start:play()
-        gameState:setPickFighterScene()
+        Transition_In.transition_in = true
     end
     self:incrementTimers(dt)
+    if Transition_In.transition_in then
+        Transition_In:update(dt, gameState, self.music)
+    end
 end
 
 function titleScene:updateCredits(dt)
@@ -236,6 +236,33 @@ function titleScene:updateChars(dt)
     end
 end
 
+function titleScene:updateTitle(dt)
+    self.title.image:update(dt)
+    if self.credit_timer >= self.credit_delay then
+        if self.title.x < 0 then
+            self.title.x = self.title.x + 5
+        else
+            self.start_timer = true
+        end
+    end
+end
+
+function titleScene:updateLightning(dt)
+    if self.lightning.trigger then
+        local old_frame = self.lightning.image:getFrame()
+        self.lightning.image:update(dt)
+        local new_frame = self.lightning.image:getFrame()
+        if new_frame < old_frame then
+            self.lightning.image:setFrame(4)
+        end
+        if self.lightning.timer < 0.2 then
+            self.lightning.alpha = 1.0
+        else
+            self.lightning.alpha = 1.0 - 1.2*(self.lightning.timer / self.lightning.duration)
+        end
+    end
+end
+
 function titleScene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
@@ -257,6 +284,9 @@ function titleScene:draw(sx, sy)
     self:drawChars()
     if self.flash then
         self:drawFlash()
+    end
+    if Transition_In.transition_in then
+        Transition_In:draw()
     end
     love.graphics.pop()
 end
@@ -305,36 +335,9 @@ function titleScene:drawLightning()
     end
 end
 
-function titleScene:updateTitle(dt)
-    self.title.image:update(dt)
-    if self.credit_timer >= self.credit_delay then
-        if self.title.x < 0 then
-            self.title.x = self.title.x + 5
-        else
-            self.start_timer = true
-        end
-    end
-end
-
 function titleScene:drawFlash()
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, WindowHeight/GlobalScale)
-end
-
-function titleScene:updateLightning(dt)
-    if self.lightning.trigger then
-        local old_frame = self.lightning.image:getFrame()
-        self.lightning.image:update(dt)
-        local new_frame = self.lightning.image:getFrame()
-        if new_frame < old_frame then
-            self.lightning.image:setFrame(4)
-        end
-        if self.lightning.timer < 0.2 then
-            self.lightning.alpha = 1.0
-        else
-            self.lightning.alpha = 1.0 - 1.2*(self.lightning.timer / self.lightning.duration)
-        end
-    end
 end
 
 function titleScene:incrementTimers(dt)
@@ -369,6 +372,9 @@ function titleScene:incrementTimers(dt)
         self.flash = true
     else
         self.flash = false
+    end
+    if Transition_In.transition_in then
+        Transition_In.transition_timer = Transition_In.transition_timer + dt
     end
 end
 

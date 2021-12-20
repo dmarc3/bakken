@@ -16,6 +16,7 @@ local titleScene = require"scenes/title_scene"
 local pickFighterScene = require"scenes/pick_fighter_scene"
 local pickLevelScene = require"scenes/pick_level_scene"
 local fightScene = require"scenes/fight_scene"
+
 -- Load gamepad mappings
 love.joystick.loadGamepadMappings("3rd/SDL_GameControllerDB/gamecontrollerdb.txt")
 
@@ -25,7 +26,9 @@ love.window.setIcon(icon)
 
 -- levels or scenes in our game.
 local GameState = {
+    world = nil,
     current = titleScene,
+    last = titleScene.name,
     scenes = {
         titleScene = titleScene,
         pickFighterScene = pickFighterScene,
@@ -78,8 +81,8 @@ function love.load()
     love.graphics.setColor(1, 1, 1, 1)
     -- Gamestate and scene handling
     GameState.current:load()
-    GameState.scenes.titleScene:load()
-    GameState.scenes.pickFighterScene:load()
+    -- GameState.scenes.titleScene:load()
+    -- GameState.scenes.pickFighterScene:load()
    --[[  for _, scene in pairs(GameState.scenes) do
         scene:load()
     end ]]
@@ -94,17 +97,22 @@ function love.update(dt)
             dt = dt*Debug_Speed
         end
     end
+    -- if GameState.current.name ~= GameState.last then
+    --     GameState.last = GameState.current.name
+    --     print("loading from main")
+    --     GameState.current:load(GameState)
+    -- end
     GameState.current:update(dt, GameState)
 end
 
 -- A primary callback of LÖVE that is called continuously
 function love.draw()
-    -- print(GameState.current.name)
     GameState.current:draw(GameState.sx, GameState.sy)
     -- Only for debugging
     -- With (36, 24) grids are 20 pixels by 20 pixels
     -- 1440/36 = 20 pixels and 960/24 = 20 pixels
     if Debug then
+        drawPhysicsBodies()
         debugGrid(36, 24)
     end
 end
@@ -145,4 +153,28 @@ function debugGrid(i, j)
         end
     end
     love.graphics.setColor(1,1,1,1)
+end
+
+function drawPhysicsBodies()
+    if GameState.world ~= nil then
+        love.graphics.push()
+        love.graphics.scale(GameState.sx, GameState.sy)
+        love.graphics.setColor(0, 0, 0, 0.7)
+        for _, body in pairs(GameState.world:getBodies()) do
+            for _, fixture in pairs(body:getFixtures()) do
+                local shape = fixture:getShape()
+        
+                if shape:typeOf("CircleShape") then
+                    local cx, cy = body:getWorldPoints(shape:getPoint())
+                    love.graphics.circle("fill", cx, cy, shape:getRadius())
+                elseif shape:typeOf("PolygonShape") then
+                    love.graphics.polygon("fill", body:getWorldPoints(shape:getPoints()))
+                else
+                    love.graphics.line(body:getWorldPoints(shape:getPoints()))
+                end
+            end
+        end
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.pop()
+    end
 end

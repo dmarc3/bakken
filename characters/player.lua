@@ -266,9 +266,6 @@ function Player:draw()
     end
     self:drawHitBox("a1")
     -- end
-    if Debug then
-        self:drawBody()
-    end
 end
 
 function Player:drawHealthBar()
@@ -540,11 +537,6 @@ function Player:drawHitBox(anim)
             self.a1.hitbox.fixture = love.physics.newFixture(self.a1.hitbox.body, self.a1.hitbox.shape)
             self.a1.hitbox.fixture:setSensor(true)
             self.a1.hitbox.fixture:setUserData("sensor"..self.id)
-            if Debug then
-                love.graphics.setColor(1, 1, 1, 0.8)
-                love.graphics.polygon("fill", self[anim].hitbox.body:getWorldPoints(self[anim].hitbox.shape:getPoints()))
-                love.graphics.setColor(1, 1, 1)
-            end
             self.delete_bodies["player"..self.id.."_a1"] = 1
         end
     end

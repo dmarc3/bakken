@@ -4,11 +4,12 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas)
+function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.name = "curlew"
     self.canvas = canvas
     self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
     self.complete = false
+    self.with_physics = with_physics
     -- Dock dimensions
     self.Dock = {}
     self.Dock.x = {121, 71, 89, 153, 170}
@@ -25,99 +26,115 @@ function Level:load(player1, player2, canvas)
     for i = 1, #self.Dock.x do
         -- Create dock anchor
         self.Base[i] = {}
-        self.Base[i].body = love.physics.newBody(World, self.Dock.x[i], self.Dock.y[i], "static")
-        self.Base[i].shape = love.physics.newRectangleShape(self.Dock.w[i], self.Dock.h[i])
-        self.Base[i].fixture = love.physics.newFixture(self.Base[i].body, self.Base[i].shape)
-        self.Base[i].fixture:setUserData("sensor")
-        self.Base[i].fixture:setSensor(true)
+        if with_physics then
+            self.Base[i].body = love.physics.newBody(World, self.Dock.x[i], self.Dock.y[i], "static")
+            self.Base[i].shape = love.physics.newRectangleShape(self.Dock.w[i], self.Dock.h[i])
+            self.Base[i].fixture = love.physics.newFixture(self.Base[i].body, self.Base[i].shape)
+            self.Base[i].fixture:setUserData("sensor")
+            self.Base[i].fixture:setSensor(true)
+        end
         -- Create dock
         self.Dock[i] = {}
-        self.Dock[i].body = love.physics.newBody(World, self.Dock.x[i], self.Dock.y[i], "dynamic")
-        self.Dock[i].x = self.Dock[i].body:getX()
-        self.Dock[i].y = self.Dock[i].body:getY()
-        self.Dock[i].body:setUserData("ground")
-        self.Dock[i].body:setFixedRotation(true)
-        self.Dock[i].shape = love.physics.newRectangleShape(self.Dock.w[i], self.Dock.h[i])
-        self.Dock[i].fixture = love.physics.newFixture(self.Dock[i].body, self.Dock[i].shape)
-        --Dock[i].fixture:setFriction(Friction)
-        self.Dock[i].fixture:setUserData("ground")
-        self.Dock[i].body:setMass(self.Dock.m[i])
-        -- Create distance joints
-        self.Base[i].joint = love.physics.newDistanceJoint(self.Base[i].body, self.Dock[i].body, self.Base[i].body:getX(), self.Base[i].body:getY(), self.Dock[i].body:getX(), self.Dock[i].body:getY(), false)
-        self.Base[i].joint:setDampingRatio(0.1)
-        self.Base[i].joint:setFrequency(5)
-        self.Base[i].joint:setLength(0)
+        self.Dock[i].x = self.Dock.x[i]
+        self.Dock[i].y = self.Dock.y[i]
+        if with_physics then
+            self.Dock[i].body = love.physics.newBody(World, self.Dock.x[i], self.Dock.y[i], "dynamic")
+            self.Dock[i].body:setUserData("ground")
+            self.Dock[i].body:setFixedRotation(true)
+            self.Dock[i].shape = love.physics.newRectangleShape(self.Dock.w[i], self.Dock.h[i])
+            self.Dock[i].fixture = love.physics.newFixture(self.Dock[i].body, self.Dock[i].shape)
+            --Dock[i].fixture:setFriction(Friction)
+            self.Dock[i].fixture:setUserData("ground")
+            self.Dock[i].body:setMass(self.Dock.m[i])
+            -- Create distance joints
+            self.Base[i].joint = love.physics.newDistanceJoint(self.Base[i].body, self.Dock[i].body, self.Base[i].body:getX(), self.Base[i].body:getY(), self.Dock[i].body:getX(), self.Dock[i].body:getY(), false)
+            self.Base[i].joint:setDampingRatio(0.1)
+            self.Base[i].joint:setFrequency(5)
+            self.Base[i].joint:setLength(0)
+        end
     end
     -- Create anchor for left toy
     self.Floaty1_Base = {}
-    self.Floaty1_Base.body = love.physics.newBody(World, 34, WindowHeight/GlobalScale*0.8, "static")
-    self.Floaty1_Base.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
-    self.Floaty1_Base.fixture = love.physics.newFixture(self.Floaty1_Base.body, self.Floaty1_Base.shape)
-    self.Floaty1_Base.fixture:setUserData("sensor")
-    self.Floaty1_Base.fixture:setSensor(true)
+    if with_physics then
+        self.Floaty1_Base.body = love.physics.newBody(World, 34, WindowHeight/GlobalScale*0.8, "static")
+        self.Floaty1_Base.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
+        self.Floaty1_Base.fixture = love.physics.newFixture(self.Floaty1_Base.body, self.Floaty1_Base.shape)
+        self.Floaty1_Base.fixture:setUserData("sensor")
+        self.Floaty1_Base.fixture:setSensor(true)
+    end
     -- Create left toy
     self.Floaty1 = {}
-    self.Floaty1.body = love.physics.newBody(World, 34, WindowHeight/GlobalScale*0.8, "dynamic")
-    self.Floaty1.x = self.Floaty1.body:getX()
-    self.Floaty1.y = self.Floaty1.body:getY()
-    self.Floaty1.body:setUserData("ground")
-    self.Floaty1.body:setFixedRotation(true)
-    self.Floaty1.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
-    self.Floaty1.fixture = love.physics.newFixture(self.Floaty1.body, self.Floaty1.shape)
-    self.Floaty1.fixture:setFriction(Friction)
-    self.Floaty1.fixture:setUserData("ground")
-    self.Floaty1.body:setMass(500)
+    self.Floaty1.x = 34
+    self.Floaty1.y = WindowHeight/GlobalScale*0.8
+    if with_physics then
+        self.Floaty1.body = love.physics.newBody(World, 34, WindowHeight/GlobalScale*0.8, "dynamic")
+        self.Floaty1.body:setUserData("ground")
+        self.Floaty1.body:setFixedRotation(true)
+        self.Floaty1.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
+        self.Floaty1.fixture = love.physics.newFixture(self.Floaty1.body, self.Floaty1.shape)
+        self.Floaty1.fixture:setFriction(Friction)
+        self.Floaty1.fixture:setUserData("ground")
+        self.Floaty1.body:setMass(500)
+    end
     -- Create anchor for right toy
     self.Floaty2_Base = {}
-    self.Floaty2_Base.body = love.physics.newBody(World, 215, WindowHeight/GlobalScale*0.8, "static")
-    self.Floaty2_Base.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
-    self.Floaty2_Base.fixture = love.physics.newFixture(self.Floaty2_Base.body, self.Floaty2_Base.shape)
-    self.Floaty2_Base.fixture:setUserData("sensor")
-    self.Floaty2_Base.fixture:setSensor(true)
+    if with_physics then
+        self.Floaty2_Base.body = love.physics.newBody(World, 215, WindowHeight/GlobalScale*0.8, "static")
+        self.Floaty2_Base.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
+        self.Floaty2_Base.fixture = love.physics.newFixture(self.Floaty2_Base.body, self.Floaty2_Base.shape)
+        self.Floaty2_Base.fixture:setUserData("sensor")
+        self.Floaty2_Base.fixture:setSensor(true)
+    end
     -- Create right toy
     self.Floaty2 = {}
-    self.Floaty2.body = love.physics.newBody(World, 215, WindowHeight/GlobalScale*0.8, "dynamic")
-    self.Floaty2.x = self.Floaty2.body:getX()
-    self.Floaty2.y = self.Floaty2.body:getY()
-    self.Floaty2.body:setUserData("ground")
-    self.Floaty2.body:setFixedRotation(true)
-    self.Floaty2.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
-    self.Floaty2.fixture = love.physics.newFixture(self.Floaty2.body, self.Floaty2.shape)
-    self.Floaty2.fixture:setFriction(Friction)
-    self.Floaty2.fixture:setUserData("ground")
-    self.Floaty2.body:setMass(500)
+    self.Floaty2.x = 215
+    self.Floaty2.y = WindowHeight/GlobalScale*0.8
+    if with_physics then
+        self.Floaty2.body = love.physics.newBody(World, 215, WindowHeight/GlobalScale*0.8, "dynamic")
+        self.Floaty2.body:setUserData("ground")
+        self.Floaty2.body:setFixedRotation(true)
+        self.Floaty2.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.14, 10)
+        self.Floaty2.fixture = love.physics.newFixture(self.Floaty2.body, self.Floaty2.shape)
+        self.Floaty2.fixture:setFriction(Friction)
+        self.Floaty2.fixture:setUserData("ground")
+        self.Floaty2.body:setMass(500)
+    end
     self.Floaty2_arm = {}
-    self.Floaty2_arm.body = love.physics.newBody(World, 234, WindowHeight/GlobalScale*0.725, "dynamic")
-    self.Floaty2_arm.shape = love.physics.newRectangleShape(4, 15)
-    self.Floaty2_arm.fixture = love.physics.newFixture(self.Floaty2_arm.body, self.Floaty2_arm.shape)
-    self.Floaty2_arm.body:setUserData("ground")
-    self.Floaty2_arm.body:setFixedRotation(true)
-    self.Floaty2_arm.fixture:setUserData("ground")
-    self.Floaty2_arm.body:setMass(500)
+    if with_physics then
+        self.Floaty2_arm.body = love.physics.newBody(World, 234, WindowHeight/GlobalScale*0.725, "dynamic")
+        self.Floaty2_arm.shape = love.physics.newRectangleShape(4, 15)
+        self.Floaty2_arm.fixture = love.physics.newFixture(self.Floaty2_arm.body, self.Floaty2_arm.shape)
+        self.Floaty2_arm.body:setUserData("ground")
+        self.Floaty2_arm.body:setFixedRotation(true)
+        self.Floaty2_arm.fixture:setUserData("ground")
+        self.Floaty2_arm.body:setMass(500)
     
-    self.Floaty1_Base.joint = love.physics.newDistanceJoint(self.Floaty1_Base.body, self.Floaty1.body, self.Floaty1_Base.body:getX(), self.Floaty1_Base.body:getY(), self.Floaty1.body:getX(), self.Floaty1.body:getY(), false)
-    self.Floaty1_Base.joint:setDampingRatio(0.1)
-    self.Floaty1_Base.joint:setFrequency(2)
-    self.Floaty1_Base.joint:setLength(0)
-    self.Floaty2_Base.joint = love.physics.newDistanceJoint(self.Floaty2_Base.body, self.Floaty2.body, self.Floaty2_Base.body:getX(), self.Floaty2_Base.body:getY(), self.Floaty2.body:getX(), self.Floaty2.body:getY(), false)
-    self.Floaty2_Base.joint:setDampingRatio(0.1)
-    self.Floaty2_Base.joint:setFrequency(2)
-    self.Floaty2_Base.joint:setLength(0)
-    self.Floaty2.joint = love.physics.newWeldJoint(self.Floaty2.body, self.Floaty2_arm.body, self.Floaty2_arm.body:getX()-2, self.Floaty2_arm.body:getY()-15/2, false)
+        self.Floaty1_Base.joint = love.physics.newDistanceJoint(self.Floaty1_Base.body, self.Floaty1.body, self.Floaty1_Base.body:getX(), self.Floaty1_Base.body:getY(), self.Floaty1.body:getX(), self.Floaty1.body:getY(), false)
+        self.Floaty1_Base.joint:setDampingRatio(0.1)
+        self.Floaty1_Base.joint:setFrequency(2)
+        self.Floaty1_Base.joint:setLength(0)
+        self.Floaty2_Base.joint = love.physics.newDistanceJoint(self.Floaty2_Base.body, self.Floaty2.body, self.Floaty2_Base.body:getX(), self.Floaty2_Base.body:getY(), self.Floaty2.body:getX(), self.Floaty2.body:getY(), false)
+        self.Floaty2_Base.joint:setDampingRatio(0.1)
+        self.Floaty2_Base.joint:setFrequency(2)
+        self.Floaty2_Base.joint:setLength(0)
+        self.Floaty2.joint = love.physics.newWeldJoint(self.Floaty2.body, self.Floaty2_arm.body, self.Floaty2_arm.body:getX()-2, self.Floaty2_arm.body:getY()-15/2, false)
+    end
     -- Create boundaries
     Walls = {}
     Walls.left = {}
-    Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
-    Walls.left.body:setUserData("wall")
-    Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
-    Walls.left.fixture:setUserData("wall")
     Walls.right = {}
-    Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
-    Walls.right.body:setUserData("wall")
-    Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
-    Walls.right.fixture:setUserData("wall")
+    if with_physics then
+        Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+        Walls.left.body:setUserData("wall")
+        Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
+        Walls.left.fixture:setUserData("wall")
+        Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+        Walls.right.body:setUserData("wall")
+        Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
+        Walls.right.fixture:setUserData("wall")
+    end
     
     -- Define background
     local spritesheet = love.graphics.newImage("assets/levels/curlew.png")
@@ -158,10 +175,13 @@ function Level:load(player1, player2, canvas)
     self.displacedMass = 0
 
     -- Load players
-    self.player1 = player:new(1, player1, Level.x1, Level.y1)
-    self.player1:load()
-    self.player2 = player:new(2, player2, Level.x2, Level.y2)
-    self.player2:load()
+    self.draw_players = draw_players
+    if self.draw_players then
+        self.player1 = player:new(1, player1, Level.x1, Level.y1)
+        self.player1:load()
+        self.player2 = player:new(2, player2, Level.x2, Level.y2)
+        self.player2:load()
+    end
 end
 
 function Level:update(dt)
@@ -169,8 +189,10 @@ function Level:update(dt)
     Curlew.Floaty1:update(dt)
     Curlew.Floaty2:update(dt)
     Curlew.Dock[1]:update(dt)
-    self.player1:update(dt)
-    self.player2:update(dt)
+    if self.draw_players then
+        self.player1:update(dt)
+        self.player2:update(dt)
+    end
     self.eff:send("image2", self.canvas2)
     self.eff:send("normal_map", self.normal_map)
     self.delta = self.delta - dt*0.03
@@ -178,20 +200,40 @@ function Level:update(dt)
         self.delta = 0.0
     end
     self.eff:send("d", self.delta)
-    self.eff:send("dock2_y", self.Dock[2].body:getY()/(WindowHeight/GlobalScale))
-    self.eff:send("dock3_y", self.Dock[3].body:getY()/(WindowHeight/GlobalScale))
-    self.eff:send("dock4_y", self.Dock[4].body:getY()/(WindowHeight/GlobalScale))
-    self.eff:send("dock5_y", self.Dock[5].body:getY()/(WindowHeight/GlobalScale))
-    self.eff:send("float1_y", self.Floaty1.body:getY()/(WindowHeight/GlobalScale))
-    self.eff:send("float1_x", self.Floaty1.body:getX()/(WindowWidth/GlobalScale))
-    self.eff:send("float2_y", self.Floaty2.body:getY()/(WindowHeight/GlobalScale))
-    self.eff:send("float2_x", self.Floaty2.body:getX()/(WindowWidth/GlobalScale))
-    self:detectFall()
+    self.eff:send("dock2_y", self.Dock[2].y/(WindowHeight/GlobalScale))
+    self.eff:send("dock3_y", self.Dock[3].y/(WindowHeight/GlobalScale))
+    self.eff:send("dock4_y", self.Dock[4].y/(WindowHeight/GlobalScale))
+    self.eff:send("dock5_y", self.Dock[5].y/(WindowHeight/GlobalScale))
+    self.eff:send("float1_y", self.Floaty1.y/(WindowHeight/GlobalScale))
+    self.eff:send("float1_x", self.Floaty1.x/(WindowWidth/GlobalScale))
+    self.eff:send("float2_y", self.Floaty2.y/(WindowHeight/GlobalScale))
+    self.eff:send("float2_x", self.Floaty2.x/(WindowWidth/GlobalScale))
+    if self.draw_players then
+        self:detectFall()
+    end
     self:incrementTimers(dt)
     self.Splash:update(dt)
+    self:updateBodies()
 end
 
-function Level:draw(x, y, sx, sy, option)
+function Level:updateBodies()
+    if self.with_physics then
+        for i = 1, #self.Dock.x do
+            self.Dock[i].x = self.Dock[i].body:getX()
+            self.Dock[i].y = self.Dock[i].body:getY()
+            self.Dock[i].angle = self.Dock[i].body:getAngle()
+
+        end
+        self.Floaty1.x = self.Floaty1.body:getX()
+        self.Floaty1.y = self.Floaty1.body:getY()
+        self.Floaty1.angle = self.Floaty1.body:getAngle()
+        self.Floaty2.x = self.Floaty2.body:getX()
+        self.Floaty2.y = self.Floaty2.body:getY()
+        self.Floaty2.angle = self.Floaty2.body:getAngle()
+    end
+end
+
+function Level:draw(x, y, sx, sy)
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -199,12 +241,12 @@ function Level:draw(x, y, sx, sy, option)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawShadedBackground()
-    if option then
+    if self.draw_players then
         self.player1:draw()
         self.player2:draw()
     end
     self:drawForeground()
-    if not option then
+    if not self.draw_players then
         self:drawBackground()
     end
     love.graphics.pop()
@@ -216,13 +258,13 @@ function Level:draw(x, y, sx, sy, option)
     self:drawWater()
     love.graphics.pop()
     love.graphics.setCanvas()
-    if option then
+    if self.draw_players then
         love.graphics.setShader(self.eff)
     end
     love.graphics.draw(self.canvas, x, y)
     -- Remove shader and draw background water
     love.graphics.setShader()
-    if option then
+    if self.draw_players then
         love.graphics.push()
         love.graphics.scale(sx, sy)
         self:drawBackground()
@@ -238,8 +280,10 @@ function Level:draw(x, y, sx, sy, option)
     -- Draw Player Health Bars
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    self.player1:drawHealthBar()
-    self.player2:drawHealthBar()
+    if self.draw_players then
+        self.player1:drawHealthBar()
+        self.player2:drawHealthBar()
+    end
     love.graphics.pop()
     -- Draw splash
     if self.splash then
@@ -261,7 +305,7 @@ function Level:incrementTimers(dt)
 end
 
 function Level:drawForeground()
-    Curlew.Floaty2_front:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
+    Curlew.Floaty2_front:draw(self.Floaty2.x,self.Floaty2.y-5, 0, 1, 1, 214, 128)
 end
 
 function Level:drawWater()
@@ -271,40 +315,22 @@ end
 function Level:drawShadedBackground()
     Curlew.Water:draw(0,0)
     for i = 2, 5 do
-        Curlew.Dock[i]:draw(self.Dock[i].body:getX(), self.Dock[i].body:getY(), self.Dock[i].body:getAngle(), 1, 1, self.Dock.x[i], self.Dock.y[i])
+        Curlew.Dock[i]:draw(self.Dock[i].x, self.Dock[i].y, self.Dock[i].angle, 1, 1, self.Dock.x[i], self.Dock.y[i])
     end
-    Curlew.Dock[1]:draw(self.Dock[1].body:getX(), self.Dock[1].body:getY(), 0, 1, 1, self.Dock.x[1], self.Dock.y[1])
-    Curlew.Floaty1:draw(self.Floaty1.body:getX(),self.Floaty1.body:getY()-5, 0, 1, 1, 34, 128)
-    Curlew.Floaty2:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
-    if Debug then
-        --[[ love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
-        love.graphics.setColor(0.1, 0.1, 0.1, 1)
-        love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 40, WindowWidth/GlobalScale, 40) ]]
-        love.graphics.setColor(0, 0, 0, 0.5)
-        --love.graphics.polygon("fill", Base[1].body:getWorldPoints(Base[1].shape:getPoints()))
-        love.graphics.polygon("fill", self.Dock[1].body:getWorldPoints(self.Dock[1].shape:getPoints()))
-        love.graphics.polygon("fill", self.Dock[2].body:getWorldPoints(self.Dock[2].shape:getPoints()))
-        love.graphics.polygon("fill", self.Dock[3].body:getWorldPoints(self.Dock[3].shape:getPoints()))
-        love.graphics.polygon("fill", self.Dock[4].body:getWorldPoints(self.Dock[4].shape:getPoints()))
-        love.graphics.polygon("fill", self.Dock[5].body:getWorldPoints(self.Dock[5].shape:getPoints()))
-        love.graphics.polygon("fill", self.Floaty1_Base.body:getWorldPoints(self.Floaty1_Base.shape:getPoints()))
-        love.graphics.polygon("fill", self.Floaty1.body:getWorldPoints(self.Floaty1.shape:getPoints()))
-        love.graphics.polygon("fill", self.Floaty2_Base.body:getWorldPoints(self.Floaty2_Base.shape:getPoints()))
-        love.graphics.polygon("fill", self.Floaty2.body:getWorldPoints(self.Floaty2.shape:getPoints()))
-        love.graphics.polygon("fill", self.Floaty2_arm.body:getWorldPoints(self.Floaty2_arm.shape:getPoints()))
-        love.graphics.setColor(1, 1, 1, 1)
-    end
+    Curlew.Dock[1]:draw(self.Dock[1].x, self.Dock[1].y, 0, 1, 1, self.Dock.x[1], self.Dock.y[1])
+    Curlew.Floaty1:draw(self.Floaty1.x,self.Floaty1.y-5, 0, 1, 1, 34, 128)
+    Curlew.Floaty2:draw(self.Floaty2.x,self.Floaty2.y-5, 0, 1, 1, 214, 128)
     love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Level:drawBackground()
     Curlew.Background:draw(0, 0)
     for i = 2, 5 do
-        Curlew.Dock[i]:draw(self.Dock[i].body:getX(), self.Dock[i].body:getY(), self.Dock[i].body:getAngle(), 1, 1, self.Dock.x[i], self.Dock.y[i])
+        Curlew.Dock[i]:draw(self.Dock[i].x, self.Dock[i].y, self.Dock[i].angle, 1, 1, self.Dock.x[i], self.Dock.y[i])
     end
-    Curlew.Dock[1]:draw(self.Dock[1].body:getX(), self.Dock[1].body:getY(), 0, 1, 1, self.Dock.x[1], self.Dock.y[1])
-    Curlew.Floaty1:draw(self.Floaty1.body:getX(),self.Floaty1.body:getY()-5, 0, 1, 1, 34, 128)
-    Curlew.Floaty2:draw(self.Floaty2.body:getX(),self.Floaty2.body:getY()-5, 0, 1, 1, 214, 128)
+    Curlew.Dock[1]:draw(self.Dock[1].x, self.Dock[1].y, 0, 1, 1, self.Dock.x[1], self.Dock.y[1])
+    Curlew.Floaty1:draw(self.Floaty1.x,self.Floaty1.y-5, 0, 1, 1, 34, 128)
+    Curlew.Floaty2:draw(self.Floaty2.x,self.Floaty2.y-5, 0, 1, 1, 214, 128)
     love.graphics.setColor(1, 1, 1, 1)
 end
 

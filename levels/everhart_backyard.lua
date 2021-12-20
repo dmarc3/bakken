@@ -4,32 +4,36 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas)
+function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.name = "everhart_backyard"
     self.canvas = canvas
     self.complete = false
     -- Create self.Ground and self.Walls
     self.Ground = {}
-    self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
-    self.Ground.body:setUserData("ground")
-    self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
-    self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
-    self.Ground.fixture:setFriction(Friction)
-    self.Ground.fixture:setUserData("ground")
+    if with_physics then
+        self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+        self.Ground.body:setUserData("ground")
+        self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
+        self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
+        self.Ground.fixture:setFriction(Friction)
+        self.Ground.fixture:setUserData("ground")
+    end
     self.Ground.y = WindowHeight/GlobalScale + 10
     self.Walls = {}
     self.Walls.left = {}
-    self.Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
-    self.Walls.left.body:setUserData("wall")
-    self.Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    self.Walls.left.fixture = love.physics.newFixture(self.Walls.left.body, self.Walls.left.shape)
-    self.Walls.left.fixture:setUserData("wall")
     self.Walls.right = {}
-    self.Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
-    self.Walls.right.body:setUserData("wall")
-    self.Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    self.Walls.right.fixture = love.physics.newFixture(self.Walls.right.body, self.Walls.right.shape)
-    self.Walls.right.fixture:setUserData("wall")
+    if with_physics then
+        self.Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+        self.Walls.left.body:setUserData("wall")
+        self.Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        self.Walls.left.fixture = love.physics.newFixture(self.Walls.left.body, self.Walls.left.shape)
+        self.Walls.left.fixture:setUserData("wall")
+        self.Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+        self.Walls.right.body:setUserData("wall")
+        self.Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        self.Walls.right.fixture = love.physics.newFixture(self.Walls.right.body, self.Walls.right.shape)
+        self.Walls.right.fixture:setUserData("wall")
+    end
     
     -- Define background
     local spritesheet = love.graphics.newImage("assets/levels/everhart_backyard.png")
@@ -69,10 +73,13 @@ function Level:load(player1, player2, canvas)
     self.birdx = 100
     self.sunx = 0
     -- Load players
-    self.player1 = player:new(1, player1, Level.x1, Level.y1)
-    self.player1:load()
-    self.player2 = player:new(2, player2, Level.x2, Level.y2)
-    self.player2:load()
+    self.draw_players = draw_players
+    if self.draw_players then
+        self.player1 = player:new(1, player1, Level.x1, Level.y1)
+        self.player1:load()
+        self.player2 = player:new(2, player2, Level.x2, Level.y2)
+        self.player2:load()
+    end
 end
 
 function Level:update(dt)
@@ -83,8 +90,10 @@ function Level:update(dt)
     if self.smoke_state > 1 then
         self.Smoke[self.smoke_states[self.smoke_state]]:update(dt)
     end
-    self.player1:update(dt)
-    self.player2:update(dt)
+    if self.draw_players then
+        self.player1:update(dt)
+        self.player2:update(dt)
+    end
     self.cloudx = self.cloudx - 0.02
     if self.cloudx < -WindowWidth/GlobalScale then
         self.cloudx = self.cloudx + WindowWidth/GlobalScale
@@ -98,7 +107,7 @@ function Level:incrementTimers(dt)
     end
 end
 
-function Level:draw(x, y, sx, sy, option)
+function Level:draw(x, y, sx, sy)
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -106,7 +115,7 @@ function Level:draw(x, y, sx, sy, option)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawBackground()
-    if option then
+    if self.draw_players then
         self.player1:draw()
         self.player2:draw()
     end
@@ -115,8 +124,10 @@ function Level:draw(x, y, sx, sy, option)
     -- Draw Player Health Bars
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    self.player1:drawHealthBar()
-    self.player2:drawHealthBar()
+    if self.draw_players then
+        self.player1:drawHealthBar()
+        self.player2:drawHealthBar()
+    end
     love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()

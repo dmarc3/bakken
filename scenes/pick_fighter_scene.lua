@@ -7,7 +7,8 @@ local pickFighterScene = scene:new("pickFigherScene")
 P1 = "drew"
 P2 = "lilah"
 
-function pickFighterScene:load()
+function pickFighterScene:load(GameState)
+    -- print("Loading pickFighterScene")
     self.chars = {"drew", "lilah", "sam", "miller", "abram", "drew"}
     self.chars_xspacing = {12, 21, 21, 15, 27, 12}
     self.animations = {}
@@ -90,6 +91,11 @@ function pickFighterScene:load()
         self.joystick2 = nil
     end
 
+    Transition_Out = require"scenes/transition_out"
+    Transition_Out:load()
+    Transition_In = require"scenes/transition_in"
+    Transition_In:load("setPickLevelScene")
+
     -- Reset Inputs on load
     ResetInputs()
 end
@@ -97,7 +103,6 @@ end
 function pickFighterScene:update(dt, GameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
     self:processDelay()
-    self:incrementTimers(dt)
     self:updateCharacters(dt)
     if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
         self.sfx.accept_all:play()
@@ -105,8 +110,16 @@ function pickFighterScene:update(dt, GameState)
         GameState.player2 = self.chars[self.player2]
         -- GameState.player1 = "drew"
         -- GameState.player2 = "lilah"
-        GameState.scenes.pickLevelScene:load(GameState)
-        GameState:setPickLevelScene()
+        Transition_In.transition_in = true
+        -- GameState.scenes.pickLevelScene:load(GameState)
+        -- GameState:setPickLevelScene()
+    end
+    self:incrementTimers(dt)
+    if Transition_Out.transition_out then
+        Transition_Out:update(dt)
+    end
+    if Transition_In.transition_in then
+        Transition_In:update(dt, GameState, nil)
     end
 end
 
@@ -122,6 +135,12 @@ function pickFighterScene:draw(sx, sy)
     love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, 20)
     love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
     self.banner:draw(WindowWidth/GlobalScale*0.5 - self.banner:getWidth()/2, 5)
+    if Transition_Out.transition_out then
+        Transition_Out:draw()
+    end
+    if Transition_In.transition_in then
+        Transition_In:draw()
+    end
     love.graphics.pop()
 end
 
@@ -129,12 +148,6 @@ function pickFighterScene:drawBackground()
     love.graphics.setBackgroundColor(0.2, 0.2, 0.2)
     love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
-    if Debug then
-        love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale-20, WindowWidth/GlobalScale, 20)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill",  WindowHeight/GlobalScale-20, WindowWidth/GlobalScale, 1, 1)
-    end
     love.graphics.setColor(1, 1, 1, 1)
 end
 
@@ -175,9 +188,6 @@ function pickFighterScene:drawCharacters()
         end
         
         self:selectCharacter()
-        if Debug then
-            love.graphics.rectangle("fill", x0+(i-1)*spacing, y0, 1, 1)
-        end
     end
     -- Draw Selected Characters
     local xchar = 70
@@ -365,6 +375,13 @@ function pickFighterScene:incrementTimers(dt)
         end
     else
         self.victory_timer2 = 0.0
+    end
+    -- print(Transition_Out.transition_timer.."    "..Transition_Out.transition.out:getFrame())
+    if Transition_Out.transition_out then
+        Transition_Out.transition_timer = Transition_Out.transition_timer + dt
+    end
+    if Transition_In.transition_in then
+        Transition_In.transition_timer = Transition_In.transition_timer + dt
     end
 end
 

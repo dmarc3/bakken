@@ -4,46 +4,54 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas)
+function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.name = "bakke_backyard"
     self.canvas = canvas
     self.complete = false
     -- Create self.Ground and Walls
     self.Ground = {}
-    self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
-    self.Ground.body:setUserData("ground")
-    self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
-    self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
-    self.Ground.fixture:setFriction(Friction)
-    self.Ground.fixture:setUserData("ground")
+    if with_physics then
+        self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+        self.Ground.body:setUserData("ground")
+        self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
+        self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
+        self.Ground.fixture:setFriction(Friction)
+        self.Ground.fixture:setUserData("ground")
+    end
     self.Ground.y = WindowHeight/GlobalScale + 10
     Walls = {}
     Walls.left = {}
-    Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
-    Walls.left.body:setUserData("wall")
-    Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
-    Walls.left.fixture:setUserData("wall")
     Walls.right = {}
-    Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
-    Walls.right.body:setUserData("wall")
-    Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
-    Walls.right.fixture:setUserData("wall")
+    if with_physics then
+        Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+        Walls.left.body:setUserData("wall")
+        Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
+        Walls.left.fixture:setUserData("wall")
+        Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+        Walls.right.body:setUserData("wall")
+        Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
+        Walls.right.fixture:setUserData("wall")
+    end
     Toys = {}
-    Toys.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.765, WindowHeight/GlobalScale*0.68, "static")
-    Toys.body:setUserData("obstacle")
-    Toys.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
-    Toys.fixture = love.physics.newFixture(Toys.body, Toys.shape)
-    Toys.fixture:setFriction(Friction)
-    Toys.fixture:setUserData("obstacle")
+    if with_physics then
+        Toys.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.765, WindowHeight/GlobalScale*0.68, "static")
+        Toys.body:setUserData("obstacle")
+        Toys.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
+        Toys.fixture = love.physics.newFixture(Toys.body, Toys.shape)
+        Toys.fixture:setFriction(Friction)
+        Toys.fixture:setUserData("obstacle")
+    end
     Roof = {}
-    Roof.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.797, WindowHeight/GlobalScale*0.455, "static")
-    Roof.body:setUserData("obstacle")
-    Roof.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.11)
-    Roof.fixture = love.physics.newFixture(Roof.body, Roof.shape)
-    Roof.fixture:setFriction(Friction)
-    Roof.fixture:setUserData("obstacle")
+    if with_physics then
+        Roof.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.797, WindowHeight/GlobalScale*0.455, "static")
+        Roof.body:setUserData("obstacle")
+        Roof.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.11)
+        Roof.fixture = love.physics.newFixture(Roof.body, Roof.shape)
+        Roof.fixture:setFriction(Friction)
+        Roof.fixture:setUserData("obstacle")
+    end
     
     -- Define background
     local spritesheet = love.graphics.newImage("assets/levels/backyard.png")
@@ -71,10 +79,13 @@ function Level:load(player1, player2, canvas)
     self.birdx = 100
     self.sunx = 0
     -- Load players
-    self.player1 = player:new(1, player1, Level.x1, Level.y1)
-    self.player1:load()
-    self.player2 = player:new(2, player2, Level.x2, Level.y2)
-    self.player2:load()
+    self.draw_players = draw_players
+    if self.draw_players then
+        self.player1 = player:new(1, player1, Level.x1, Level.y1)
+        self.player1:load()
+        self.player2 = player:new(2, player2, Level.x2, Level.y2)
+        self.player2:load()
+    end
 end
 
 function Level:update(dt)
@@ -100,11 +111,13 @@ function Level:update(dt)
         self.birdx = self.birdx + 2*WindowWidth/GlobalScale
     end
     self.sunx = self.sunx - 0.001
-    self.player1:update(dt)
-    self.player2:update(dt)
+    if self.draw_players then
+        self.player1:update(dt)
+        self.player2:update(dt)
+    end
 end
 
-function Level:draw(x, y, sx, sy, option)
+function Level:draw(x, y, sx, sy)
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -112,7 +125,7 @@ function Level:draw(x, y, sx, sy, option)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawBackground()
-    if option then
+    if self.draw_players then
         self.player1:draw()
         self.player2:draw()
     end
@@ -121,8 +134,10 @@ function Level:draw(x, y, sx, sy, option)
     -- Draw Player Health Bars
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    self.player1:drawHealthBar()
-    self.player2:drawHealthBar()
+    if self.draw_players then
+        self.player1:drawHealthBar()
+        self.player2:drawHealthBar()
+    end
     love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()
@@ -145,92 +160,80 @@ function Level:drawBackground()
     self.Backyard.bird1:draw(self.birdx, 0)
     self.Backyard.bird2:draw(self.birdx+2*WindowWidth/GlobalScale, 0)
     self.Backyard.foreground:draw(0,0)
-    if Debug then
-        --[[ love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
-        love.graphics.setColor(0.1, 0.1, 0.1, 1)
-        love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 40, WindowWidth/GlobalScale, 40) ]]
-        love.graphics.setColor(0, 0, 0, 0.5)
-        love.graphics.polygon("fill", Toys.body:getWorldPoints(Toys.shape:getPoints()))
-        love.graphics.polygon("fill", Roof.body:getWorldPoints(Roof.shape:getPoints()))
-        gx, gy = self.Ground.body:getPosition()
-        love.graphics.rectangle("fill", gx-WindowWidth/GlobalScale/2, gy-10, WindowWidth/GlobalScale, 20)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill", gx, gy, 1, 1)
-    end
     love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Level:resetFighters(dt, id)
     local dx = 1.0
-    local x1 = Level.player1.x0
-    local x2 = Level.player2.x0
-    if Level.player2.dead then
+    local x1 = self.player1.x0
+    local x2 = self.player2.x0
+    if self.player2.dead then
         x1 = 0.5*WindowWidth/GlobalScale
-        x2 = Level.player2.x
+        x2 = self.player2.x
     end
-    if Level.player1.dead then
-        x1 = Level.player1.x
+    if self.player1.dead then
+        x1 = self.player1.x
         x2 = 0.5*WindowWidth/GlobalScale
     end
     if id == 1 then
         -- Reset player1
-        Level.player1.physics.fixture:setMask(2)
-        if Level.player1.x > x1 then
-            Level.player1.physics.body:setLinearVelocity(-Level.player1.maxSpeed, 0)
-            Level.player1.xVel = -Level.player1.maxSpeed
-            Level.player1.xDir = -1.0
+        self.player1.physics.fixture:setMask(2)
+        if self.player1.x > x1 then
+            self.player1.physics.body:setLinearVelocity(-self.player1.maxSpeed, 0)
+            self.player1.xVel = -self.player1.maxSpeed
+            self.player1.xDir = -1.0
         else
-            Level.player1.physics.body:setLinearVelocity(Level.player1.maxSpeed, 0)
-            Level.player1.xVel = Level.player1.maxSpeed
-            Level.player1.xDir = 1.0
+            self.player1.physics.body:setLinearVelocity(self.player1.maxSpeed, 0)
+            self.player1.xVel = self.player1.maxSpeed
+            self.player1.xDir = 1.0
         end
-        Level.player1.xoverride = true
-        if math.abs(Level.player1.x - x1) < dx then
-            Level.player1.physics.body:setPosition(x1, Level.player1.y0)
-            Level.player1.physics.body:setLinearVelocity(0, 0)
-            Level.player1.xVel = 0
-            Level.player1.xDir = 1.0
-            Level.player1.xoverride = false
+        self.player1.xoverride = true
+        if math.abs(self.player1.x - x1) < dx then
+            self.player1.physics.body:setPosition(x1, self.player1.y0)
+            self.player1.physics.body:setLinearVelocity(0, 0)
+            self.player1.xVel = 0
+            self.player1.xDir = 1.0
+            self.player1.xoverride = false
         end
     else
         -- Reset player2
-        Level.player2.physics.fixture:setMask(2)
-        if Level.player2.x > x2 then
-            Level.player2.physics.body:setLinearVelocity(-Level.player2.maxSpeed, 0)
-            Level.player2.xVel = -Level.player2.maxSpeed
-            Level.player2.xDir = -1.0
-        elseif Level.player2.x < x2 then
-            Level.player2.physics.body:setLinearVelocity(Level.player2.maxSpeed, 0)
-            Level.player2.xVel = Level.player2.maxSpeed
-            Level.player2.xDir = 1.0
+        self.player2.physics.fixture:setMask(2)
+        if self.player2.x > x2 then
+            self.player2.physics.body:setLinearVelocity(-self.player2.maxSpeed, 0)
+            self.player2.xVel = -self.player2.maxSpeed
+            self.player2.xDir = -1.0
+        elseif self.player2.x < x2 then
+            self.player2.physics.body:setLinearVelocity(self.player2.maxSpeed, 0)
+            self.player2.xVel = self.player2.maxSpeed
+            self.player2.xDir = 1.0
         end
-        Level.player2.xoverride = true
-        if math.abs(Level.player2.x - x2) < dx then
-            Level.player2.physics.body:setPosition(x2, Level.player2.y0)
-            Level.player2.physics.body:setLinearVelocity(0, 0)
-            Level.player2.xVel = 0
-            Level.player2.xDir = -1.0
-            Level.player2.xoverride = false
+        self.player2.xoverride = true
+        if math.abs(self.player2.x - x2) < dx then
+            self.player2.physics.body:setPosition(x2, self.player2.y0)
+            self.player2.physics.body:setLinearVelocity(0, 0)
+            self.player2.xVel = 0
+            self.player2.xDir = -1.0
+            self.player2.xoverride = false
         end
     end
     -- Switch boolean
-    if math.abs(Level.player1.x - x1) < dx and math.abs(Level.player2.x - x2) < dx then
-        Level.player1.knocked_out = false
-        Level.player1.xVel = 0
-        Level.player1.xDir = 1.0
-        Level.player1.physics.fixture:setMask()
-        Level.player2.knocked_out = false
-        Level.player2.xVel = 0
-        Level.player2.xDir = -1.0
-        Level.player2.physics.fixture:setMask()
-        if Level.player2.dead then
+    if math.abs(self.player1.x - x1) < dx and math.abs(self.player2.x - x2) < dx then
+        self.player1.knocked_out = false
+        self.player1.xVel = 0
+        self.player1.xDir = 1.0
+        self.player1.physics.fixture:setMask()
+        self.player2.knocked_out = false
+        self.player2.xVel = 0
+        self.player2.xDir = -1.0
+        self.player2.physics.fixture:setMask()
+        if self.player2.dead then
             print("Player 1 is victorious!")
-            Level.player1.victory = true
-            Level.complete = true
-        elseif Level.player1.dead then
+            self.player1.victory = true
+            self.complete = true
+        elseif self.player1.dead then
             print("Player 2 is victorious!")
-            Level.player2.victory = true
-            Level.complete = true
+            self.player2.victory = true
+            self.complete = true
         end
     end
 end
