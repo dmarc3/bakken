@@ -4,7 +4,7 @@ local scene = require"scene"
 local titleScene = scene:new("titleScene")
 
 function titleScene:load()
-    print("Loading titleScene")
+    -- print("Loading titleScene")
     love.graphics.clear()
     self.BG_SpriteSheet = love.graphics.newImage("assets/ui/title_screen.png")
     self.BG_SpriteSheetMeta = "assets/ui/title_screen.json"

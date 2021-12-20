@@ -37,7 +37,6 @@ function Transition_In:update(dt, gameState, music)
                 music:stop()
             end
         end
-        print("loading from transition_in")
         gameState[self.next_scene](gameState)
         gameState.current:load(gameState)
     end

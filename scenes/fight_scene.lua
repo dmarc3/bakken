@@ -23,7 +23,7 @@ function fight_scene:load(GameState)
 
     -- Import level
     Level = require("levels/"..GameState.level)
-    Level:load(GameState.player1, GameState.player2, self.canvas, true)
+    Level:load(GameState.player1, GameState.player2, self.canvas, true, true)
 
     -- Import fight ui
     local spritesheet = love.graphics.newImage("assets/ui/fight.png")
@@ -34,7 +34,7 @@ function fight_scene:load(GameState)
     Fight.x0 = Fight.x
     Fight.y0 = Fight.y
     Fight.kabam = peachy.new(asepriteMeta, spritesheet, "kabam")
-    self.fight_duration = 1.0
+    self.fight_duration = 2.0
     self.fight_timer = 0
     self.fight_timer2 = 0
     self.fight = false
@@ -47,9 +47,9 @@ function fight_scene:load(GameState)
     Names.player1 = peachy.new(asepriteMeta, spritesheet, GameState.player1)
     Names.player2 = peachy.new(asepriteMeta, spritesheet, GameState.player2)
     Names.wins = peachy.new(asepriteMeta, spritesheet, "wins")
-    -- Set players to nil
-    --player1 = nil
-    --player2 = nil
+    -- Transition loads
+    Transition_Out = require"scenes/transition_out"
+    Transition_Out:load()
 end
   
 
@@ -68,6 +68,9 @@ function fight_scene:update(dt, GameState)
     World:update(dt)
     self:updateFight(dt)
     Level:update(dt)
+    if Transition_Out.transition_out then
+        Transition_Out:update(dt)
+    end
     CheckKeys()
 end
 
@@ -109,11 +112,17 @@ function fight_scene:draw(sx, sy)
     if Level.complete then
         self:drawVictory()
     end
+    if Transition_Out.transition_out then
+        Transition_Out:draw()
+    end
     love.graphics.pop()
 end
 
 function fight_scene:incrementTimers(dt)
     self.fight_timer = self.fight_timer + dt
+    if Transition_Out.transition_out then
+        Transition_Out.transition_timer = Transition_Out.transition_timer + dt
+    end
 end
 
 function fight_scene:updateFight(dt)

@@ -8,7 +8,7 @@ P1 = "drew"
 P2 = "lilah"
 
 function pickFighterScene:load(GameState)
-    print("Loading pickFighterScene")
+    -- print("Loading pickFighterScene")
     self.chars = {"drew", "lilah", "sam", "miller", "abram", "drew"}
     self.chars_xspacing = {12, 21, 21, 15, 27, 12}
     self.animations = {}
@@ -148,12 +148,6 @@ function pickFighterScene:drawBackground()
     love.graphics.setBackgroundColor(0.2, 0.2, 0.2)
     love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
-    if Debug then
-        love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale-20, WindowWidth/GlobalScale, 20)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill",  WindowHeight/GlobalScale-20, WindowWidth/GlobalScale, 1, 1)
-    end
     love.graphics.setColor(1, 1, 1, 1)
 end
 
@@ -194,9 +188,6 @@ function pickFighterScene:drawCharacters()
         end
         
         self:selectCharacter()
-        if Debug then
-            love.graphics.rectangle("fill", x0+(i-1)*spacing, y0, 1, 1)
-        end
     end
     -- Draw Selected Characters
     local xchar = 70

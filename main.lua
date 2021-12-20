@@ -26,6 +26,7 @@ love.window.setIcon(icon)
 
 -- levels or scenes in our game.
 local GameState = {
+    world = nil,
     current = titleScene,
     last = titleScene.name,
     scenes = {
@@ -111,6 +112,7 @@ function love.draw()
     -- With (36, 24) grids are 20 pixels by 20 pixels
     -- 1440/36 = 20 pixels and 960/24 = 20 pixels
     if Debug then
+        drawPhysicsBodies()
         debugGrid(36, 24)
     end
 end
@@ -151,4 +153,28 @@ function debugGrid(i, j)
         end
     end
     love.graphics.setColor(1,1,1,1)
+end
+
+function drawPhysicsBodies()
+    if GameState.world ~= nil then
+        love.graphics.push()
+        love.graphics.scale(GameState.sx, GameState.sy)
+        love.graphics.setColor(0, 0, 0, 0.7)
+        for _, body in pairs(GameState.world:getBodies()) do
+            for _, fixture in pairs(body:getFixtures()) do
+                local shape = fixture:getShape()
+        
+                if shape:typeOf("CircleShape") then
+                    local cx, cy = body:getWorldPoints(shape:getPoint())
+                    love.graphics.circle("fill", cx, cy, shape:getRadius())
+                elseif shape:typeOf("PolygonShape") then
+                    love.graphics.polygon("fill", body:getWorldPoints(shape:getPoints()))
+                else
+                    love.graphics.line(body:getWorldPoints(shape:getPoints()))
+                end
+            end
+        end
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.pop()
+    end
 end

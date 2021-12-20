@@ -4,46 +4,54 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas, draw_players)
+function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.name = "bakke_backyard"
     self.canvas = canvas
     self.complete = false
     -- Create self.Ground and Walls
     self.Ground = {}
-    self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
-    self.Ground.body:setUserData("ground")
-    self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
-    self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
-    self.Ground.fixture:setFriction(Friction)
-    self.Ground.fixture:setUserData("ground")
+    if with_physics then
+        self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+        self.Ground.body:setUserData("ground")
+        self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
+        self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
+        self.Ground.fixture:setFriction(Friction)
+        self.Ground.fixture:setUserData("ground")
+    end
     self.Ground.y = WindowHeight/GlobalScale + 10
     Walls = {}
     Walls.left = {}
-    Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
-    Walls.left.body:setUserData("wall")
-    Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
-    Walls.left.fixture:setUserData("wall")
     Walls.right = {}
-    Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
-    Walls.right.body:setUserData("wall")
-    Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
-    Walls.right.fixture:setUserData("wall")
+    if with_physics then
+        Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+        Walls.left.body:setUserData("wall")
+        Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
+        Walls.left.fixture:setUserData("wall")
+        Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+        Walls.right.body:setUserData("wall")
+        Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
+        Walls.right.fixture:setUserData("wall")
+    end
     Toys = {}
-    Toys.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.765, WindowHeight/GlobalScale*0.68, "static")
-    Toys.body:setUserData("obstacle")
-    Toys.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
-    Toys.fixture = love.physics.newFixture(Toys.body, Toys.shape)
-    Toys.fixture:setFriction(Friction)
-    Toys.fixture:setUserData("obstacle")
+    if with_physics then
+        Toys.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.765, WindowHeight/GlobalScale*0.68, "static")
+        Toys.body:setUserData("obstacle")
+        Toys.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
+        Toys.fixture = love.physics.newFixture(Toys.body, Toys.shape)
+        Toys.fixture:setFriction(Friction)
+        Toys.fixture:setUserData("obstacle")
+    end
     Roof = {}
-    Roof.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.797, WindowHeight/GlobalScale*0.455, "static")
-    Roof.body:setUserData("obstacle")
-    Roof.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.11)
-    Roof.fixture = love.physics.newFixture(Roof.body, Roof.shape)
-    Roof.fixture:setFriction(Friction)
-    Roof.fixture:setUserData("obstacle")
+    if with_physics then
+        Roof.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.797, WindowHeight/GlobalScale*0.455, "static")
+        Roof.body:setUserData("obstacle")
+        Roof.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.11)
+        Roof.fixture = love.physics.newFixture(Roof.body, Roof.shape)
+        Roof.fixture:setFriction(Friction)
+        Roof.fixture:setUserData("obstacle")
+    end
     
     -- Define background
     local spritesheet = love.graphics.newImage("assets/levels/backyard.png")
@@ -152,18 +160,6 @@ function Level:drawBackground()
     self.Backyard.bird1:draw(self.birdx, 0)
     self.Backyard.bird2:draw(self.birdx+2*WindowWidth/GlobalScale, 0)
     self.Backyard.foreground:draw(0,0)
-    if Debug then
-        --[[ love.graphics.setBackgroundColor(0.25, 0.25, 0.25)
-        love.graphics.setColor(0.1, 0.1, 0.1, 1)
-        love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 40, WindowWidth/GlobalScale, 40) ]]
-        love.graphics.setColor(0, 0, 0, 0.5)
-        love.graphics.polygon("fill", Toys.body:getWorldPoints(Toys.shape:getPoints()))
-        love.graphics.polygon("fill", Roof.body:getWorldPoints(Roof.shape:getPoints()))
-        gx, gy = self.Ground.body:getPosition()
-        love.graphics.rectangle("fill", gx-WindowWidth/GlobalScale/2, gy-10, WindowWidth/GlobalScale, 20)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill", gx, gy, 1, 1)
-    end
     love.graphics.setColor(1, 1, 1, 1)
 end
 

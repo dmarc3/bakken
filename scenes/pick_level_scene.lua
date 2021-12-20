@@ -11,9 +11,10 @@ Friction = 5
 love.physics.setMeter(Meter)
 
 function pickLevelScene:load(GameState)
-    print("Loading pickLevelScene")
+    -- print("Loading pickLevelScene")
     World = love.physics.newWorld(0, Meter*Gravity, false)
     World:setCallbacks(beginContact, endContact)
+    GameState.world = World
 
     self.levels = {"bakke_backyard", "everhart_backyard", "curlew"}
     self.level = 1
@@ -23,11 +24,11 @@ function pickLevelScene:load(GameState)
     -- Import level
     Levels = {}
     Levels[1] = require("levels/"..self.levels[1])
-    Levels[1]:load(GameState.player1, GameState.player2, self.canvas, false)
+    Levels[1]:load(GameState.player1, GameState.player2, self.canvas, false, false)
     Levels[2] = require("levels/"..self.levels[2])
-    Levels[2]:load(GameState.player1, GameState.player2, self.canvas, false)
+    Levels[2]:load(GameState.player1, GameState.player2, self.canvas, false, false)
     Levels[3] = require("levels/"..self.levels[3])
-    Levels[3]:load(GameState.player1, GameState.player2, self.canvas, false)
+    Levels[3]:load(GameState.player1, GameState.player2, self.canvas, false, false)
 
     self.y = {10, 30, 50}
     self.animations = {}
@@ -84,7 +85,7 @@ function pickLevelScene:update(dt, GameState)
     self:updateLevel(dt)
     if KeysPressed["return"] == true then
         self.sfx.accept_all:play()
-        self:deleteBodies()
+        -- self:deleteBodies()
         GameState.level = self.levels[self.level]
         Transition_In.transition_in = true
         -- GameState.scenes.fightScene:load(GameState)
@@ -92,7 +93,7 @@ function pickLevelScene:update(dt, GameState)
     end
     if ButtonsPressed[1]["start"] == true then
         self.sfx.accept_all:play()
-        self:deleteBodies()
+        -- self:deleteBodies()
         GameState.level = self.levels[self.level]
         Transition_In.transition_in = true
         -- GameState.scenes.fightScene:load(GameState)
@@ -185,7 +186,6 @@ function pickLevelScene:selectLevel()
 end
 
 function pickLevelScene:incrementTimers(dt)
-    print(Transition_In.transition_in)
     self.delay_timer = self.delay_timer + dt
     if self.delay_timer > 0.25 then
         self.delay = false

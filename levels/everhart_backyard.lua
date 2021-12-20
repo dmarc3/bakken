@@ -4,32 +4,36 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas, draw_players)
+function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.name = "everhart_backyard"
     self.canvas = canvas
     self.complete = false
     -- Create self.Ground and self.Walls
     self.Ground = {}
-    self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
-    self.Ground.body:setUserData("ground")
-    self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
-    self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
-    self.Ground.fixture:setFriction(Friction)
-    self.Ground.fixture:setUserData("ground")
+    if with_physics then
+        self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+        self.Ground.body:setUserData("ground")
+        self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
+        self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
+        self.Ground.fixture:setFriction(Friction)
+        self.Ground.fixture:setUserData("ground")
+    end
     self.Ground.y = WindowHeight/GlobalScale + 10
     self.Walls = {}
     self.Walls.left = {}
-    self.Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
-    self.Walls.left.body:setUserData("wall")
-    self.Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    self.Walls.left.fixture = love.physics.newFixture(self.Walls.left.body, self.Walls.left.shape)
-    self.Walls.left.fixture:setUserData("wall")
     self.Walls.right = {}
-    self.Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
-    self.Walls.right.body:setUserData("wall")
-    self.Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
-    self.Walls.right.fixture = love.physics.newFixture(self.Walls.right.body, self.Walls.right.shape)
-    self.Walls.right.fixture:setUserData("wall")
+    if with_physics then
+        self.Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+        self.Walls.left.body:setUserData("wall")
+        self.Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        self.Walls.left.fixture = love.physics.newFixture(self.Walls.left.body, self.Walls.left.shape)
+        self.Walls.left.fixture:setUserData("wall")
+        self.Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+        self.Walls.right.body:setUserData("wall")
+        self.Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        self.Walls.right.fixture = love.physics.newFixture(self.Walls.right.body, self.Walls.right.shape)
+        self.Walls.right.fixture:setUserData("wall")
+    end
     
     -- Define background
     local spritesheet = love.graphics.newImage("assets/levels/everhart_backyard.png")
