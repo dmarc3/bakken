@@ -84,6 +84,7 @@ function fight_scene:load(GameState)
             "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
+    self.end_timer = 0
 end
   
 
@@ -113,6 +114,12 @@ function fight_scene:update(dt, GameState)
         if Transition_In.transition_in == true then
             Transition_In:update(math.max(dt, Pause_dt), GameState, nil)
         end
+    end
+    if Level.complete and self.end_timer > 7.0 and Transition_In == nil then
+        print("Transitioning!")
+        Transition_In = require"scenes/transition_in"
+        Transition_In:load("setTitleScene")
+        Transition_In.transition_in = true
     end
 end
 
@@ -160,6 +167,11 @@ function fight_scene:draw(sx, sy)
     if self.pause then
         self:drawPause()
     end
+    if Transition_In ~= nil then
+        if Transition_In.transition_in then
+            Transition_In:draw()
+        end
+    end
     love.graphics.pop()
 end
 
@@ -174,6 +186,9 @@ function fight_scene:incrementTimers(dt)
         if Transition_In.transition_in then
             Transition_In.transition_timer = Transition_In.transition_timer + math.max(dt, Pause_dt)
         end
+    end
+    if Level.complete then
+        self.end_timer = self.end_timer + dt
     end
 end
 
@@ -222,11 +237,6 @@ function fight_scene:drawPause()
     else
         self.pause_menu.exit.not_selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+5*dy, 0, sf, sf)
     end
-    if Transition_In ~= nil then
-        if Transition_In.transition_in then
-            Transition_In:draw()
-        end
-    end
 end
 
 function fight_scene:drawVictory()
@@ -258,7 +268,6 @@ function fight_scene:updatePause(dt)
         utils.snplay(self.sfx.change_sel)
     end
     if KeysPressed["return"] and self.pause_selection == 2 and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) and self.pause and Transition_In == nil then
-        print("Change Fighter!")
         Transition_In = require"scenes/transition_in"
         Transition_In:load("setPickFighterScene")
         Transition_In.transition_in = true
