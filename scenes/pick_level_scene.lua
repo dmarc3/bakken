@@ -18,8 +18,8 @@ function pickLevelScene:load(GameState)
 
     self.levels = {"bakke_backyard", "everhart_backyard", "curlew"}
     self.level = 1
-    self.level_x = 0.35*WindowWidth
-    self.level_y = 0.35*WindowHeight
+    self.level_x = 0.2*WindowWidth
+    self.level_y = 0.15*WindowHeight
     self.canvas = love.graphics.newCanvas(WindowWidth, WindowHeight)
     -- Import level
     Levels = {}
@@ -30,7 +30,7 @@ function pickLevelScene:load(GameState)
     Levels[3] = require("levels/"..self.levels[3])
     Levels[3]:load(GameState.player1, GameState.player2, self.canvas, false, false)
 
-    self.y = {10, 30, 50}
+    self.y = {170, 185, 200}
     self.animations = {}
     for _, level in pairs(self.levels) do
         local spritesheet = love.graphics.newImage("assets/ui/"..level.."_title.png")
@@ -76,6 +76,11 @@ function pickLevelScene:load(GameState)
     Transition_In = require"scenes/transition_in"
     Transition_In:load("setFightScene")
 
+    -- Import banner
+    local spritesheet = love.graphics.newImage("assets/ui/banner.png")
+    local asepriteMeta = "assets/ui/banner.json"
+    self.banner = peachy.new(asepriteMeta, spritesheet, "pick_level")
+
     -- Reset Inputs on load
     ResetInputs()
 end
@@ -114,6 +119,7 @@ function pickLevelScene:draw(sx, sy)
     self:drawBackground(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
+    self.banner:draw(WindowWidth/GlobalScale*0.55 - self.banner:getWidth()/2, 5)
     if Transition_Out.transition_out then
         Transition_Out:draw()
     end
@@ -126,15 +132,15 @@ end
 function pickLevelScene:drawBackground(sx, sy)
     love.graphics.setColor(0.1, 0.1, 0.1)
     love.graphics.rectangle("fill", 0, 0, self.level_x-3*0.6*sx, WindowHeight)
-    love.graphics.rectangle("fill", WindowWidth - 72 + 3*0.6*sx, 0, 72, WindowHeight)
+    love.graphics.rectangle("fill", WindowWidth - 288 + 3*0.6*sx, 0, 288, WindowHeight)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.push()
     love.graphics.scale(3*sx/4, 3*sy/4)
     for i, level in pairs(self.levels) do
         if self.level == i then
-            self.animations[level].selected:draw(10, self.y[i])
+            self.animations[level].selected:draw(0.5*WindowWidth/GlobalScale, self.y[i], 0, 0.8, 0.8)
         else
-            self.animations[level].not_selected:draw(10, self.y[i])
+            self.animations[level].not_selected:draw(0.5*WindowWidth/GlobalScale, self.y[i], 0, 0.8, 0.8)
         end
     end
     love.graphics.pop()
@@ -142,8 +148,9 @@ function pickLevelScene:drawBackground(sx, sy)
 end
 
 function pickLevelScene:drawLevel(sx, sy)
-    Levels[self.level]:draw(self.level_x, self.level_y, 0.60*sx, 0.60*sy)
-    self.level_border:draw(self.level_x-3*0.6*sx, self.level_y-3*0.6*sy, 0, 0.60*sx, 0.60*sy)
+    local sf = 0.6
+    Levels[self.level]:draw(self.level_x, self.level_y, sf*sx, sf*sy)
+    self.level_border:draw(self.level_x-3*sf*sx, self.level_y-3*sf*sy, 0, sf*sx, sf*sy)
 end
 
 function pickLevelScene:updateLevel(dt)

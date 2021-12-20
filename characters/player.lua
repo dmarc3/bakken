@@ -342,31 +342,33 @@ function Player:drawBody()
 end
 
 function Player:update(dt)
-    local current_frame = self.animation[self.animationName]:getFrame()
-    local current_anim = self.animationName
-    -- Apply physicse
-    self:syncPhysics()
-    self:applyGravity(dt)
-    -- Move Player
-    if self.joystick then
-        self:moveJoystick(dt)
-    else
-        self:moveKeyboard(dt)
-    end
-    -- Increment Timers
-    self:incrementTimers(dt)
+    if not Debug_Pause then
+        local current_frame = self.animation[self.animationName]:getFrame()
+        local current_anim = self.animationName
+        -- Apply physicse
+        self:syncPhysics()
+        self:applyGravity(dt)
+        -- Move Player
+        if self.joystick then
+            self:moveJoystick(dt)
+        else
+            self:moveKeyboard(dt)
+        end
+        -- Increment Timers
+        self:incrementTimers(dt)
 
-    self:updateHealthBar(dt)
-    -- Update Animation
-    self:detectSprint(dt)
-    self:setState()
-    self.animation[self.animationName]:update(dt)
-    if current_frame ~= self.animation[self.animationName]:getFrame() or current_anim ~= self.animationName then
-        self.frame_change = true
-    else
-        self.frame_change = false
+        self:updateHealthBar(dt)
+        -- Update Animation
+        self:detectSprint(dt)
+        self:setState()
+        self.animation[self.animationName]:update(dt)
+        if current_frame ~= self.animation[self.animationName]:getFrame() or current_anim ~= self.animationName then
+            self.frame_change = true
+        else
+            self.frame_change = false
+        end
+        self:deleteBodies()
     end
-    self:deleteBodies()
 end
 
 function Player:updateHealthBar(dt)

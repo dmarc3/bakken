@@ -102,15 +102,17 @@ function Level:update(dt)
     self.Backyard.clouds1:update(dt)
     self.Backyard.clouds2:update(dt)
     self.Backyard.sun:update(dt)
-    self.cloudx = self.cloudx - 0.02
-    if self.cloudx < -WindowWidth/GlobalScale then
-        self.cloudx = self.cloudx + WindowWidth/GlobalScale
+    if dt > 0 then
+        self.cloudx = self.cloudx - 0.02
+        if self.cloudx < -WindowWidth/GlobalScale then
+            self.cloudx = self.cloudx + WindowWidth/GlobalScale
+        end
+        self.birdx = self.birdx - 0.5
+        if self.birdx < -2*WindowWidth/GlobalScale then
+            self.birdx = self.birdx + 2*WindowWidth/GlobalScale
+        end
+        self.sunx = self.sunx - 0.001
     end
-    self.birdx = self.birdx - 0.5
-    if self.birdx < -2*WindowWidth/GlobalScale then
-        self.birdx = self.birdx + 2*WindowWidth/GlobalScale
-    end
-    self.sunx = self.sunx - 0.001
     if self.draw_players then
         self.player1:update(dt)
         self.player2:update(dt)

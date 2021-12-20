@@ -2,6 +2,7 @@ local scene = require "scene"
 
 local peachy = require("3rd/peachy/peachy")
 local player = require"characters/player"
+local utils = require"utils"
 
 local fight_scene = scene:new("fight")
 
@@ -12,7 +13,6 @@ local fight_scene = scene:new("fight")
 -- love.physics.setMeter(Meter)
 
 function fight_scene:load(GameState)
-    print("Loading fight_scene")
     -- World = love.physics.newWorld(0, Meter*Gravity, false)
     -- World:setCallbacks(beginContact, endContact)
 
@@ -39,6 +39,8 @@ function fight_scene:load(GameState)
     self.fight_timer2 = 0
     self.fight = false
     self.delta = 0
+    self.pause = false
+    self.pause_timer = 0.0
 
     -- Import player names
     local spritesheet = love.graphics.newImage("assets/ui/names.png")
@@ -50,6 +52,38 @@ function fight_scene:load(GameState)
     -- Transition loads
     Transition_Out = require"scenes/transition_out"
     Transition_Out:load()
+    Transition_In = nil
+    -- Import pause box
+    local spritesheet = love.graphics.newImage("assets/ui/pause_box.png")
+    local asepriteMeta = "assets/ui/pause_box.json"
+    self.pause_box = peachy.new(asepriteMeta, spritesheet, "idle")
+    local spritesheet = love.graphics.newImage("assets/ui/pause_menu.png")
+    local asepriteMeta = "assets/ui/pause_menu.json"
+    self.pause_menu = {}
+    self.pause_menu.resume = {}
+    self.pause_menu.resume.not_selected = peachy.new(asepriteMeta, spritesheet, "resume_not_selected")
+    self.pause_menu.resume.selected = peachy.new(asepriteMeta, spritesheet, "resume_selected")
+    self.pause_menu.change = {}
+    self.pause_menu.change.not_selected = peachy.new(asepriteMeta, spritesheet, "change_not_selected")
+    self.pause_menu.change.selected = peachy.new(asepriteMeta, spritesheet, "change_selected")
+    self.pause_menu.exit = {}
+    self.pause_menu.exit.not_selected = peachy.new(asepriteMeta, spritesheet, "exit_not_selected")
+    self.pause_menu.exit.selected = peachy.new(asepriteMeta, spritesheet, "exit_selected")
+    self.pause_selection = 1
+    self.pause_move_timer = 0.0
+    -- load sfx
+    self.sfx = {
+        change_sel = love.audio.newSource(
+            "assets/audio/sfx/ui/change_selection.ogg", "static"
+        )
+        ,
+        invalid_sel = love.audio.newSource(
+            "assets/audio/sfx/ui/invalid_selection.ogg", "static"
+        ),
+        accept_all = love.audio.newSource(
+            "assets/audio/sfx/ui/accept_all.ogg", "static"
+        )
+    }
 end
   
 
@@ -71,7 +105,15 @@ function fight_scene:update(dt, GameState)
     if Transition_Out.transition_out then
         Transition_Out:update(dt)
     end
-    CheckKeys()
+    self:updatePause(dt)
+    if not self.pause then
+        CheckKeys()
+    end
+    if Transition_In ~= nil then
+        if Transition_In.transition_in == true then
+            Transition_In:update(math.max(dt, Pause_dt), GameState, nil)
+        end
+    end
 end
 
 function fight_scene:resetFighters(dt)
@@ -105,7 +147,7 @@ function fight_scene:resetFighters(dt)
 end
 
 function fight_scene:draw(sx, sy)
-    Level:draw(0, 0, sx, sy, true)
+    Level:draw(0, 0, sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawFight()
@@ -115,6 +157,9 @@ function fight_scene:draw(sx, sy)
     if Transition_Out.transition_out then
         Transition_Out:draw()
     end
+    if self.pause then
+        self:drawPause()
+    end
     love.graphics.pop()
 end
 
@@ -122,6 +167,13 @@ function fight_scene:incrementTimers(dt)
     self.fight_timer = self.fight_timer + dt
     if Transition_Out.transition_out then
         Transition_Out.transition_timer = Transition_Out.transition_timer + dt
+    end
+    self.pause_timer = self.pause_timer + dt
+    self.pause_move_timer = self.pause_move_timer + Pause_dt
+    if Transition_In ~= nil then
+        if Transition_In.transition_in then
+            Transition_In.transition_timer = Transition_In.transition_timer + math.max(dt, Pause_dt)
+        end
     end
 end
 
@@ -147,6 +199,36 @@ function fight_scene:drawFight()
     end
 end
 
+function fight_scene:drawPause()
+    love.graphics.setColor(0, 0, 0, 0.5)
+    love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, WindowHeight/GlobalScale)
+    love.graphics.setColor(1, 1, 1, 1)
+    self.pause_box:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2)
+    local dx = 4
+    local dy = 4
+    local sf = 0.5
+    if self.pause_selection == 1 then
+        self.pause_menu.resume.selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+dy, 0, sf, sf)
+    else
+        self.pause_menu.resume.not_selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+dy, 0, sf, sf)
+    end
+    if self.pause_selection == 2 then
+        self.pause_menu.change.selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+3*dy, 0, sf, sf)
+    else
+        self.pause_menu.change.not_selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+3*dy, 0, sf, sf)    
+    end
+    if self.pause_selection == 3 then
+        self.pause_menu.exit.selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+5*dy, 0, sf, sf)
+    else
+        self.pause_menu.exit.not_selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+5*dy, 0, sf, sf)
+    end
+    if Transition_In ~= nil then
+        if Transition_In.transition_in then
+            Transition_In:draw()
+        end
+    end
+end
+
 function fight_scene:drawVictory()
     if Level.complete then
         if Level.player1.dead then
@@ -158,6 +240,67 @@ function fight_scene:drawVictory()
         if Level.player1.dead or Level.player2.dead then
             Names.wins:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.4)
         end
+    end
+end
+
+function fight_scene:updatePause(dt)
+    if KeysPressed["escape"] and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) then
+        self.pause_selection = 1
+        self.pause_timer = 0
+        self.pause = not self.pause
+        Debug_Pause = self.pause
+        utils.snplay(self.sfx.change_sel)
+    end
+    if KeysPressed["return"] and self.pause_selection == 1 and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) and self.pause then
+        self.pause_timer = 0
+        self.pause = not self.pause
+        Debug_Pause = self.pause
+        utils.snplay(self.sfx.change_sel)
+    end
+    if KeysPressed["return"] and self.pause_selection == 2 and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) and self.pause and Transition_In == nil then
+        print("Change Fighter!")
+        Transition_In = require"scenes/transition_in"
+        Transition_In:load("setPickFighterScene")
+        Transition_In.transition_in = true
+        Debug_Pause = false
+        utils.snplay(self.sfx.change_sel)
+    end
+    if KeysPressed["return"] and self.pause_selection == 3 and self.pause then
+        utils.snplay(self.sfx.change_sel)
+        love.event.quit()
+    end
+    self.pause_menu.resume.selected:update(Pause_dt)
+    self.pause_menu.change.selected:update(Pause_dt)
+    self.pause_menu.exit.selected:update(Pause_dt)
+    if self.pause then
+        if (KeysPressed["w"] or KeysPressed["kp5"]) and self.pause_move_timer > 0.3 then
+            self:pauseDecrement()
+            self.pause_move_timer = 0
+        end
+        if (KeysPressed["s"] or KeysPressed["kp2"]) and self.pause_move_timer > 0.3 then
+            self:pauseIncrement()
+            self.pause_move_timer = 0
+        end
+    end
+end
+
+function fight_scene:pauseIncrement()
+    -- increment selection
+    if self.pause_selection == 3 then
+        utils.snplay(self.sfx.invalid_sel)
+    else
+        utils.snplay(self.sfx.change_sel)
+        self.pause_selection = self.pause_selection + 1
+    end
+end
+
+function fight_scene:pauseDecrement()
+    -- increment selection
+    if self.pause_selection == 1 then
+        utils.snplay(self.sfx.invalid_sel)
+    else
+        utils.snplay(self.sfx.change_sel)
+        self.pause_selection = self.pause_selection - 1
     end
 end
 

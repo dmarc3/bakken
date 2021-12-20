@@ -79,7 +79,7 @@ function pickFighterScene:load(GameState)
     -- Import banner
     local spritesheet = love.graphics.newImage("assets/ui/banner.png")
     local asepriteMeta = "assets/ui/banner.json"
-    self.banner = peachy.new(asepriteMeta, spritesheet, "idle")
+    self.banner = peachy.new(asepriteMeta, spritesheet, "pick_fighter")
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
     if joystickcount == 2 then

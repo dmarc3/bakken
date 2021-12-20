@@ -1,7 +1,16 @@
 { "frames": [
    {
-    "filename": "banner.aseprite",
+    "filename": "banner 0.aseprite",
     "frame": { "x": 0, "y": 0, "w": 177, "h": 12 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 177, "h": 12 },
+    "sourceSize": { "w": 177, "h": 12 },
+    "duration": 100
+   },
+   {
+    "filename": "banner 1.aseprite",
+    "frame": { "x": 177, "y": 0, "w": 177, "h": 12 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 177, "h": 12 },
@@ -14,10 +23,11 @@
   "version": "1.2.30-x64",
   "image": "banner.png",
   "format": "RGBA8888",
-  "size": { "w": 177, "h": 12 },
+  "size": { "w": 354, "h": 12 },
   "scale": "1",
   "frameTags": [
-   { "name": "idle", "from": 0, "to": 0, "direction": "forward" }
+   { "name": "pick_fighter", "from": 0, "to": 0, "direction": "forward" },
+   { "name": "pick_level", "from": 1, "to": 1, "direction": "forward" }
   ],
   "layers": [
    { "name": "banner", "opacity": 255, "blendMode": "normal" }

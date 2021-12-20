@@ -54,6 +54,8 @@ AxisMoved[2] = {}
 -- Declare Debug Mode
 Debug = false
 Debug_Pause = false
+Debug_Pause_Duration = 0
+Pause_dt = 0
 Debug_Speed = 1.0
 
 -- hooks for updating state. free to call from within
@@ -90,10 +92,15 @@ end
 
 -- A primary callback of LÖVE that is called continuously
 function love.update(dt)
+    if Debug_Pause then
+        Pause_dt = dt
+        Debug_Pause_Duration = Debug_Pause_Duration + dt
+        dt = 0
+    else
+        Debug_Pause_Duration = 0
+    end
     if Debug then
-        if Debug_Pause then
-            dt = 0
-        elseif Debug_Speed ~= 1 then
+        if Debug_Speed ~= 1 then
             dt = dt*Debug_Speed
         end
     end
@@ -118,7 +125,7 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    if key == "escape" then
+    if key == "escape" and Debug then
         Debug_Pause = not Debug_Pause
     end
     KeysPressed[key] = true
