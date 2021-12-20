@@ -106,6 +106,7 @@ function love.draw()
     -- 1440/36 = 20 pixels and 960/24 = 20 pixels
     if Debug then
         debugGrid(36, 24)
+        love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
     end
 end
 
