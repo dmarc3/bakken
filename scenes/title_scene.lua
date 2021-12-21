@@ -34,7 +34,7 @@ function titleScene:load()
     local chars = {"drew", "lilah", "sam", "miller", "lilah", "abram"}
     local x = {WindowWidth/GlobalScale*0.1, WindowWidth/GlobalScale*0.25, WindowWidth/GlobalScale*0.4, WindowWidth/GlobalScale*0.55, WindowWidth/GlobalScale*0.75, WindowWidth/GlobalScale*0.9}
     self:loadChars(chars, x)
-    self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
+    self.music = love.audio.newSource("assets/audio/music/title_theme.ogg", "static")
     self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
     self:loadCredits()
     Transition_In = require"scenes/transition_in"
