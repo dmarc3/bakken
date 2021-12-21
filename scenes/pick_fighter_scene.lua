@@ -43,8 +43,10 @@ function pickFighterScene:load(GameState)
     self.selection2_timer = 0
     self.player1 = 1
     self.player2 = 2
-    self.move = false
-    self.move_timer = 0
+    self.move1 = false
+    self.move1_timer = 0
+    self.move2 = false
+    self.move2_timer = 0
     self.delay = true
     self.delay_timer = 0
     self.victory_timer1 = 0
@@ -145,7 +147,7 @@ function pickFighterScene:draw(sx, sy)
 end
 
 function pickFighterScene:drawBackground()
-    love.graphics.setBackgroundColor(0.2, 0.2, 0.2)
+    love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
     love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
     love.graphics.setColor(1, 1, 1, 1)
@@ -230,50 +232,57 @@ function pickFighterScene:updateCharacters(dt)
     self.animations.player2:update(dt)
     self.animations.selection:update(dt)
     if not self.selected1 then
-        if AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] > 0 and not self.move then
+        if AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] > 0 and not self.move1 then
             self.player1 = self:playerIncrement(self.player1, self.player2)
-            self.move = true
-            self.move_timer = 0
-        elseif AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] < 0 and not self.move then
+            self.move1 = true
+            self.move1_timer = 0
+        elseif AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] < 0 and not self.move1 then
             self.player1 = self:playerDecrement(self.player1, self.player2)
-            self.move = true
-            self.move_timer = 0
+            self.move1 = true
+            self.move1_timer = 0
         end
-        if KeysPressed["d"] ~= nil and not self.move then
+        if KeysPressed["d"] ~= nil and not self.move1 then
             self.player1 = self:playerIncrement(self.player1, self.player2)
-            self.move = true
-            self.move_timer = 0
-        elseif KeysPressed["a"] ~= nil and not self.move then
+            self.move1 = true
+            self.move1_timer = 0
+        elseif KeysPressed["a"] ~= nil and not self.move1 then
             self.player1 = self:playerDecrement(self.player1, self.player2)
-            self.move = true
-            self.move_timer = 0
+            self.move1 = true
+            self.move1_timer = 0
         end
     end
     if not self.selected2 then
-        if AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] > 0 and not self.move then
+        if AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] > 0 and not self.move2 then
             self.player2 = self:playerIncrement(self.player2, self.player1)
-            self.move = true
-            self.move_timer = 0
-        elseif AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] < 0 and not self.move then
+            self.move2 = true
+            self.move2_timer = 0
+        elseif AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] < 0 and not self.move2 then
             self.player1 = self:playerDecrement(self.player1, self.player2)
-            self.move = true
-            self.move_timer = 0
+            self.move2 = true
+            self.move2_timer = 0
         end
-        if KeysPressed["kp3"] ~= nil and not self.move then
+        if KeysPressed["kp3"] ~= nil and not self.move2 then
             self.player2 = self:playerIncrement(self.player2, self.player1)
-            self.move = true
-            self.move_timer = 0
-        elseif KeysPressed["kp1"] ~= nil and not self.move then
+            self.move2 = true
+            self.move2_timer = 0
+        elseif KeysPressed["kp1"] ~= nil and not self.move2 then
             self.player2 = self:playerDecrement(self.player2, self.player1)
-            self.move = true
-            self.move_timer = 0
+            self.move2 = true
+            self.move2_timer = 0
         end
     end
-    if self.move then
-        self.move_timer = self.move_timer + dt
-        if self.move_timer > 0.3 then
-            self.move_timer = 0
-            self.move = false
+    if self.move1 then
+        self.move1_timer = self.move1_timer + dt
+        if self.move1_timer > 0.3 then
+            self.move1_timer = 0
+            self.move1 = false
+        end
+    end
+    if self.move2 then
+        self.move2_timer = self.move2_timer + dt
+        if self.move2_timer > 0.3 then
+            self.move2_timer = 0
+            self.move2 = false
         end
     end
     if self.selection1 then

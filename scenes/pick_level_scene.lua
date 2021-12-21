@@ -130,7 +130,7 @@ function pickLevelScene:draw(sx, sy)
 end
 
 function pickLevelScene:drawBackground(sx, sy)
-    love.graphics.setColor(0.1, 0.1, 0.1)
+    love.graphics.setColor(0.05, 0.05, 0.05)
     love.graphics.rectangle("fill", 0, 0, self.level_x-3*0.6*sx, WindowHeight)
     love.graphics.rectangle("fill", WindowWidth - 288 + 3*0.6*sx, 0, 288, WindowHeight)
     love.graphics.setColor(1, 1, 1, 1)
