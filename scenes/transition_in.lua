@@ -28,19 +28,19 @@ function Transition_In:draw()
     end
 end
 
-function Transition_In:update(dt, gameState, music)
+function Transition_In:update(dt, gameState, keepMusic)
     self.transition.inn:update(dt)
     self.transition.bakken:update(dt)
     if self.transition_timer > self.transition_duration then
-        if music and music:isPlaying() then
-            music:stop()
+        if gameState.music and gameState.music:isPlaying() and not keepMusic then
+            gameState.music:stop()
         end
         gameState[self.next_scene](gameState)
         gameState.current:load(gameState)
-    elseif music and music:isPlaying() then
+    elseif gameState.music and gameState.music:isPlaying() and not keepMusic then
         -- fade out music
-        local vol = music:getVolume()
-        music:setVolume(vol - (dt / self.transition_duration))
+        local vol = gameState.music:getVolume()
+        gameState.music:setVolume(vol - (dt / self.transition_duration))
     end
 end
 

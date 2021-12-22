@@ -85,24 +85,18 @@ function fight_scene:load(gameState)
     }
     -- Load music theme
     if gameState.level == "bakke_backyard" then
-        self.music = love.audio.newSource(
-            "assets/audio/music/bakke_theme.ogg", "stream"
-        )
+        gameState:setMusic("assets/audio/music/bakke_theme.ogg")
     elseif gameState.level == "everhart_backyard" then
-        self.music = love.audio.newSource(
-            "assets/audio/music/everhart_theme.ogg", "stream"
-        )
+        gameState:setMusic("assets/audio/music/everhart_theme.ogg")
     elseif gameState.level == "curlew" then
-        self.music = love.audio.newSource(
-            "assets/audio/music/curlew_theme.ogg", "stream"
-        )
+        gameState:setMusic("assets/audio/music/curlew_theme.ogg")
     end
     self.end_timer = 0
 end
   
 
 function fight_scene:update(dt, gameState)
-    utils.pplay(self.music)
+    utils.pplay(gameState.music)
     -- Check victory
     if Level.player1.victory or Level.player2.victory then
         ResetInputs()
