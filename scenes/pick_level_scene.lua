@@ -71,10 +71,6 @@ function pickLevelScene:load(gameState)
             "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
-    -- Load music theme
-    -- self.music = love.audio.newSource(
-    --     "assets/audio/music/selection_theme.ogg", "stream"
-    -- )
     -- Transition loads
     Transition_Out = require"scenes/transition_out"
     Transition_Out:load()
