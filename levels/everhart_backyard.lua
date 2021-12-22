@@ -108,6 +108,7 @@ function Level:incrementTimers(dt)
 end
 
 function Level:draw(x, y, sx, sy)
+    local orig_canvas = love.graphics.getCanvas()
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -116,8 +117,8 @@ function Level:draw(x, y, sx, sy)
     love.graphics.scale(sx, sy)
     self:drawBackground()
     if self.draw_players then
-        self.player1:draw()
-        self.player2:draw()
+        self.player1:draw(0)
+        self.player2:draw(0)
     end
     self:drawForeground()
     love.graphics.pop()
@@ -125,13 +126,14 @@ function Level:draw(x, y, sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     if self.draw_players then
-        self.player1:drawHealthBar()
-        self.player2:drawHealthBar()
+        self.player1:drawHealthBar(0)
+        self.player2:drawHealthBar(0)
     end
     love.graphics.pop()
     -- Draw Canvas
     love.graphics.setCanvas()
     love.graphics.draw(self.canvas, x, y)
+    love.graphics.setCanvas(orig_canvas)
 end
 
 function Level:drawForeground()

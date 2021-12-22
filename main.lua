@@ -5,11 +5,22 @@
 -- of an elite group known as the Full Medical Alchemists. These are their stories.
 
 -- Load Modules / Libraries
+local push = require("3rd/push/push")
+
+love.graphics.setDefaultFilter("nearest", "nearest")
+
+SysWidth, SysHeight = love.window.getDesktopDimensions()
+GlobalScale = SysHeight/160
+local gameWidth, gameHeight = 240*GlobalScale, 160*GlobalScale --fixed game resolution
+
+push:setupScreen(gameWidth, gameHeight, SysWidth, SysHeight, {fullscreen = true})
+push:setBorderColor(0.05, 0.05, 0.05)
+WindowWidth, WindowHeight = push:getWidth(), push:getHeight()
 
 -- Declare Global Parameters Here
-WindowWidth = love.graphics.getWidth()
-WindowHeight = love.graphics.getHeight()
-love.graphics.setDefaultFilter("nearest", "nearest")
+-- WindowWidth = love.graphics.getWidth()
+-- WindowHeight = love.graphics.getHeight()
+
 
 -- Define Local Parameters Here
 local titleScene = require"scenes/title_scene"
@@ -28,7 +39,7 @@ love.window.setIcon(icon)
 local GameState = {
     world = nil,
     current = titleScene,
-    last = titleScene.name,
+    canvas = love.graphics.newCanvas(WindowWidth, WindowHeight),
     scenes = {
         titleScene = titleScene,
         pickFighterScene = pickFighterScene,
@@ -82,7 +93,7 @@ function love.load()
     love.graphics.clear()
     love.graphics.setColor(1, 1, 1, 1)
     -- Gamestate and scene handling
-    GameState.current:load()
+    GameState.current:load(GameState)
     -- GameState.scenes.titleScene:load()
     -- GameState.scenes.pickFighterScene:load()
    --[[  for _, scene in pairs(GameState.scenes) do
@@ -114,6 +125,9 @@ end
 
 -- A primary callback of LÖVE that is called continuously
 function love.draw()
+    push:start()
+    love.graphics.setCanvas(GameState.canvas)
+    love.graphics.clear()
     GameState.current:draw(GameState.sx, GameState.sy)
     -- Only for debugging
     -- With (36, 24) grids are 20 pixels by 20 pixels
@@ -123,6 +137,13 @@ function love.draw()
         debugGrid(36, 24)
         love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
     end
+    love.graphics.setCanvas()
+    love.graphics.draw(GameState.canvas, (SysWidth-WindowWidth)/2, 0)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.rectangle("fill", 0, 0, (SysWidth-WindowWidth)/2, SysHeight)
+    love.graphics.rectangle("fill", SysWidth - (SysWidth-WindowWidth)/2, 0, (SysWidth-WindowWidth)/2, SysHeight)
+    love.graphics.setColor(1, 1, 1, 1)
+    push:finish()
 end
 
 function love.keypressed(key)

@@ -3,8 +3,9 @@ local scene = require"scene"
 
 local titleScene = scene:new("titleScene")
 
-function titleScene:load()
+function titleScene:load(gameState)
     -- print("Loading titleScene")
+    self.game_canvas = gameState.canvas
     love.graphics.clear()
     self.BG_SpriteSheet = love.graphics.newImage("assets/ui/title_screen.png")
     self.BG_SpriteSheetMeta = "assets/ui/title_screen.json"
@@ -266,7 +267,6 @@ end
 function titleScene:draw(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    love.graphics.setBackgroundColor(0.05, 0.05, 0.05, 1.0)
     self:drawCredits()
     self:drawLightning()
     self.title.image:draw(self.title.x, -WindowHeight/GlobalScale*0.1)

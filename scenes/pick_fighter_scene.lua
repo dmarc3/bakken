@@ -7,8 +7,9 @@ local pickFighterScene = scene:new("pickFigherScene")
 P1 = "drew"
 P2 = "lilah"
 
-function pickFighterScene:load(GameState)
+function pickFighterScene:load(gameState)
     -- print("Loading pickFighterScene")
+    self.game_canvas = gameState.canvas
     self.chars = {"drew", "lilah", "sam", "miller", "abram", "drew"}
     self.chars_xspacing = {12, 21, 21, 15, 27, 12}
     self.animations = {}
@@ -102,26 +103,26 @@ function pickFighterScene:load(GameState)
     ResetInputs()
 end
 
-function pickFighterScene:update(dt, GameState)
+function pickFighterScene:update(dt, gameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
     self:processDelay()
     self:updateCharacters(dt)
     if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
         self.sfx.accept_all:play()
-        GameState.player1 = self.chars[self.player1]
-        GameState.player2 = self.chars[self.player2]
-        -- GameState.player1 = "drew"
-        -- GameState.player2 = "lilah"
+        gameState.player1 = self.chars[self.player1]
+        gameState.player2 = self.chars[self.player2]
+        -- gameState.player1 = "drew"
+        -- gameState.player2 = "lilah"
         Transition_In.transition_in = true
-        -- GameState.scenes.pickLevelScene:load(GameState)
-        -- GameState:setPickLevelScene()
+        -- gameState.scenes.pickLevelScene:load(gameState)
+        -- gameState:setPickLevelScene()
     end
     self:incrementTimers(dt)
     if Transition_Out.transition_out then
         Transition_Out:update(dt)
     end
     if Transition_In.transition_in then
-        Transition_In:update(dt, GameState, nil)
+        Transition_In:update(dt, gameState, nil)
     end
 end
 
@@ -147,7 +148,6 @@ function pickFighterScene:draw(sx, sy)
 end
 
 function pickFighterScene:drawBackground()
-    love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
     love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
     love.graphics.setColor(1, 1, 1, 1)

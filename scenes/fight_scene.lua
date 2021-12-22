@@ -12,18 +12,17 @@ local fight_scene = scene:new("fight")
 -- Friction = 5
 -- love.physics.setMeter(Meter)
 
-function fight_scene:load(GameState)
+function fight_scene:load(gameState)
     -- World = love.physics.newWorld(0, Meter*Gravity, false)
     -- World:setCallbacks(beginContact, endContact)
 
     -- Load canvas
+    self.game_canvas = gameState.canvas
     self.canvas = love.graphics.newCanvas(WindowWidth, WindowHeight)
-    self.canvas1 = love.graphics.newCanvas(WindowWidth, WindowHeight)
-    self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
 
     -- Import level
-    Level = require("levels/"..GameState.level)
-    Level:load(GameState.player1, GameState.player2, self.canvas, true, true)
+    Level = require("levels/"..gameState.level)
+    Level:load(gameState.player1, gameState.player2, self.canvas, true, true)
 
     -- Import fight ui
     local spritesheet = love.graphics.newImage("assets/ui/fight.png")
@@ -46,8 +45,8 @@ function fight_scene:load(GameState)
     local spritesheet = love.graphics.newImage("assets/ui/names.png")
     local asepriteMeta = "assets/ui/names.json"
     Names = {}
-    Names.player1 = peachy.new(asepriteMeta, spritesheet, GameState.player1)
-    Names.player2 = peachy.new(asepriteMeta, spritesheet, GameState.player2)
+    Names.player1 = peachy.new(asepriteMeta, spritesheet, gameState.player1)
+    Names.player2 = peachy.new(asepriteMeta, spritesheet, gameState.player2)
     Names.wins = peachy.new(asepriteMeta, spritesheet, "wins")
     -- Transition loads
     Transition_Out = require"scenes/transition_out"
@@ -88,7 +87,7 @@ function fight_scene:load(GameState)
 end
   
 
-function fight_scene:update(dt, GameState)
+function fight_scene:update(dt, gameState)
     -- Check victory
     if Level.player1.victory or Level.player2.victory then
         ResetInputs()
@@ -112,7 +111,7 @@ function fight_scene:update(dt, GameState)
     end
     if Transition_In ~= nil then
         if Transition_In.transition_in == true then
-            Transition_In:update(math.max(dt, Pause_dt), GameState, nil)
+            Transition_In:update(math.max(dt, Pause_dt), gameState, nil)
         end
     end
     if Level.complete and self.end_timer > 7.0 and Transition_In == nil then
@@ -154,7 +153,7 @@ function fight_scene:resetFighters(dt)
 end
 
 function fight_scene:draw(sx, sy)
-    Level:draw(0, 0, sx, sy)
+    Level:draw((SysWidth-WindowWidth)/2, 0, sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawFight()

@@ -244,9 +244,9 @@ function Player:load()
     self.xoverride = false
 end
 
-function Player:draw()
+function Player:draw(x)
     if self.animationName == "a1" then
-        self.animation[self.animationName]:draw(self.original_x,
+        self.animation[self.animationName]:draw(self.original_x+x,
                                                 self.y,
                                                 0,
                                                 self.xDir,
@@ -255,7 +255,7 @@ function Player:draw()
                                                 self.animation[self.animationName]:getHeight()-self.yorigin)
         -- self.animation[self.animationName]:getHeight()/2)
     else
-        self.animation[self.animationName]:draw(self.x,
+        self.animation[self.animationName]:draw(self.x+x,
                                                 self.y,
                                                 0,
                                                 self.xDir,
@@ -268,9 +268,9 @@ function Player:draw()
     -- end
 end
 
-function Player:drawHealthBar()
-    self.hb_animation:draw(self.hb_x, self.hb_y)
-    self.hb_lives_animation:draw(self.hb_x, self.hb_y)
+function Player:drawHealthBar(x)
+    self.hb_animation:draw(self.hb_x + x, self.hb_y)
+    self.hb_lives_animation:draw(self.hb_x + x, self.hb_y)
 end
 
 function Player:setState()

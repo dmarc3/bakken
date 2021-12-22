@@ -10,11 +10,12 @@ Meter = 64
 Friction = 5
 love.physics.setMeter(Meter)
 
-function pickLevelScene:load(GameState)
+function pickLevelScene:load(gameState)
     -- print("Loading pickLevelScene")
+    self.game_canvas = gameState.canvas
     World = love.physics.newWorld(0, Meter*Gravity, false)
     World:setCallbacks(beginContact, endContact)
-    GameState.world = World
+    gameState.world = World
 
     self.levels = {"bakke_backyard", "everhart_backyard", "curlew"}
     self.level = 1
@@ -24,11 +25,11 @@ function pickLevelScene:load(GameState)
     -- Import level
     Levels = {}
     Levels[1] = require("levels/"..self.levels[1])
-    Levels[1]:load(GameState.player1, GameState.player2, self.canvas, false, false)
+    Levels[1]:load(gameState.player1, gameState.player2, self.canvas, false, false)
     Levels[2] = require("levels/"..self.levels[2])
-    Levels[2]:load(GameState.player1, GameState.player2, self.canvas, false, false)
+    Levels[2]:load(gameState.player1, gameState.player2, self.canvas, false, false)
     Levels[3] = require("levels/"..self.levels[3])
-    Levels[3]:load(GameState.player1, GameState.player2, self.canvas, false, false)
+    Levels[3]:load(gameState.player1, gameState.player2, self.canvas, false, false)
 
     self.y = {170, 185, 200}
     self.animations = {}
@@ -85,31 +86,31 @@ function pickLevelScene:load(GameState)
     ResetInputs()
 end
 
-function pickLevelScene:update(dt, GameState)
+function pickLevelScene:update(dt, gameState)
     self:processDelay()
     self:updateLevel(dt)
     if KeysPressed["return"] == true then
         self.sfx.accept_all:play()
         -- self:deleteBodies()
-        GameState.level = self.levels[self.level]
+        gameState.level = self.levels[self.level]
         Transition_In.transition_in = true
-        -- GameState.scenes.fightScene:load(GameState)
-        -- GameState:setFightScene()
+        -- gameState.scenes.fightScene:load(gameState)
+        -- gameState:setFightScene()
     end
     if ButtonsPressed[1]["start"] == true then
         self.sfx.accept_all:play()
         -- self:deleteBodies()
-        GameState.level = self.levels[self.level]
+        gameState.level = self.levels[self.level]
         Transition_In.transition_in = true
-        -- GameState.scenes.fightScene:load(GameState)
-        -- GameState:setFightScene()
+        -- gameState.scenes.fightScene:load(gameState)
+        -- gameState:setFightScene()
     end
     self:incrementTimers(dt)
     if Transition_Out.transition_out then
         Transition_Out:update(dt)
     end
     if Transition_In.transition_in then
-        Transition_In:update(dt, GameState, nil)
+        Transition_In:update(dt, gameState, nil)
     end
 end
 
@@ -131,8 +132,8 @@ end
 
 function pickLevelScene:drawBackground(sx, sy)
     love.graphics.setColor(0.05, 0.05, 0.05)
-    love.graphics.rectangle("fill", 0, 0, self.level_x-3*0.6*sx, WindowHeight)
-    love.graphics.rectangle("fill", WindowWidth - 288 + 3*0.6*sx, 0, 288, WindowHeight)
+    love.graphics.rectangle("fill", 0, 0, WindowWidth/2 - 0.6*sx*self.level_border:getWidth()/2, WindowHeight)
+    love.graphics.rectangle("fill", WindowWidth/2 + 0.6*sx*self.level_border:getWidth()/2, 0, WindowWidth/2 + 0.6*sx*self.level_border:getWidth()/2, WindowHeight)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.push()
     love.graphics.scale(3*sx/4, 3*sy/4)
@@ -144,12 +145,11 @@ function pickLevelScene:drawBackground(sx, sy)
         end
     end
     love.graphics.pop()
-    love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
 end
 
 function pickLevelScene:drawLevel(sx, sy)
     local sf = 0.6
-    Levels[self.level]:draw(self.level_x, self.level_y, sf*sx, sf*sy)
+    Levels[self.level]:draw(self.level_x + (SysWidth-WindowWidth)/2, self.level_y, sf*sx, sf*sy)
     self.level_border:draw(self.level_x-3*sf*sx, self.level_y-3*sf*sy, 0, sf*sx, sf*sy)
 end
 
