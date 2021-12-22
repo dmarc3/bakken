@@ -65,23 +65,12 @@ function Player:new(id, char, x, y)
     instance.block_start = instance.charsheet.block_start
     instance.block = instance.charsheet.block
     instance.block_end = instance.charsheet.block_end
-    -- sfx
+    -- Load sound effects
     local sfx_pitch = instance.charsheet.sfx_pitch
     instance.sfx = {
-        -- below represents a matrix of attack_1 sounds, `attack_1_vX_pY.ogg`
-        -- X is one of two variations, to mix things up
-        -- Y (sfx_pitch) is one of 10 pitches for each X, matching a given character
-        -- below is a vector slice of that matrix for that character
-        -- NOTE: Since these aren't statically defined, they won't work
-        -- if this game is converted to a HTML game with love.js or similar
-        attack_1 = {
-            love.audio.newSource(
-                "assets/audio/sfx/attack/attack_1_v1_p" .. sfx_pitch .. ".ogg", "static"
-            ),
-            love.audio.newSource(
-                "assets/audio/sfx/attack/attack_1_v2_p" .. sfx_pitch .. ".ogg", "static"
-            ),
-        },
+        attack_1 = love.audio.newSource(
+                "assets/audio/sfx/attack/attack_1_p" .. sfx_pitch .. ".ogg", "static"
+        ),
         block = love.audio.newSource(
             "assets/audio/sfx/block/block_p" .. sfx_pitch .. ".ogg", "static"
         ),
@@ -95,8 +84,6 @@ function Player:new(id, char, x, y)
             "assets/audio/sfx/kneel/kneel_breath_p" .. sfx_pitch .. ".ogg", "static"
         )
     }
-    instance.sfx_attack_variation = 1  -- start with attack_1_v1
-
 
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
@@ -835,10 +822,7 @@ end
 
 function Player:trigger_sfx(sfx_type)
     if sfx_type == "attack_1" then
-        if not self.sfx.attack_1[self.sfx_attack_variation]:isPlaying() then
-            self.sfx_attack_variation = math.random(1, 2)
-            self.sfx.attack_1[self.sfx_attack_variation]:play()
-        end
+        utils.pplay(self.sfx.attack_1)
     elseif sfx_type == "block" then
         if not self.blocking then
             utils.pplay(self.sfx.block)
