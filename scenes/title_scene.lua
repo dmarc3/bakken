@@ -35,7 +35,7 @@ function titleScene:load(gameState)
     local chars = {"drew", "lilah", "sam", "miller", "lilah", "abram"}
     local x = {WindowWidth/GlobalScale*0.1, WindowWidth/GlobalScale*0.25, WindowWidth/GlobalScale*0.4, WindowWidth/GlobalScale*0.55, WindowWidth/GlobalScale*0.75, WindowWidth/GlobalScale*0.9}
     self:loadChars(chars, x)
-    self.music = love.audio.newSource("assets/audio/music/title_theme.ogg", "static")
+    gameState:setMusic("assets/audio/music/title_theme.ogg")
     self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
     self:loadCredits()
     Transition_In = require"scenes/transition_in"
@@ -123,8 +123,10 @@ end
 
 function titleScene:update(dt, gameState)
     self:updateCredits(dt)
-    if self.title.x == 0 and not self.music:isPlaying() and self.credit_timer >= self.credit_delay then
-        self.music:play()
+    if self.title.x == 0
+            and not gameState.music:isPlaying()
+            and self.credit_timer >= self.credit_delay then
+        gameState.music:play()
     end
     if not self.interact then
         ResetInputs()
@@ -149,7 +151,7 @@ function titleScene:update(dt, gameState)
     end
     self:incrementTimers(dt)
     if Transition_In.transition_in then
-        Transition_In:update(dt, gameState, self.music)
+        Transition_In:update(dt, gameState)
     end
 end
 

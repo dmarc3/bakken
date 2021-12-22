@@ -52,7 +52,7 @@ function pickFighterScene:load(gameState)
     self.delay_timer = 0
     self.victory_timer1 = 0
     self.victory_timer2 = 0
-    -- load sfx
+    -- Load sound effects
     self.sfx = {
         change_sel = love.audio.newSource(
             "assets/audio/sfx/ui/change_selection.ogg", "static"
@@ -72,6 +72,8 @@ function pickFighterScene:load(gameState)
             "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
+    -- Load music theme
+    gameState:setMusic("assets/audio/music/selection_theme.ogg")
     -- Import player names
     local spritesheet = love.graphics.newImage("assets/ui/names.png")
     local asepriteMeta = "assets/ui/names.json"
@@ -105,6 +107,11 @@ end
 
 function pickFighterScene:update(dt, gameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
+    -- hacky fix for music not playing when coming to pick fighter from pause menu
+    if not gameState.music:isPlaying() then
+        gameState:setMusic("assets/audio/music/selection_theme.ogg")
+        gameState.music:play()
+    end
     self:processDelay()
     self:updateCharacters(dt)
     -- player1 press enter/start once characters are selected to change to next scene
@@ -121,7 +128,7 @@ function pickFighterScene:update(dt, gameState)
         Transition_Out:update(dt)
     end
     if Transition_In.transition_in then
-        Transition_In:update(dt, gameState, nil)
+        Transition_In:update(dt, gameState, true)
     end
 end
 
