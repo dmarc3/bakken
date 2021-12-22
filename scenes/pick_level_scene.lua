@@ -91,19 +91,13 @@ function pickLevelScene:update(dt, gameState)
     self:updateLevel(dt)
     if KeysPressed["return"] == true then
         self.sfx.accept_all:play()
-        -- self:deleteBodies()
         gameState.level = self.levels[self.level]
         Transition_In.transition_in = true
-        -- gameState.scenes.fightScene:load(gameState)
-        -- gameState:setFightScene()
     end
     if ButtonsPressed[1]["start"] == true then
         self.sfx.accept_all:play()
-        -- self:deleteBodies()
         gameState.level = self.levels[self.level]
         Transition_In.transition_in = true
-        -- gameState.scenes.fightScene:load(gameState)
-        -- gameState:setFightScene()
     end
     self:incrementTimers(dt)
     if Transition_Out.transition_out then
@@ -154,25 +148,11 @@ function pickLevelScene:drawLevel(sx, sy)
 end
 
 function pickLevelScene:updateLevel(dt)
-    if KeysPressed["s"] and not self.move then
-        self.level = self.level + 1
-        if self.level > 3 then
-            self.sfx.invalid_sel:play()
-            self.level = 3
-        else
-            utils.snplay(self.sfx.change_sel)
-            self.move = true
-        end
+    if (KeysPressed["s"] or (AxisMoved[1]["lefty"] ~= nil and AxisMoved[1]["lefty"] > 0) or ButtonsPressed[1]['dpdown']) and not self.move then
+        self:levelDecrement()
     end
-    if KeysPressed["w"] and not self.move then
-        self.level = self.level - 1
-        if self.level == 0 then
-            self.sfx.invalid_sel:play()
-            self.level = 1
-        else
-            utils.snplay(self.sfx.change_sel)
-            self.move = true
-        end
+    if (KeysPressed["w"] or (AxisMoved[1]["lefty"] ~= nil and AxisMoved[1]["lefty"] < 0) or ButtonsPressed[1]['dpup']) and not self.move then
+        self:levelIncrement()
     end
     for i, level in pairs(self.levels) do
         self.animations[level].not_selected:update(dt)
@@ -185,6 +165,28 @@ function pickLevelScene:updateLevel(dt)
             self.move_timer = 0
             self.move = false
         end
+    end
+end
+
+function pickLevelScene:levelIncrement()
+    self.level = self.level - 1
+    if self.level == 0 then
+        self.sfx.invalid_sel:play()
+        self.level = 1
+    else
+        utils.snplay(self.sfx.change_sel)
+        self.move = true
+    end
+end
+
+function pickLevelScene:levelDecrement()
+    self.level = self.level + 1
+    if self.level > 3 then
+        self.sfx.invalid_sel:play()
+        self.level = 3
+    else
+        utils.snplay(self.sfx.change_sel)
+        self.move = true
     end
 end
 
@@ -209,13 +211,6 @@ function pickLevelScene:processDelay()
     if self.delay then
         self.selected = false
         ResetInputs()
-    end
-end
-
-function pickLevelScene:deleteBodies()
-    local bodies = World:getBodies()
-    for j, wbody in pairs(bodies) do
-        wbody:destroy()
     end
 end
 

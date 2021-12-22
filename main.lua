@@ -94,11 +94,6 @@ function love.load()
     love.graphics.setColor(1, 1, 1, 1)
     -- Gamestate and scene handling
     GameState.current:load(GameState)
-    -- GameState.scenes.titleScene:load()
-    -- GameState.scenes.pickFighterScene:load()
-   --[[  for _, scene in pairs(GameState.scenes) do
-        scene:load()
-    end ]]
 end
 
 -- A primary callback of LÖVE that is called continuously
@@ -115,11 +110,7 @@ function love.update(dt)
             dt = dt*Debug_Speed
         end
     end
-    -- if GameState.current.name ~= GameState.last then
-    --     GameState.last = GameState.current.name
-    --     print("loading from main")
-    --     GameState.current:load(GameState)
-    -- end
+    CheckKeys(dt)
     GameState.current:update(dt, GameState)
 end
 
@@ -206,4 +197,17 @@ function drawPhysicsBodies()
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.pop()
     end
+end
+
+function CheckKeys(dt)
+    local function pconcat(tab)
+        local keyset={}
+        local n=0
+        for k,v in pairs(tab) do
+            n=n+1
+            keyset[n]=k
+        end
+        return table.concat(keyset, " ")
+    end
+    -- print(pconcat(ButtonsPressed[1]))
 end
