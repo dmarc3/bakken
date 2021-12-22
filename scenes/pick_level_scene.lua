@@ -94,7 +94,7 @@ function pickLevelScene:update(dt, gameState)
         gameState.level = self.levels[self.level]
         Transition_In.transition_in = true
     end
-    if ButtonsPressed[1]["start"] == true then
+    if ButtonsPressed[1]["start"] == true or ButtonsPressed[1]["a"] == true then
         self.sfx.accept_all:play()
         gameState.level = self.levels[self.level]
         Transition_In.transition_in = true

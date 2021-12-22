@@ -110,7 +110,6 @@ function love.update(dt)
             dt = dt*Debug_Speed
         end
     end
-    CheckKeys(dt)
     GameState.current:update(dt, GameState)
 end
 
@@ -199,15 +198,15 @@ function drawPhysicsBodies()
     end
 end
 
-function CheckKeys(dt)
-    local function pconcat(tab)
-        local keyset={}
-        local n=0
-        for k,v in pairs(tab) do
-            n=n+1
-            keyset[n]=k
-        end
-        return table.concat(keyset, " ")
-    end
-    -- print(pconcat(ButtonsPressed[1]))
-end
+-- function CheckKeys(dt)
+--     local function pconcat(tab)
+--         local keyset={}
+--         local n=0
+--         for k,v in pairs(tab) do
+--             n=n+1
+--             keyset[n]=k
+--         end
+--         return table.concat(keyset, " ")
+--     end
+--     -- print(pconcat(ButtonsPressed[1]))
+-- end

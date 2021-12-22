@@ -133,7 +133,7 @@ function pickFighterScene:draw(sx, sy)
     self:drawStage(1)
     self:drawCharacters()
     self:drawStage(2)
-    love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
+    love.graphics.setColor(0.2, 0.2, 0.2, 1.0)
     love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, 20)
     love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
     self.banner:draw(WindowWidth/GlobalScale*0.5 - self.banner:getWidth()/2, 5)
@@ -147,7 +147,7 @@ function pickFighterScene:draw(sx, sy)
 end
 
 function pickFighterScene:drawBackground()
-    love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
+    love.graphics.setColor(0.2, 0.2, 0.2, 1.0)
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
     love.graphics.setColor(1, 1, 1, 1)
 end
