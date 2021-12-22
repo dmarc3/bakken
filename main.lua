@@ -6,10 +6,23 @@
 
 -- Load Modules / Libraries
 
+--Record the screen dimensions
+love.window.setMode(0, 0)
+local screen_width = love.graphics.getWidth()
+local screen_height = love.graphics.getHeight()
+
+GlobalScale = screen_height/160.0
+love.window.setMode(240*GlobalScale, 160*GlobalScale, {fullscreen=true, centered=true})
+local screen_pad_x = (screen_width - 240*GlobalScale)/2
+
 -- Declare Global Parameters Here
 WindowWidth = love.graphics.getWidth()
 WindowHeight = love.graphics.getHeight()
+AdjustedWindowWidth = 240*GlobalScale
 love.graphics.setDefaultFilter("nearest", "nearest")
+
+-- --Continue as normal
+-- love.graphics.setMode(whatever, whatever, ...)
 
 -- Define Local Parameters Here
 local titleScene = require"scenes/title_scene"
@@ -28,7 +41,8 @@ love.window.setIcon(icon)
 local GameState = {
     world = nil,
     current = titleScene,
-    last = titleScene.name,
+    canvas = love.graphics.newCanvas(240*GlobalScale, 160*GlobalScale),
+    screen_pad_x = screen_pad_x,
     scenes = {
         titleScene = titleScene,
         pickFighterScene = pickFighterScene,
@@ -52,7 +66,7 @@ AxisMoved[1] = {}
 AxisMoved[2] = {}
 
 -- Declare Debug Mode
-Debug = false
+Debug = true
 Debug_Pause = false
 Debug_Pause_Duration = 0
 Pause_dt = 0
@@ -114,7 +128,16 @@ end
 
 -- A primary callback of LÖVE that is called continuously
 function love.draw()
+    love.graphics.setCanvas(GameState.canvas)
+    love.graphics.clear()
     GameState.current:draw(GameState.sx, GameState.sy)
+    love.graphics.setCanvas()
+    love.graphics.draw(GameState.canvas, screen_pad_x, 0)
+    -- Draw "Wide Screen" boxes
+    love.graphics.setColor(1.0, 0.0, 0.0, 0.2)
+    love.graphics.rectangle("fill", 0, 0, screen_pad_x, WindowHeight)
+    love.graphics.rectangle("fill", WindowWidth-screen_pad_x, 0, screen_pad_x, WindowHeight)
+    love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
     -- Only for debugging
     -- With (36, 24) grids are 20 pixels by 20 pixels
     -- 1440/36 = 20 pixels and 960/24 = 20 pixels

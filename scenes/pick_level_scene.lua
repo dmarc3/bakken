@@ -18,17 +18,20 @@ function pickLevelScene:load(GameState)
 
     self.levels = {"bakke_backyard", "everhart_backyard", "curlew"}
     self.level = 1
-    self.level_x = 0.2*WindowWidth
+    self.level_sf = 0.6
+    self.level_x = 0.5*WindowWidth - AdjustedWindowWidth*0.6/2
     self.level_y = 0.15*WindowHeight
-    self.canvas = love.graphics.newCanvas(WindowWidth, WindowHeight)
+    self.pad_x = GameState.screen_pad_x
+    self.canvas = love.graphics.newCanvas(AdjustedWindowWidth, WindowHeight)
+
     -- Import level
     Levels = {}
     Levels[1] = require("levels/"..self.levels[1])
-    Levels[1]:load(GameState.player1, GameState.player2, self.canvas, false, false)
+    Levels[1]:load(GameState.screen_pad_x/GlobalScale, GameState.player1, GameState.player2, self.canvas, false, false)
     Levels[2] = require("levels/"..self.levels[2])
-    Levels[2]:load(GameState.player1, GameState.player2, self.canvas, false, false)
+    Levels[2]:load(GameState.screen_pad_x/GlobalScale, GameState.player1, GameState.player2, self.canvas, false, false)
     Levels[3] = require("levels/"..self.levels[3])
-    Levels[3]:load(GameState.player1, GameState.player2, self.canvas, false, false)
+    Levels[3]:load(GameState.screen_pad_x/GlobalScale, GameState.player1, GameState.player2, self.canvas, false, false)
 
     self.y = {170, 185, 200}
     self.animations = {}
@@ -119,7 +122,7 @@ function pickLevelScene:draw(sx, sy)
     self:drawBackground(sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
-    self.banner:draw(WindowWidth/GlobalScale*0.55 - self.banner:getWidth()/2, 5)
+    self.banner:draw(AdjustedWindowWidth/GlobalScale*0.55 - self.banner:getWidth()/2, 5)
     if Transition_Out.transition_out then
         Transition_Out:draw()
     end
@@ -131,26 +134,25 @@ end
 
 function pickLevelScene:drawBackground(sx, sy)
     love.graphics.setColor(0.05, 0.05, 0.05)
-    love.graphics.rectangle("fill", 0, 0, self.level_x-3*0.6*sx, WindowHeight)
-    love.graphics.rectangle("fill", WindowWidth - 288 + 3*0.6*sx, 0, 288, WindowHeight)
+    love.graphics.rectangle("fill", 0, 0, AdjustedWindowWidth*(1-self.level_sf)/2 -3*0.6*sx, WindowHeight)
+    love.graphics.rectangle("fill", AdjustedWindowWidth - AdjustedWindowWidth*(1-self.level_sf)/2 + 3*0.6*sx, 0, AdjustedWindowWidth*(1-self.level_sf)/2 -3*0.6*sx, WindowHeight)
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.push()
     love.graphics.scale(3*sx/4, 3*sy/4)
     for i, level in pairs(self.levels) do
         if self.level == i then
-            self.animations[level].selected:draw(0.5*WindowWidth/GlobalScale, self.y[i], 0, 0.8, 0.8)
+            self.animations[level].selected:draw(0.5*AdjustedWindowWidth/GlobalScale, self.y[i], 0, 0.8, 0.8)
         else
-            self.animations[level].not_selected:draw(0.5*WindowWidth/GlobalScale, self.y[i], 0, 0.8, 0.8)
+            self.animations[level].not_selected:draw(0.5*AdjustedWindowWidth/GlobalScale, self.y[i], 0, 0.8, 0.8)
         end
     end
     love.graphics.pop()
-    love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
+    love.graphics.setBackgroundColor(0.05, 0.05, 0.05)
 end
 
 function pickLevelScene:drawLevel(sx, sy)
-    local sf = 0.6
-    Levels[self.level]:draw(self.level_x, self.level_y, sf*sx, sf*sy)
-    self.level_border:draw(self.level_x-3*sf*sx, self.level_y-3*sf*sy, 0, sf*sx, sf*sy)
+    Levels[self.level]:draw(self.level_x, self.level_y, self.level_sf*sx, self.level_sf*sy)
+    self.level_border:draw(0.5*AdjustedWindowWidth, self.level_y-3*self.level_sf*sy, 0, self.level_sf*sx, self.level_sf*sy, self.level_border:getWidth()/2, 0)
 end
 
 function pickLevelScene:updateLevel(dt)

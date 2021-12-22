@@ -4,16 +4,17 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas, draw_players, with_physics)
+function Level:load(pad_x, player1, player2, canvas, draw_players, with_physics)
     self.name = "bakke_backyard"
     self.canvas = canvas
     self.complete = false
+    self.pad_x = pad_x
     -- Create self.Ground and Walls
     self.Ground = {}
     if with_physics then
-        self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+        self.Ground.body = love.physics.newBody(World, pad_x + AdjustedWindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
         self.Ground.body:setUserData("ground")
-        self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
+        self.Ground.shape = love.physics.newRectangleShape(AdjustedWindowWidth/GlobalScale, 20)
         self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
         self.Ground.fixture:setFriction(Friction)
         self.Ground.fixture:setUserData("ground")
@@ -23,12 +24,12 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     Walls.left = {}
     Walls.right = {}
     if with_physics then
-        Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+        Walls.left.body = love.physics.newBody(World, pad_x - 10, WindowHeight/GlobalScale/2, "static")
         Walls.left.body:setUserData("wall")
         Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
         Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
         Walls.left.fixture:setUserData("wall")
-        Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+        Walls.right.body = love.physics.newBody(World, pad_x + AdjustedWindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
         Walls.right.body:setUserData("wall")
         Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
         Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
@@ -36,18 +37,18 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     end
     Toys = {}
     if with_physics then
-        Toys.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.765, WindowHeight/GlobalScale*0.68, "static")
+        Toys.body = love.physics.newBody(World, pad_x + AdjustedWindowWidth/GlobalScale*0.765, WindowHeight/GlobalScale*0.68, "static")
         Toys.body:setUserData("obstacle")
-        Toys.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
+        Toys.shape = love.physics.newRectangleShape(AdjustedWindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
         Toys.fixture = love.physics.newFixture(Toys.body, Toys.shape)
         Toys.fixture:setFriction(Friction)
         Toys.fixture:setUserData("obstacle")
     end
     Roof = {}
     if with_physics then
-        Roof.body = love.physics.newBody(World, WindowWidth/GlobalScale*0.797, WindowHeight/GlobalScale*0.455, "static")
+        Roof.body = love.physics.newBody(World, pad_x + AdjustedWindowWidth/GlobalScale*0.797, WindowHeight/GlobalScale*0.455, "static")
         Roof.body:setUserData("obstacle")
-        Roof.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.11)
+        Roof.shape = love.physics.newRectangleShape(AdjustedWindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.11)
         Roof.fixture = love.physics.newFixture(Roof.body, Roof.shape)
         Roof.fixture:setFriction(Friction)
         Roof.fixture:setUserData("obstacle")
@@ -71,9 +72,9 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.Backyard.bird1 = peachy.new(asepriteMeta, spritesheet, "bird")
     self.Backyard.bird2 = peachy.new(asepriteMeta, spritesheet, "bird")
     -- Define Constants
-    self.x1 = WindowWidth/GlobalScale*0.2
+    self.x1 = AdjustedWindowWidth/GlobalScale*0.2
     self.y1 = WindowHeight/GlobalScale*0.8
-    self.x2 = WindowWidth/GlobalScale*0.8
+    self.x2 = AdjustedWindowWidth/GlobalScale*0.9
     self.y2 = WindowHeight/GlobalScale*0.8
     self.cloudx = 0
     self.birdx = 100
@@ -81,9 +82,9 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     -- Load players
     self.draw_players = draw_players
     if self.draw_players then
-        self.player1 = player:new(1, player1, Level.x1, Level.y1)
+        self.player1 = player:new(1, player1, Level.x1, Level.y1, 0)
         self.player1:load()
-        self.player2 = player:new(2, player2, Level.x2, Level.y2)
+        self.player2 = player:new(2, player2, Level.x2, Level.y2, 0)
         self.player2:load()
     end
 end
@@ -121,6 +122,7 @@ end
 
 function Level:draw(x, y, sx, sy)
     -- Activate Canvas
+    local orig_canvas = love.graphics.getCanvas()
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
     -- Draw background to have shader applied to it
@@ -128,8 +130,8 @@ function Level:draw(x, y, sx, sy)
     love.graphics.scale(sx, sy)
     self:drawBackground()
     if self.draw_players then
-        self.player1:draw()
-        self.player2:draw()
+        self.player1:draw(x)
+        self.player2:draw(x)
     end
     self:drawForeground()
     love.graphics.pop()
@@ -144,6 +146,7 @@ function Level:draw(x, y, sx, sy)
     -- Draw Canvas
     love.graphics.setCanvas()
     love.graphics.draw(self.canvas, x, y)
+    love.graphics.setCanvas(orig_canvas)
 end
 
 function Level:drawForeground()

@@ -17,13 +17,12 @@ function fight_scene:load(GameState)
     -- World:setCallbacks(beginContact, endContact)
 
     -- Load canvas
-    self.canvas = love.graphics.newCanvas(WindowWidth, WindowHeight)
-    self.canvas1 = love.graphics.newCanvas(WindowWidth, WindowHeight)
-    self.canvas2 = love.graphics.newCanvas(WindowWidth, WindowHeight)
+    self.canvas = love.graphics.newCanvas(AdjustedWindowWidth, WindowHeight)
+    self.pad_x = GameState.screen_pad_x
 
     -- Import level
     Level = require("levels/"..GameState.level)
-    Level:load(GameState.player1, GameState.player2, self.canvas, true, true)
+    Level:load(self.pad_x/GlobalScale, GameState.player1, GameState.player2, self.canvas, true, true)
 
     -- Import fight ui
     local spritesheet = love.graphics.newImage("assets/ui/fight.png")
@@ -154,7 +153,7 @@ function fight_scene:resetFighters(dt)
 end
 
 function fight_scene:draw(sx, sy)
-    Level:draw(0, 0, sx, sy)
+    Level:draw(self.pad_x, 0, sx, sy)
     love.graphics.push()
     love.graphics.scale(sx, sy)
     self:drawFight()
@@ -195,7 +194,7 @@ end
 function fight_scene:updateFight(dt)
     Fight.kabam:update(dt)
     if self.fight_timer < self.fight_duration then
-        -- Fight.x = Fight.x - 3*(WindowWidth/GlobalScale/self.fight_duration)*dt/4
+        -- Fight.x = Fight.x - 3*(AdjustedWindowWidth/GlobalScale/self.fight_duration)*dt/4
         Fight.y = Fight.y - 3*(WindowHeight/GlobalScale/self.fight_duration)*dt/4
     end
 end
@@ -216,39 +215,39 @@ end
 
 function fight_scene:drawPause()
     love.graphics.setColor(0, 0, 0, 0.5)
-    love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, WindowHeight/GlobalScale)
+    love.graphics.rectangle("fill", 0, 0, AdjustedWindowWidth/GlobalScale, WindowHeight/GlobalScale)
     love.graphics.setColor(1, 1, 1, 1)
-    self.pause_box:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2)
+    self.pause_box:draw(AdjustedWindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2)
     local dx = 4
     local dy = 4
     local sf = 0.5
     if self.pause_selection == 1 then
-        self.pause_menu.resume.selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+dy, 0, sf, sf)
+        self.pause_menu.resume.selected:draw(AdjustedWindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+dy, 0, sf, sf)
     else
-        self.pause_menu.resume.not_selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+dy, 0, sf, sf)
+        self.pause_menu.resume.not_selected:draw(AdjustedWindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+dy, 0, sf, sf)
     end
     if self.pause_selection == 2 then
-        self.pause_menu.change.selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+3*dy, 0, sf, sf)
+        self.pause_menu.change.selected:draw(AdjustedWindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+3*dy, 0, sf, sf)
     else
-        self.pause_menu.change.not_selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+3*dy, 0, sf, sf)    
+        self.pause_menu.change.not_selected:draw(AdjustedWindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+3*dy, 0, sf, sf)    
     end
     if self.pause_selection == 3 then
-        self.pause_menu.exit.selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+5*dy, 0, sf, sf)
+        self.pause_menu.exit.selected:draw(AdjustedWindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+5*dy, 0, sf, sf)
     else
-        self.pause_menu.exit.not_selected:draw(WindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+5*dy, 0, sf, sf)
+        self.pause_menu.exit.not_selected:draw(AdjustedWindowWidth/GlobalScale*0.5-self.pause_box:getWidth()/2+dx, WindowHeight/GlobalScale*0.5-self.pause_box:getHeight()/2+5*dy, 0, sf, sf)
     end
 end
 
 function fight_scene:drawVictory()
     if Level.complete then
         if Level.player1.dead then
-            Names.player2:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
+            Names.player2:draw(AdjustedWindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
         end
         if Level.player2.dead then
-            Names.player1:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
+            Names.player1:draw(AdjustedWindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
         end
         if Level.player1.dead or Level.player2.dead then
-            Names.wins:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.4)
+            Names.wins:draw(AdjustedWindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.4)
         end
     end
 end

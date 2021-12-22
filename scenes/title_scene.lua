@@ -10,7 +10,7 @@ function titleScene:load()
     self.BG_SpriteSheetMeta = "assets/ui/title_screen.json"
     self.title = {}
     self.title.image = peachy.new(self.BG_SpriteSheetMeta, self.BG_SpriteSheet, "Idle")
-    self.title.x = -WindowWidth/GlobalScale
+    self.title.x = -AdjustedWindowWidth/GlobalScale
     self.lightning = {}
     self.lightning.image = peachy.new(self.BG_SpriteSheetMeta, self.BG_SpriteSheet, "lightning")
     self.lightning.image:pause()
@@ -32,7 +32,7 @@ function titleScene:load()
     self.PB_SpriteSheetMeta = "assets/ui/press_button.json"
     self.press_button = peachy.new(self.PB_SpriteSheetMeta, self.PB_SpriteSheet, "Idle")
     local chars = {"drew", "lilah", "sam", "miller", "lilah", "abram"}
-    local x = {WindowWidth/GlobalScale*0.1, WindowWidth/GlobalScale*0.25, WindowWidth/GlobalScale*0.4, WindowWidth/GlobalScale*0.55, WindowWidth/GlobalScale*0.75, WindowWidth/GlobalScale*0.9}
+    local x = {AdjustedWindowWidth/GlobalScale*0.1, AdjustedWindowWidth/GlobalScale*0.25, AdjustedWindowWidth/GlobalScale*0.4, AdjustedWindowWidth/GlobalScale*0.55, AdjustedWindowWidth/GlobalScale*0.75, AdjustedWindowWidth/GlobalScale*0.9}
     self:loadChars(chars, x)
     self.music = love.audio.newSource("assets/audio/music/title.ogg", "static")
     self.sfx_start = love.audio.newSource("assets/audio/sfx/ui/accept_all.ogg", "static")
@@ -271,15 +271,15 @@ function titleScene:draw(sx, sy)
     self:drawLightning()
     self.title.image:draw(self.title.x, -WindowHeight/GlobalScale*0.1)
     love.graphics.setColor(0.2, 0.2, 0.2, 1)
-    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale*0.8, WindowWidth/GlobalScale, WindowHeight/GlobalScale)
+    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale*0.8, AdjustedWindowWidth/GlobalScale, WindowHeight/GlobalScale)
     love.graphics.setColor(1, 1, 1, 1)
     for i = 1, 3 do
         if self.timer > self.phrase.delay[i] then
-            self.phrase[i]:draw(0.0, -WindowHeight/GlobalScale*0.1)
+            self.phrase[i]:draw(0, -WindowHeight/GlobalScale*0.1)
         end
     end
     if self.interact then
-        self.press_button:draw(WindowWidth/GlobalScale/2, WindowHeight/GlobalScale*0.6, 0, 1, 1, self.press_button:getWidth()/2, self.press_button:getHeight()/2)
+        self.press_button:draw(AdjustedWindowWidth/GlobalScale/2, WindowHeight/GlobalScale*0.6, 0, 1, 1, self.press_button:getWidth()/2, self.press_button:getHeight()/2)
     end
     self:drawChars()
     if self.flash then
@@ -294,18 +294,18 @@ end
 function titleScene:drawCredits()
     local dx = 0.037
     love.graphics.setColor(1.0, 1.0, 1.0, self.credits.made.alpha)
-    self.credits.made.image:draw(WindowWidth/GlobalScale*(self.credits_x-0.15), WindowHeight/GlobalScale*(self.credits_y-5*dx), 0, 0.75, 0.75)
-    love.graphics.draw(self.love_logo, WindowWidth/GlobalScale*(self.credits_x+0.153), WindowHeight/GlobalScale*(self.credits_y-6*dx), 0, 0.1, 0.1)
+    self.credits.made.image:draw(AdjustedWindowWidth/GlobalScale*(self.credits_x-0.15), WindowHeight/GlobalScale*(self.credits_y-5*dx), 0, 0.75, 0.75)
+    love.graphics.draw(self.love_logo, AdjustedWindowWidth/GlobalScale*(self.credits_x+0.153), WindowHeight/GlobalScale*(self.credits_y-6*dx), 0, 0.1, 0.1)
     love.graphics.setColor(1.0, 1.0, 1.0, self.credits.marcus.alpha)
-    self.credits.marcus.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*self.credits_y, 0, 0.3, 0.3)
+    self.credits.marcus.image:draw(AdjustedWindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*self.credits_y, 0, 0.3, 0.3)
     love.graphics.setColor(1.0, 1.0, 1.0, self.credits.erik.alpha)
-    self.credits.erik.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+dx), 0, 0.3, 0.3)
+    self.credits.erik.image:draw(AdjustedWindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+dx), 0, 0.3, 0.3)
     love.graphics.setColor(1.0, 1.0, 1.0, self.credits.rusty.alpha)
-    self.credits.rusty.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+2*dx), 0, 0.3, 0.3)
+    self.credits.rusty.image:draw(AdjustedWindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+2*dx), 0, 0.3, 0.3)
     love.graphics.setColor(1.0, 1.0, 1.0, self.credits.madeleine.alpha)
-    self.credits.madeleine.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+3*dx), 0, 0.3, 0.3)
+    self.credits.madeleine.image:draw(AdjustedWindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+3*dx), 0, 0.3, 0.3)
     love.graphics.setColor(1.0, 1.0, 1.0, self.credits.katherine.alpha)
-    self.credits.katherine.image:draw(WindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+4*dx), 0, 0.3, 0.3)
+    self.credits.katherine.image:draw(AdjustedWindowWidth/GlobalScale*self.credits_x, WindowHeight/GlobalScale*(self.credits_y+4*dx), 0, 0.3, 0.3)
     love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 end
 

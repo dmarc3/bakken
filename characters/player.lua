@@ -9,7 +9,7 @@ math.randomseed(os.time())
 Player = {}
 Player.__index = Player
 
-function Player:new(id, char, x, y)
+function Player:new(id, char, x, y, pad_x)
     local instance = setmetatable({}, Player)
     instance.id = id
     instance.char = char
@@ -127,7 +127,7 @@ function Player:new(id, char, x, y)
     if id == 1 then
         instance.xShift = 0
         instance.xDir = 1
-        instance.hb_x = 2
+        instance.hb_x = pad_x + 0.02*AdjustedWindowWidth/GlobalScale
         instance.hb_y = 2
         instance.red = 1
         instance.green = 0
@@ -148,7 +148,7 @@ function Player:new(id, char, x, y)
     else
         instance.xShift = instance.x_shift_pad*instance.width
         instance.xDir = -1
-        instance.hb_x = WindowWidth/GlobalScale-2-instance.hb_animation:getWidth()
+        instance.hb_x = pad_x + AdjustedWindowWidth/GlobalScale-instance.hb_animation:getWidth()-0.02*AdjustedWindowWidth/GlobalScale
         instance.hb_y = 2
         instance.red = 0
         instance.green = 0
@@ -244,9 +244,9 @@ function Player:load()
     self.xoverride = false
 end
 
-function Player:draw()
+function Player:draw(x)
     if self.animationName == "a1" then
-        self.animation[self.animationName]:draw(self.original_x,
+        self.animation[self.animationName]:draw(self.original_x - x/GlobalScale,
                                                 self.y,
                                                 0,
                                                 self.xDir,
@@ -255,7 +255,7 @@ function Player:draw()
                                                 self.animation[self.animationName]:getHeight()-self.yorigin)
         -- self.animation[self.animationName]:getHeight()/2)
     else
-        self.animation[self.animationName]:draw(self.x,
+        self.animation[self.animationName]:draw(self.x - x/GlobalScale,
                                                 self.y,
                                                 0,
                                                 self.xDir,

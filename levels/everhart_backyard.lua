@@ -4,16 +4,16 @@ local player = require"characters/player"
 Level = {}
 Level.__index = Level
 
-function Level:load(player1, player2, canvas, draw_players, with_physics)
+function Level:load(pad_x, player1, player2, canvas, draw_players, with_physics)
     self.name = "everhart_backyard"
     self.canvas = canvas
     self.complete = false
     -- Create self.Ground and self.Walls
     self.Ground = {}
     if with_physics then
-        self.Ground.body = love.physics.newBody(World, WindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
+        self.Ground.body = love.physics.newBody(World, pad_x + AdjustedWindowWidth/GlobalScale/2, WindowHeight/GlobalScale-10, "static")
         self.Ground.body:setUserData("ground")
-        self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
+        self.Ground.shape = love.physics.newRectangleShape(AdjustedWindowWidth/GlobalScale, 20)
         self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
         self.Ground.fixture:setFriction(Friction)
         self.Ground.fixture:setUserData("ground")
@@ -23,12 +23,12 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.Walls.left = {}
     self.Walls.right = {}
     if with_physics then
-        self.Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
+        self.Walls.left.body = love.physics.newBody(World, pad_x - 10, WindowHeight/GlobalScale/2, "static")
         self.Walls.left.body:setUserData("wall")
         self.Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
         self.Walls.left.fixture = love.physics.newFixture(self.Walls.left.body, self.Walls.left.shape)
         self.Walls.left.fixture:setUserData("wall")
-        self.Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
+        self.Walls.right.body = love.physics.newBody(World, pad_x + AdjustedWindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
         self.Walls.right.body:setUserData("wall")
         self.Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
         self.Walls.right.fixture = love.physics.newFixture(self.Walls.right.body, self.Walls.right.shape)
@@ -65,9 +65,9 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.dur = 10.0
     self.duration = math.random()*self.dur+self.dur
     -- Define Constants
-    self.x1 = WindowWidth/GlobalScale*0.2
+    self.x1 = AdjustedWindowWidth/GlobalScale*0.2
     self.y1 = WindowHeight/GlobalScale*0.8
-    self.x2 = WindowWidth/GlobalScale*0.8
+    self.x2 = AdjustedWindowWidth/GlobalScale*0.9
     self.y2 = WindowHeight/GlobalScale*0.8
     self.cloudx = 0
     self.birdx = 100
@@ -75,9 +75,9 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     -- Load players
     self.draw_players = draw_players
     if self.draw_players then
-        self.player1 = player:new(1, player1, Level.x1, Level.y1)
+        self.player1 = player:new(1, player1, Level.x1, Level.y1, 0)
         self.player1:load()
-        self.player2 = player:new(2, player2, Level.x2, Level.y2)
+        self.player2 = player:new(2, player2, Level.x2, Level.y2, 0)
         self.player2:load()
     end
 end
@@ -108,6 +108,7 @@ function Level:incrementTimers(dt)
 end
 
 function Level:draw(x, y, sx, sy)
+    local orig_canvas = love.graphics.getCanvas()
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -116,8 +117,8 @@ function Level:draw(x, y, sx, sy)
     love.graphics.scale(sx, sy)
     self:drawBackground()
     if self.draw_players then
-        self.player1:draw()
-        self.player2:draw()
+        self.player1:draw(x)
+        self.player2:draw(x)
     end
     self:drawForeground()
     love.graphics.pop()
@@ -132,6 +133,7 @@ function Level:draw(x, y, sx, sy)
     -- Draw Canvas
     love.graphics.setCanvas()
     love.graphics.draw(self.canvas, x, y)
+    love.graphics.setCanvas(orig_canvas)
 end
 
 function Level:drawForeground()

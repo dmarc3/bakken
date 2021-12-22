@@ -106,15 +106,13 @@ function pickFighterScene:update(dt, GameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
     self:processDelay()
     self:updateCharacters(dt)
-    if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
+    if (KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true) and (self.selected1 and self.selected2) then
         self.sfx.accept_all:play()
         GameState.player1 = self.chars[self.player1]
         GameState.player2 = self.chars[self.player2]
         -- GameState.player1 = "drew"
         -- GameState.player2 = "lilah"
         Transition_In.transition_in = true
-        -- GameState.scenes.pickLevelScene:load(GameState)
-        -- GameState:setPickLevelScene()
     end
     self:incrementTimers(dt)
     if Transition_Out.transition_out then
@@ -134,9 +132,9 @@ function pickFighterScene:draw(sx, sy)
     self:drawCharacters()
     self:drawStage(2)
     love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
-    love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, 20)
+    love.graphics.rectangle("fill", 0, 0, AdjustedWindowWidth/GlobalScale, 20)
     love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
-    self.banner:draw(WindowWidth/GlobalScale*0.5 - self.banner:getWidth()/2, 5)
+    self.banner:draw(AdjustedWindowWidth/GlobalScale*0.5 - self.banner:getWidth()/2, 5)
     if Transition_Out.transition_out then
         Transition_Out:draw()
     end
@@ -149,7 +147,7 @@ end
 function pickFighterScene:drawBackground()
     love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
     love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
-    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
+    love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, AdjustedWindowWidth/GlobalScale, 55)
     love.graphics.setColor(1, 1, 1, 1)
 end
 
@@ -196,11 +194,11 @@ function pickFighterScene:drawCharacters()
     local ychar = 64
     local scale = 1.5
     self.animations[self.chars[self.player1]][self.animationName1]:draw(xchar, ychar, 0, scale, scale,self.chars_xspacing[self.player1], self.animations[self.chars[self.player1]].idle:getHeight()/2)
-    self.animations[self.chars[self.player2]][self.animationName2]:draw(WindowWidth/GlobalScale-xchar, ychar, 0, -scale, scale, self.chars_xspacing[self.player2], self.animations[self.chars[self.player2]].idle:getHeight()/2)
+    self.animations[self.chars[self.player2]][self.animationName2]:draw(AdjustedWindowWidth/GlobalScale-xchar, ychar, 0, -scale, scale, self.chars_xspacing[self.player2], self.animations[self.chars[self.player2]].idle:getHeight()/2)
     love.graphics.setColor(221/255, 25/255, 29/255, 1.0)
     self.names[self.chars[self.player1]]:draw(xchar-self.names[self.chars[self.player1]]:getWidth()/2, ychar+36)
     love.graphics.setColor(48/255, 63/255, 159/255, 1.0)
-    self.names[self.chars[self.player2]]:draw(WindowWidth/GlobalScale-xchar-self.names[self.chars[self.player1]]:getWidth()/2, ychar+36)
+    self.names[self.chars[self.player2]]:draw(AdjustedWindowWidth/GlobalScale-xchar-self.names[self.chars[self.player1]]:getWidth()/2, ychar+36)
     love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 end
 
@@ -210,10 +208,10 @@ function pickFighterScene:drawStage(option)
     local scale = 1.5
     if option == 1 then
         self.animations.stage:draw(x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
-        self.animations.stage:draw(WindowWidth/GlobalScale-x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
+        self.animations.stage:draw(AdjustedWindowWidth/GlobalScale-x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
     else
         self.animations.lighting:draw(x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
-        self.animations.lighting:draw(WindowWidth/GlobalScale-x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
+        self.animations.lighting:draw(AdjustedWindowWidth/GlobalScale-x0, y0, 0, scale, scale, 22, self.animations.stage:getHeight()/2)
     end
 end
 
