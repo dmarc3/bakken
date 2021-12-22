@@ -386,6 +386,11 @@ function endContact(a, b, collision)
     Level.player2:endContact(a, b, collision)
 end
 
+function preSolve(a, b, collision)
+    Level.player1:preSolve(a, b, collision)
+    Level.player2:preSolve(a, b, collision)
+end
+
 function CheckKeys(dt)
     local function pconcat(tab)
         local keyset={}

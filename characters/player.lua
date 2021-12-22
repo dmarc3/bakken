@@ -773,21 +773,17 @@ end
 
 function Player:beginContact(a, b, collision)
 	-- print("Being Contact!")
-    if self.grounded == true then return end
+    -- if self.grounded == true then return end
     local logic_a = a:getUserData() == "player"..self.id and (b:getUserData() == "ground" or b:getUserData() == "player"..self.enemy_id or b:getUserData() == "obstacle")
     local logic_b = b:getUserData() == "player"..self.id and (a:getUserData() == "ground" or a:getUserData() == "player"..self.enemy_id or a:getUserData() == "obstacle")
 	local nx, ny = collision:getNormal()
 	if logic_a then
 		if ny > 0 then
 			self:land(collision)
---[[         elseif ny < 0 then
-            self.yVel = 0 ]]
         end
 	elseif logic_b then
 		if ny < 0 then
 			self:land(collision)
-        --[[ elseif ny > 0 then
-            self.yVel = 0 ]]
         end
 	end
 end
@@ -801,6 +797,40 @@ function Player:endContact(a, b, collision)
 			self.grounded = false
 		end
 	end
+end
+
+function Player:preSolve(a, b, collision)
+    local logic_a = a:getUserData() == "player"..self.id and (b:getUserData() == "wall" or b:getUserData() == "obstacle")
+    local logic_b = b:getUserData() == "player"..self.id and (a:getUserData() == "wall" or a:getUserData() == "obstacle")
+    local nx, ny = collision:getNormal()
+    if (logic_a or logic_b) and nx ~= 0 then
+        -- Prevent player from moving into wall/obstacle
+        if nx == 1 then
+            if KeysPressed[self.left] then
+                KeysPressed[self.left] = nil
+            end
+            if ButtonsPressed[self.id]['dpleft'] then
+                ButtonsPressed[self.id]['dpleft'] = nil
+            end
+            if AxisMoved[self.id]["leftx"] ~= nil then
+                if AxisMoved[self.id]["leftx"] < 0 then
+                    AxisMoved[self.id]["leftx"] = nil
+                end
+            end
+        elseif nx == -1 then
+            if KeysPressed[self.right] then
+                KeysPressed[self.right] = nil
+            end
+            if ButtonsPressed[self.id]['dpright'] then
+                ButtonsPressed[self.id]['dpright'] = nil
+            end
+            if AxisMoved[self.id]["leftx"] ~= nil then
+                if AxisMoved[self.id]["leftx"] > 0 then
+                    AxisMoved[self.id]["leftx"] = nil
+                end
+            end
+        end
+    end
 end
 
 function Player:trigger_sfx(sfx_type)
