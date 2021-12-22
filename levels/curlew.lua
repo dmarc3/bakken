@@ -234,6 +234,7 @@ function Level:updateBodies()
 end
 
 function Level:draw(x, y, sx, sy)
+    local orig_canvas = love.graphics.getCanvas()
     -- Activate Canvas
     love.graphics.setCanvas(self.canvas)
     love.graphics.clear()
@@ -242,12 +243,12 @@ function Level:draw(x, y, sx, sy)
     love.graphics.scale(sx, sy)
     self:drawShadedBackground()
     if self.draw_players then
-        self.player1:draw()
-        self.player2:draw()
+        self.player1:draw(0)
+        self.player2:draw(0)
     end
-    self:drawForeground()
+    self:drawForeground(0)
     if not self.draw_players then
-        self:drawBackground()
+        self:drawBackground(0)
     end
     love.graphics.pop()
     -- Draw Canvas
@@ -267,22 +268,22 @@ function Level:draw(x, y, sx, sy)
     if self.draw_players then
         love.graphics.push()
         love.graphics.scale(sx, sy)
-        self:drawBackground()
+        self:drawBackground((SysWidth-WindowWidth)/2/GlobalScale)
         if self.player1.y/(WindowHeight/GlobalScale) < 0.8 then
-            self.player1:draw()
+            self.player1:draw((SysWidth-WindowWidth)/2/GlobalScale)
         end
         if self.player2.y/(WindowHeight/GlobalScale) < 0.8 then
-            self.player2:draw()
+            self.player2:draw((SysWidth-WindowWidth)/2/GlobalScale)
         end
-        self:drawForeground()
+        self:drawForeground((SysWidth-WindowWidth)/2/GlobalScale)
         love.graphics.pop()
     end
     -- Draw Player Health Bars
     love.graphics.push()
     love.graphics.scale(sx, sy)
     if self.draw_players then
-        self.player1:drawHealthBar()
-        self.player2:drawHealthBar()
+        self.player1:drawHealthBar((SysWidth-WindowWidth)/2/GlobalScale)
+        self.player2:drawHealthBar((SysWidth-WindowWidth)/2/GlobalScale)
     end
     love.graphics.pop()
     -- Draw splash
@@ -292,6 +293,7 @@ function Level:draw(x, y, sx, sy)
         self.Splash:draw(self.splash_x-self.Splash:getWidth()/2, self.splash_y)
         love.graphics.pop()
     end
+    love.graphics.setCanvas(orig_canvas)
 end
 
 function Level:incrementTimers(dt)
@@ -304,8 +306,8 @@ function Level:incrementTimers(dt)
     end
 end
 
-function Level:drawForeground()
-    Curlew.Floaty2_front:draw(self.Floaty2.x,self.Floaty2.y-5, 0, 1, 1, 214, 128)
+function Level:drawForeground(x)
+    Curlew.Floaty2_front:draw(self.Floaty2.x + x,self.Floaty2.y-5, 0, 1, 1, 214, 128)
 end
 
 function Level:drawWater()
@@ -323,14 +325,14 @@ function Level:drawShadedBackground()
     love.graphics.setColor(1, 1, 1, 1)
 end
 
-function Level:drawBackground()
-    Curlew.Background:draw(0, 0)
+function Level:drawBackground(x)
+    Curlew.Background:draw(x, 0)
     for i = 2, 5 do
-        Curlew.Dock[i]:draw(self.Dock[i].x, self.Dock[i].y, self.Dock[i].angle, 1, 1, self.Dock.x[i], self.Dock.y[i])
+        Curlew.Dock[i]:draw(self.Dock[i].x + x, self.Dock[i].y, self.Dock[i].angle, 1, 1, self.Dock.x[i], self.Dock.y[i])
     end
-    Curlew.Dock[1]:draw(self.Dock[1].x, self.Dock[1].y, 0, 1, 1, self.Dock.x[1], self.Dock.y[1])
-    Curlew.Floaty1:draw(self.Floaty1.x,self.Floaty1.y-5, 0, 1, 1, 34, 128)
-    Curlew.Floaty2:draw(self.Floaty2.x,self.Floaty2.y-5, 0, 1, 1, 214, 128)
+    Curlew.Dock[1]:draw(self.Dock[1].x + x, self.Dock[1].y, 0, 1, 1, self.Dock.x[1], self.Dock.y[1])
+    Curlew.Floaty1:draw(self.Floaty1.x + x,self.Floaty1.y-5, 0, 1, 1, 34, 128)
+    Curlew.Floaty2:draw(self.Floaty2.x + x,self.Floaty2.y-5, 0, 1, 1, 214, 128)
     love.graphics.setColor(1, 1, 1, 1)
 end
 
