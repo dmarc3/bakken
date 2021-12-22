@@ -241,7 +241,6 @@ function Player:load()
     self.invuln = false
     self.invuln_timer = 0
     self.reset_position = false
-    self.xoverride = false
 end
 
 function Player:draw(x)
@@ -432,7 +431,7 @@ function Player:moveJoystick(dt)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
-    elseif not self.xoverride then
+    else
         self:applyFriction(dt)
     end
 end
@@ -456,7 +455,7 @@ function Player:moveKeyboard(dt)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
-    elseif not self.xoverride then
+    else
         self:applyFriction(dt)
     end
 
