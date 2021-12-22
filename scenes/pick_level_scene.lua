@@ -14,7 +14,7 @@ function pickLevelScene:load(gameState)
     -- print("Loading pickLevelScene")
     self.game_canvas = gameState.canvas
     World = love.physics.newWorld(0, Meter*Gravity, false)
-    World:setCallbacks(beginContact, endContact)
+    World:setCallbacks(beginContact, endContact, preSolve)
     gameState.world = World
 
     self.levels = {"bakke_backyard", "everhart_backyard", "curlew"}

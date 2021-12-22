@@ -15,7 +15,6 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
         self.Ground.body:setUserData("ground")
         self.Ground.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale, 20)
         self.Ground.fixture = love.physics.newFixture(self.Ground.body, self.Ground.shape)
-        self.Ground.fixture:setFriction(Friction)
         self.Ground.fixture:setUserData("ground")
     end
     self.Ground.y = WindowHeight/GlobalScale + 10
@@ -25,12 +24,12 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     if with_physics then
         Walls.left.body = love.physics.newBody(World, -10, WindowHeight/GlobalScale/2, "static")
         Walls.left.body:setUserData("wall")
-        Walls.left.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.left.shape = love.physics.newRectangleShape(20, 2*WindowHeight/GlobalScale)
         Walls.left.fixture = love.physics.newFixture(Walls.left.body, Walls.left.shape)
         Walls.left.fixture:setUserData("wall")
         Walls.right.body = love.physics.newBody(World, WindowWidth/GlobalScale+10, WindowHeight/GlobalScale/2, "static")
         Walls.right.body:setUserData("wall")
-        Walls.right.shape = love.physics.newRectangleShape(20, WindowHeight/GlobalScale)
+        Walls.right.shape = love.physics.newRectangleShape(20, 2*WindowHeight/GlobalScale)
         Walls.right.fixture = love.physics.newFixture(Walls.right.body, Walls.right.shape)
         Walls.right.fixture:setUserData("wall")
     end
@@ -40,7 +39,6 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
         Toys.body:setUserData("obstacle")
         Toys.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.15, WindowHeight/GlobalScale*0.015)
         Toys.fixture = love.physics.newFixture(Toys.body, Toys.shape)
-        Toys.fixture:setFriction(Friction)
         Toys.fixture:setUserData("obstacle")
     end
     Roof = {}
@@ -49,7 +47,6 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
         Roof.body:setUserData("obstacle")
         Roof.shape = love.physics.newRectangleShape(WindowWidth/GlobalScale*0.0975, WindowHeight/GlobalScale*0.11)
         Roof.fixture = love.physics.newFixture(Roof.body, Roof.shape)
-        Roof.fixture:setFriction(Friction)
         Roof.fixture:setUserData("obstacle")
     end
     
