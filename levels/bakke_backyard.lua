@@ -1,5 +1,6 @@
 local peachy = require("3rd/peachy/peachy")
 local player = require"characters/player"
+local utils = require"utils"
 
 Level = {}
 Level.__index = Level

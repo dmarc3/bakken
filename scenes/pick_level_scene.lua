@@ -59,7 +59,7 @@ function pickLevelScene:load(gameState)
         self.joystick1 = nil
         self.joystick2 = nil
     end
-    -- load sfx
+    -- Load sound effects
     self.sfx = {
         change_sel = love.audio.newSource(
             "assets/audio/sfx/ui/change_selection.ogg", "static"
@@ -71,6 +71,10 @@ function pickLevelScene:load(gameState)
             "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
+    -- Load music theme
+    -- self.music = love.audio.newSource(
+    --     "assets/audio/music/selection_theme.ogg", "stream"
+    -- )
     -- Transition loads
     Transition_Out = require"scenes/transition_out"
     Transition_Out:load()
@@ -104,7 +108,7 @@ function pickLevelScene:update(dt, gameState)
         Transition_Out:update(dt)
     end
     if Transition_In.transition_in then
-        Transition_In:update(dt, gameState, nil)
+        Transition_In:update(dt, gameState)
     end
 end
 

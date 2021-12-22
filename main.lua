@@ -50,7 +50,8 @@ local GameState = {
     player2 = "",
     level = "",
     sx = GlobalScale,
-    sy = GlobalScale
+    sy = GlobalScale,
+    music = nil
 }
 
 -- Capture keyboard / controller inputs
@@ -86,6 +87,10 @@ end
 
 function GameState:setFightScene()
     self.current = self.scenes.fightScene
+end
+
+function GameState:setMusic(filePath)
+    self.music = love.audio.newSource(filePath, "stream")
 end
 
 -- A primary callback of LÖVE that is called only once

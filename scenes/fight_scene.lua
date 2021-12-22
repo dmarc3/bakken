@@ -70,7 +70,7 @@ function fight_scene:load(gameState)
     self.pause_menu.exit.selected = peachy.new(asepriteMeta, spritesheet, "exit_selected")
     self.pause_selection = 1
     self.pause_move_timer = 0.0
-    -- load sfx
+    -- Load sound effects
     self.sfx = {
         change_sel = love.audio.newSource(
             "assets/audio/sfx/ui/change_selection.ogg", "static"
@@ -83,11 +83,26 @@ function fight_scene:load(gameState)
             "assets/audio/sfx/ui/accept_all.ogg", "static"
         )
     }
+    -- Load music theme
+    if gameState.level == "bakke_backyard" then
+        self.music = love.audio.newSource(
+            "assets/audio/music/bakke_theme.ogg", "stream"
+        )
+    elseif gameState.level == "everhart_backyard" then
+        self.music = love.audio.newSource(
+            "assets/audio/music/everhart_theme.ogg", "stream"
+        )
+    elseif gameState.level == "curlew" then
+        self.music = love.audio.newSource(
+            "assets/audio/music/curlew_theme.ogg", "stream"
+        )
+    end
     self.end_timer = 0
 end
   
 
 function fight_scene:update(dt, gameState)
+    utils.pplay(self.music)
     -- Check victory
     if Level.player1.victory or Level.player2.victory then
         ResetInputs()
