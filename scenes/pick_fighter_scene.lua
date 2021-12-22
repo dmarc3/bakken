@@ -107,7 +107,11 @@ end
 
 function pickFighterScene:update(dt, gameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
-    utils.pplay(gameState.music)
+    -- hacky fix for music not playing when coming to pick fighter from pause menu
+    if not gameState.music:isPlaying() then
+        gameState:setMusic("assets/audio/music/selection_theme.ogg")
+        gameState.music:play()
+    end
     self:processDelay()
     self:updateCharacters(dt)
     -- player1 press enter/start once characters are selected to change to next scene

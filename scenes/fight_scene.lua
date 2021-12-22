@@ -120,7 +120,7 @@ function fight_scene:update(dt, gameState)
     end
     if Transition_In ~= nil then
         if Transition_In.transition_in == true then
-            Transition_In:update(math.max(dt, Pause_dt), gameState, nil)
+            Transition_In:update(math.max(dt, Pause_dt), gameState)
         end
     end
     if Level.complete and self.end_timer > 7.0 and Transition_In == nil then
