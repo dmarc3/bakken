@@ -253,39 +253,72 @@ function fight_scene:drawVictory()
 end
 
 function fight_scene:updatePause(dt)
-    if KeysPressed["escape"] and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) then
+    if (KeysPressed["escape"] == true or ButtonsPressed[1]["start"] == true or ButtonsPressed[2]["start"] == true) and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) then
         self.pause_selection = 1
         self.pause_timer = 0
         self.pause = not self.pause
         Debug_Pause = self.pause
         utils.snplay(self.sfx.change_sel)
     end
-    if KeysPressed["return"] and self.pause_selection == 1 and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) and self.pause then
-        self.pause_timer = 0
-        self.pause = not self.pause
-        Debug_Pause = self.pause
-        utils.snplay(self.sfx.change_sel)
-    end
-    if KeysPressed["return"] and self.pause_selection == 2 and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) and self.pause and Transition_In == nil then
-        Transition_In = require"scenes/transition_in"
-        Transition_In:load("setPickFighterScene")
-        Transition_In.transition_in = true
-        Debug_Pause = false
-        utils.snplay(self.sfx.change_sel)
-    end
-    if KeysPressed["return"] and self.pause_selection == 3 and self.pause then
-        utils.snplay(self.sfx.change_sel)
-        love.event.quit()
+    if self.pause then
+        if (KeysPressed["return"] or ButtonsPressed[1]["a"] or ButtonsPressed[2]["a"]) and self.pause_selection == 1 and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) and self.pause then
+            self.pause_timer = 0
+            self.pause = not self.pause
+            Debug_Pause = self.pause
+            utils.snplay(self.sfx.change_sel)
+        end
+        if(KeysPressed["return"] or ButtonsPressed[1]["a"] or ButtonsPressed[2]["a"]) and self.pause_selection == 2 and (self.pause_timer > 0.3 or Debug_Pause_Duration > 0.3) and self.pause and Transition_In == nil then
+            Transition_In = require"scenes/transition_in"
+            Transition_In:load("setPickFighterScene")
+            Transition_In.transition_in = true
+            Debug_Pause = false
+            utils.snplay(self.sfx.change_sel)
+        end
+        if (KeysPressed["return"] or ButtonsPressed[1]["a"] or ButtonsPressed[2]["a"]) and self.pause_selection == 3 and self.pause then
+            utils.snplay(self.sfx.change_sel)
+            love.event.quit()
+        end
     end
     self.pause_menu.resume.selected:update(Pause_dt)
     self.pause_menu.change.selected:update(Pause_dt)
     self.pause_menu.exit.selected:update(Pause_dt)
     if self.pause then
+        -- process Keyboard input
         if (KeysPressed["w"] or KeysPressed["kp5"]) and self.pause_move_timer > 0.3 then
             self:pauseDecrement()
             self.pause_move_timer = 0
         end
         if (KeysPressed["s"] or KeysPressed["kp2"]) and self.pause_move_timer > 0.3 then
+            self:pauseIncrement()
+            self.pause_move_timer = 0
+        end
+        -- process gamepad axis input
+        if AxisMoved[1]["lefty"] ~= nil then
+            if AxisMoved[1]["lefty"] < 0 and self.pause_move_timer > 0.3 then
+                self:pauseDecrement()
+                self.pause_move_timer = 0
+            end
+            if AxisMoved[1]["lefty"] > 0 and self.pause_move_timer > 0.3 then
+                self:pauseIncrement()
+                self.pause_move_timer = 0
+            end
+        end
+        if AxisMoved[2]["lefty"] ~= nil then
+            if AxisMoved[2]["lefty"] < 0 and self.pause_move_timer > 0.3 then
+                self:pauseDecrement()
+                self.pause_move_timer = 0
+            end
+            if AxisMoved[2]["lefty"] > 0 and self.pause_move_timer > 0.3 then
+                self:pauseIncrement()
+                self.pause_move_timer = 0
+            end
+        end
+        -- process gamepad button input
+        if (ButtonsPressed[1]["dpup"] or ButtonsPressed[2]["dpup"]) and self.pause_move_timer > 0.3 then
+            self:pauseDecrement()
+            self.pause_move_timer = 0
+        end
+        if (ButtonsPressed[1]["dpdown"] or ButtonsPressed[2]["dpown"]) and self.pause_move_timer > 0.3 then
             self:pauseIncrement()
             self.pause_move_timer = 0
         end

@@ -107,15 +107,14 @@ function pickFighterScene:update(dt, gameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
     self:processDelay()
     self:updateCharacters(dt)
-    if KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true then
+    -- player1 press enter/start once characters are selected to change to next scene
+    if (KeysPressed["return"] == true or ButtonsPressed[1]["start"] == true) and (self.selected1 and self.selected2) then
         self.sfx.accept_all:play()
         gameState.player1 = self.chars[self.player1]
         gameState.player2 = self.chars[self.player2]
         -- gameState.player1 = "drew"
         -- gameState.player2 = "lilah"
         Transition_In.transition_in = true
-        -- gameState.scenes.pickLevelScene:load(gameState)
-        -- gameState:setPickLevelScene()
     end
     self:incrementTimers(dt)
     if Transition_Out.transition_out then
@@ -134,7 +133,7 @@ function pickFighterScene:draw(sx, sy)
     self:drawStage(1)
     self:drawCharacters()
     self:drawStage(2)
-    love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
+    love.graphics.setColor(0.2, 0.2, 0.2, 1.0)
     love.graphics.rectangle("fill", 0, 0, WindowWidth/GlobalScale, 20)
     love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
     self.banner:draw(WindowWidth/GlobalScale*0.5 - self.banner:getWidth()/2, 5)
@@ -148,7 +147,7 @@ function pickFighterScene:draw(sx, sy)
 end
 
 function pickFighterScene:drawBackground()
-    love.graphics.setColor(0.05, 0.05, 0.05, 1.0)
+    love.graphics.setColor(0.2, 0.2, 0.2, 1.0)
     love.graphics.rectangle("fill", 0, WindowHeight/GlobalScale - 55, WindowWidth/GlobalScale, 55)
     love.graphics.setColor(1, 1, 1, 1)
 end
@@ -232,6 +231,7 @@ function pickFighterScene:updateCharacters(dt)
     self.animations.player2:update(dt)
     self.animations.selection:update(dt)
     if not self.selected1 then
+        -- Process gamepad axis input
         if AxisMoved[1]["leftx"] ~= nil and AxisMoved[1]["leftx"] > 0 and not self.move1 then
             self.player1 = self:playerIncrement(self.player1, self.player2)
             self.move1 = true
@@ -241,6 +241,17 @@ function pickFighterScene:updateCharacters(dt)
             self.move1 = true
             self.move1_timer = 0
         end
+        -- Process gamepad d-pad input
+        if ButtonsPressed[1]['dpright'] and not self.move1 then
+            self.player1 = self:playerIncrement(self.player1, self.player2)
+            self.move1 = true
+            self.move1_timer = 0
+        elseif ButtonsPressed[1]['dpleft'] and not self.move1 then
+            self.player1 = self:playerDecrement(self.player1, self.player2)
+            self.move1 = true
+            self.move1_timer = 0
+        end
+        -- Process keyboard input
         if KeysPressed["d"] ~= nil and not self.move1 then
             self.player1 = self:playerIncrement(self.player1, self.player2)
             self.move1 = true
@@ -252,15 +263,27 @@ function pickFighterScene:updateCharacters(dt)
         end
     end
     if not self.selected2 then
+        -- Process gamepad axis input
         if AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] > 0 and not self.move2 then
             self.player2 = self:playerIncrement(self.player2, self.player1)
             self.move2 = true
             self.move2_timer = 0
         elseif AxisMoved[2]["leftx"] ~= nil and AxisMoved[2]["leftx"] < 0 and not self.move2 then
-            self.player1 = self:playerDecrement(self.player1, self.player2)
+            self.player2 = self:playerDecrement(self.player2, self.player1)
             self.move2 = true
             self.move2_timer = 0
         end
+        -- Process gamepad d-pad input
+        if ButtonsPressed[2]['dpright'] and not self.move2 then
+            self.player2 = self:playerIncrement(self.player2, self.player1)
+            self.move2 = true
+            self.move2_timer = 0
+        elseif ButtonsPressed[2]['dpleft'] and not self.move2 then
+            self.player2 = self:playerDecrement(self.player2, self.player1)
+            self.move2 = true
+            self.move2_timer = 0
+        end
+        -- Process keyboard input
         if KeysPressed["kp3"] ~= nil and not self.move2 then
             self.player2 = self:playerIncrement(self.player2, self.player1)
             self.move2 = true
