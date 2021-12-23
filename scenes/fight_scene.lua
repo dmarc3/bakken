@@ -372,6 +372,7 @@ function beginContact(a, b, collision)
             if not Level.player2.blocking then
                 Level.player2:damage(50)
             else
+                utils.pplay(Level.player2.sfx.parry)
                 Level.player2:damage(50*0.2)
             end
         end
@@ -381,6 +382,7 @@ function beginContact(a, b, collision)
             if not Level.player1.blocking then
                 Level.player1:damage(10)
             else
+                utils.pplay(Level.player1.sfx.parry)
                 Level.player1:damage(10*0.2)
             end
         end

@@ -61,8 +61,12 @@ function Player:new(id, char, x, y)
     instance.block_start = instance.charsheet.block_start
     instance.block = instance.charsheet.block
     instance.block_end = instance.charsheet.block_end
-    -- Load sound effects
+    -- Load player-specific sound effects
     instance.sfx = instance.charsheet.sfx
+    -- Load player-agnostic sound effects
+    instance.sfx.parry = love.audio.newSource(
+        "assets/audio/sfx/parry.ogg", "static"
+    )
 
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
