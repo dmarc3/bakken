@@ -237,13 +237,11 @@ function Level:resetFighters(dt, id)
             Level.player1.xVel = Level.player1.maxSpeed
             Level.player1.xDir = 1.0
         end
-        Level.player1.xoverride = true
         if math.abs(Level.player1.x - x1) < dx then
             Level.player1.physics.body:setPosition(x1, Level.player1.y0)
             Level.player1.physics.body:setLinearVelocity(0, 0)
             Level.player1.xVel = 0
             Level.player1.xDir = 1.0
-            Level.player1.xoverride = false
         end
     else
         -- Reset player2
@@ -257,13 +255,11 @@ function Level:resetFighters(dt, id)
             Level.player2.xVel = Level.player2.maxSpeed
             Level.player2.xDir = 1.0
         end
-        Level.player2.xoverride = true
         if math.abs(Level.player2.x - x2) < dx then
             Level.player2.physics.body:setPosition(x2, Level.player2.y0)
             Level.player2.physics.body:setLinearVelocity(0, 0)
             Level.player2.xVel = 0
             Level.player2.xDir = -1.0
-            Level.player2.xoverride = false
         end
     end
     -- Switch boolean

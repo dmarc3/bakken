@@ -167,10 +167,10 @@ function Level:load(player1, player2, canvas, draw_players, with_physics)
     self.normal_map:setWrap("repeat")
     -- Define Constants
     self.x1 = WindowWidth/GlobalScale*0.12
-    self.y1 = WindowHeight/GlobalScale*0.7
+    self.y1 = WindowHeight/GlobalScale*0.75
     -- self.y1 = WindowHeight/GlobalScale*-100
     self.x2 = WindowWidth/GlobalScale*0.9
-    self.y2 = WindowHeight/GlobalScale*0.7
+    self.y2 = WindowHeight/GlobalScale*0.75
     -- self.y2 = WindowHeight/GlobalScale*-100
     self.displacedMass = 0
 

@@ -211,7 +211,6 @@ function Player:load()
     self.invuln = false
     self.invuln_timer = 0
     self.reset_position = false
-    self.xoverride = false
 end
 
 function Player:draw(x)
@@ -402,7 +401,7 @@ function Player:moveJoystick(dt)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
-    elseif not self.xoverride then
+    else
         self:applyFriction(dt)
     end
 end
@@ -426,7 +425,7 @@ function Player:moveKeyboard(dt)
         end
         self.original_x = self.original_x + self.xVel * dt
         self.xDir = -1
-    elseif not self.xoverride then
+    else
         self:applyFriction(dt)
     end
 
@@ -509,6 +508,8 @@ function Player:drawHitBox(anim)
             self.a1.hitbox.fixture = love.physics.newFixture(self.a1.hitbox.body, self.a1.hitbox.shape)
             self.a1.hitbox.fixture:setSensor(true)
             self.a1.hitbox.fixture:setUserData("sensor"..self.id)
+            self.delete_bodies["player"..self.id.."_a1"] = 1
+        else
             self.delete_bodies["player"..self.id.."_a1"] = 1
         end
     end

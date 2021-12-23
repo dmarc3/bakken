@@ -145,6 +145,9 @@ function love.keypressed(key)
     if key == "escape" and Debug then
         Debug_Pause = not Debug_Pause
     end
+    if key == "f1" then
+        Debug = not Debug
+    end
     KeysPressed[key] = true
 end
 
@@ -183,8 +186,21 @@ function drawPhysicsBodies()
     if GameState.world ~= nil then
         love.graphics.push()
         love.graphics.scale(GameState.sx, GameState.sy)
-        love.graphics.setColor(0, 0, 0, 0.7)
         for _, body in pairs(GameState.world:getBodies()) do
+            local type = body:getUserData()
+            if type == "obstacle" then
+                love.graphics.setColor(255/255, 195/255, 0 , 0.95)
+            elseif type == "player1" then
+                love.graphics.setColor(0.8, 0, 0, 0.7)
+            elseif type == "player1_a1" then
+                love.graphics.setColor(1, 0.3, 0.3, 0.7)
+            elseif type == "player2" then
+                love.graphics.setColor(0, 0, 0.8, 0.7)
+            elseif type == "player2_a1" then
+                love.graphics.setColor(0.3, 0.3, 1, 0.7)
+            else
+                love.graphics.setColor(0, 0, 0, 0.7)
+            end
             for _, fixture in pairs(body:getFixtures()) do
                 local shape = fixture:getShape()
         
