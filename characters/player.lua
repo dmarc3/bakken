@@ -330,7 +330,11 @@ function Player:update(dt)
         -- Update Animation
         self:detectSprint(dt)
         self:setState()
-        self.animation[self.animationName]:update(dt)
+        if self.sprinting and self.animationName == "walk" then
+            self.animation[self.animationName]:update(4*dt)
+        else
+            self.animation[self.animationName]:update(dt)
+        end
         if current_frame ~= self.animation[self.animationName]:getFrame() or current_anim ~= self.animationName then
             self.frame_change = true
         else
@@ -774,6 +778,9 @@ function Player:preSolve(a, b, collision)
     local logic_a = a:getUserData() == "player"..self.id and (b:getUserData() == "wall" or b:getUserData() == "obstacle")
     local logic_b = b:getUserData() == "player"..self.id and (a:getUserData() == "wall" or a:getUserData() == "obstacle")
     local nx, ny = collision:getNormal()
+    if ny == 1 then
+        self.grounded = true
+    end
     if (logic_a or logic_b) and nx ~= 0 then
         -- Prevent player from moving into wall/obstacle
         if nx == 1 then
