@@ -40,6 +40,12 @@ function fight_scene:load(gameState)
     self.delta = 0
     self.pause = false
     self.pause_timer = 0.0
+    self.end_timer = 0
+    -- assets and such for victory/death ditty
+    self.victory_motif = love.audio.newSource(
+        "assets/audio/music/victory_motif.ogg", "stream"
+    )
+    self.victory_initiated = false
 
     -- Import player names
     local spritesheet = love.graphics.newImage("assets/ui/names.png")
@@ -91,12 +97,13 @@ function fight_scene:load(gameState)
     elseif gameState.level == "curlew" then
         gameState:setMusic("assets/audio/music/curlew_theme.ogg")
     end
-    self.end_timer = 0
 end
   
 
 function fight_scene:update(dt, gameState)
-    utils.pplay(gameState.music)
+    if not self.victory_initiated then
+        utils.pplay(gameState.music)
+    end
     -- Check victory
     if Level.player1.victory or Level.player2.victory then
         ResetInputs()
@@ -123,11 +130,17 @@ function fight_scene:update(dt, gameState)
             Transition_In:update(math.max(dt, Pause_dt), gameState)
         end
     end
-    if Level.complete and self.end_timer > 7.0 and Transition_In == nil then
-        print("Transitioning!")
-        Transition_In = require"scenes/transition_in"
-        Transition_In:load("setTitleScene")
-        Transition_In.transition_in = true
+    if Level.complete then
+        if not self.victory_initiated then
+            gameState.music:stop()
+            self.victory_motif:play()
+            self.victory_initiated = true
+        end
+        if self.end_timer > 7.0 and Transition_In == nil then
+            Transition_In = require"scenes/transition_in"
+            Transition_In:load("setTitleScene")
+            Transition_In.transition_in = true
+        end
     end
 end
 
