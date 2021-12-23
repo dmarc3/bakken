@@ -1,10 +1,6 @@
 local peachy = require("3rd/peachy/peachy")
-local json = require("3rd/json/json")
 
 local utils = require("utils")
-
--- seed rng with unix epoch
-math.randomseed(os.time())
 
 Player = {}
 Player.__index = Player
@@ -66,24 +62,7 @@ function Player:new(id, char, x, y)
     instance.block = instance.charsheet.block
     instance.block_end = instance.charsheet.block_end
     -- Load sound effects
-    local sfx_pitch = instance.charsheet.sfx_pitch
-    instance.sfx = {
-        attack_1 = love.audio.newSource(
-                "assets/audio/sfx/attack/attack_1_p" .. sfx_pitch .. ".ogg", "static"
-        ),
-        block = love.audio.newSource(
-            "assets/audio/sfx/block/block_p" .. sfx_pitch .. ".ogg", "static"
-        ),
-        single_jump = love.audio.newSource(
-            "assets/audio/sfx/jump/single_jump_p" .. sfx_pitch .. ".ogg", "static"
-        ),
-        double_jump = love.audio.newSource(
-            "assets/audio/sfx/jump/double_jump_p" .. sfx_pitch .. ".ogg", "static"
-        ),
-        kneel = love.audio.newSource(
-            "assets/audio/sfx/kneel/kneel_breath_p" .. sfx_pitch .. ".ogg", "static"
-        )
-    }
+    instance.sfx = instance.charsheet.sfx
 
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
@@ -822,7 +801,9 @@ end
 
 function Player:trigger_sfx(sfx_type)
     if sfx_type == "attack_1" then
-        utils.pplay(self.sfx.attack_1)
+        for i = 1, #self.sfx.attack_1 do
+            utils.pplay(self.sfx.attack_1[i])
+        end
     elseif sfx_type == "block" then
         if not self.blocking then
             utils.pplay(self.sfx.block)

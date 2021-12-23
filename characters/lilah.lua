@@ -19,6 +19,8 @@ local function hurtbox ()
 			2, 14}
 end
 
+local sfx_pitch = "1.15"
+
 return {
 	xorigin = 21,
 	yorigin = 18,
@@ -75,5 +77,23 @@ return {
 		f2 = 21,
 		f3 = 21
 	},
-	sfx_pitch = "1.15"
+	sfx = {
+		attack_1 = {
+			love.audio.newSource(
+				"assets/audio/sfx/attack/attack_1_p" .. sfx_pitch .. ".ogg", "static"
+			)
+		},
+        block = love.audio.newSource(
+            "assets/audio/sfx/block/block_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        single_jump = love.audio.newSource(
+            "assets/audio/sfx/jump/single_jump_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        double_jump = love.audio.newSource(
+            "assets/audio/sfx/jump/double_jump_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        kneel = love.audio.newSource(
+            "assets/audio/sfx/kneel/kneel_breath_p" .. sfx_pitch .. ".ogg", "static"
+        )
+	}
 }
