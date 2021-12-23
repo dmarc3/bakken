@@ -2,7 +2,7 @@ local peachy = require"3rd/peachy/peachy"
 local scene = require"scene"
 local utils = require"utils"
 
-local pickFighterScene = scene:new("pickFigherScene")
+local pickFighterScene = scene:new("pickFighterScene")
 
 P1 = "drew"
 P2 = "lilah"
@@ -107,7 +107,7 @@ end
 
 function pickFighterScene:update(dt, gameState)
     -- print(tostring(self.selected1)..' and '..tostring(self.selected2))
-    -- hacky fix for music not playing when coming to pick fighter from pause menu
+    utils.pplay(gameState.music)
     if not gameState.music:isPlaying() then
         gameState:setMusic("assets/audio/music/selection_theme.ogg")
         gameState.music:play()
