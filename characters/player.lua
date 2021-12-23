@@ -70,7 +70,7 @@ function Player:new(id, char, x, y)
 
     -- Process controller
     local joystickcount = love.joystick.getJoystickCount( )
-    if joystickcount == 2 then
+    if joystickcount >= 2 then
         local joysticks = love.joystick.getJoysticks()
         instance.joystick = joysticks[instance.id]
         print("Player "..instance.id.." is using "..instance.joystick:getName())
