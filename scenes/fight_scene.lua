@@ -45,6 +45,7 @@ function fight_scene:load(gameState)
     self.victory_motif = love.audio.newSource(
         "assets/audio/music/victory_motif.ogg", "stream"
     )
+    self.victory_duration = 4.192  -- specific timing for victory_motif
     self.victory_initiated = false
 
     -- Import player names
@@ -136,7 +137,7 @@ function fight_scene:update(dt, gameState)
             self.victory_motif:play()
             self.victory_initiated = true
         end
-        if self.end_timer > 7.0 and Transition_In == nil then
+        if self.end_timer > 10 and Transition_In == nil then
             Transition_In = require"scenes/transition_in"
             Transition_In:load("setTitleScene")
             Transition_In.transition_in = true
@@ -261,7 +262,7 @@ function fight_scene:drawPause()
 end
 
 function fight_scene:drawVictory()
-    if Level.complete then
+    if Level.complete and self.end_timer > self.victory_duration then
         if Level.player1.dead then
             Names.player2:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
         end
