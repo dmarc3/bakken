@@ -495,6 +495,9 @@ function Player:damage(d)
         self.health = 0
         self.knocked_out = true
     end
+    if self.blocking then
+        self:trigger_sfx("parry")
+    end
     self.hb_anim = true
     self.invuln = true
     self.invuln_timer = 0
