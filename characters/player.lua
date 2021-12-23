@@ -539,6 +539,7 @@ function Player:drawHitBox(anim)
             self.a1.hitbox.fixture:setSensor(true)
             self.a1.hitbox.fixture:setUserData("sensor"..self.id)
             self.delete_bodies["player"..self.id.."_a1"] = 1
+            print("Deleting player"..self.id.." a1 body!")
         end
     end
 end
