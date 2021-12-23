@@ -432,7 +432,7 @@ function CheckKeys(dt)
     Level.player2:attack_1()
     Level.player1:blocks()
     Level.player2:blocks()
-    --print(pconcat(KeysPressed))
+    -- print(pconcat(ButtonsPressed[1]))
 end
 
 return fight_scene

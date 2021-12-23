@@ -107,7 +107,7 @@ function Player:new(id, char, x, y)
             instance.right = "dpright"
             instance.j = "a"
             instance.a = "x"
-            instance.b = "triggerleft"
+            instance.b = "leftshoulder"
         else
             instance.left = "a"
             instance.right = "d"
@@ -128,7 +128,7 @@ function Player:new(id, char, x, y)
             instance.right = "dpright"
             instance.j = "a"
             instance.a = "x"
-            instance.b = "triggerleft"
+            instance.b = "leftshoulder"
         else
             instance.left = "kp1"
             instance.right = "kp3"
@@ -707,14 +707,20 @@ function Player:blocks()
     local cur_block = self.blocking
     -- Set block flag
     if self.joystick then
-        if AxisMoved[self.id][self.b] == nil then
-            self.blocking = false
-        elseif AxisMoved[self.id][self.b] > 0.5 then
-            self:trigger_sfx("block")  -- keep this above `self.blocking = true`
+        if ButtonsPressed[self.id][self.b] == true then
+            self:trigger_sfx("block")
             self.blocking = true
         else
             self.blocking = false
         end
+        -- if AxisMoved[self.id][self.b] == nil then
+        --     self.blocking = false
+        -- elseif AxisMoved[self.id][self.b] > 0.5 then
+        --     self:trigger_sfx("block")  -- keep this above `self.blocking = true`
+        --     self.blocking = true
+        -- else
+        --     self.blocking = false
+        -- end
     else
         if KeysPressed[self.b] == true then
             self:trigger_sfx("block")  -- keep this above `self.blocking = true`
