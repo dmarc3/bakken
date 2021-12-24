@@ -100,6 +100,9 @@ return {
         ),
         kneel = love.audio.newSource(
             "assets/audio/sfx/kneel/kneel_breath_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        knockout = love.audio.newSource(
+            "assets/audio/sfx/knockout/knockout_p" .. sfx_pitch .. ".ogg", "static"
         )
 	}
 }

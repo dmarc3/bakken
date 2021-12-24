@@ -491,9 +491,10 @@ function Player:damage(d)
     self.damaged = true
     print("Player "..self.id.." hit for "..tostring(d).." damage!")
     self.health = self.health - d
-    if self.health < 0 then
+    if self.health <= 0 then
         self.health = 0
         self.knocked_out = true
+        self:trigger_sfx("knockout")
     end
     self.hb_anim = true
     self.invuln = true
@@ -587,13 +588,13 @@ function Player:attack_1()
     local current_attack = self.attack
     if self.joystick then
         if ButtonsPressed[self.id][self.a] == true then
-            self.attack = true
             self:trigger_sfx("attack_1")
+            self.attack = true
         end
     else
         if KeysPressed[self.a] == true then
-            self.attack = true
             self:trigger_sfx("attack_1")
+            self.attack = true
         end
     end
     if not current_attack and self.attack then
@@ -818,7 +819,7 @@ function Player:preSolve(a, b, collision)
 end
 
 function Player:trigger_sfx(sfx_type)
-    if sfx_type == "attack_1" then
+    if sfx_type == "attack_1" and not self.attack then
         for i = 1, #self.sfx.attack_1 do
             utils.pplay(self.sfx.attack_1[i])
         end
@@ -832,6 +833,8 @@ function Player:trigger_sfx(sfx_type)
         utils.pplay(self.sfx.double_jump)
     elseif sfx_type == "kneel" then
         utils.pplay(self.sfx.kneel)
+    elseif sfx_type == "knockout" then
+        utils.pplay(self.sfx.knockout)
     end
 end
 
