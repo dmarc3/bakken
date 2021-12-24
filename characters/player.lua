@@ -588,13 +588,13 @@ function Player:attack_1()
     local current_attack = self.attack
     if self.joystick then
         if ButtonsPressed[self.id][self.a] == true then
-            self.attack = true
             self:trigger_sfx("attack_1")
+            self.attack = true
         end
     else
         if KeysPressed[self.a] == true then
-            self.attack = true
             self:trigger_sfx("attack_1")
+            self.attack = true
         end
     end
     if not current_attack and self.attack then
@@ -819,7 +819,7 @@ function Player:preSolve(a, b, collision)
 end
 
 function Player:trigger_sfx(sfx_type)
-    if sfx_type == "attack_1" then
+    if sfx_type == "attack_1" and not self.attack then
         for i = 1, #self.sfx.attack_1 do
             utils.pplay(self.sfx.attack_1[i])
         end
