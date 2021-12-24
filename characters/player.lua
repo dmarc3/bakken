@@ -491,9 +491,10 @@ function Player:damage(d)
     self.damaged = true
     print("Player "..self.id.." hit for "..tostring(d).." damage!")
     self.health = self.health - d
-    if self.health < 0 then
+    if self.health <= 0 then
         self.health = 0
         self.knocked_out = true
+        self:trigger_sfx("knockout")
     end
     self.hb_anim = true
     self.invuln = true
@@ -832,6 +833,8 @@ function Player:trigger_sfx(sfx_type)
         utils.pplay(self.sfx.double_jump)
     elseif sfx_type == "kneel" then
         utils.pplay(self.sfx.kneel)
+    elseif sfx_type == "knockout" then
+        utils.pplay(self.sfx.knockout)
     end
 end
 
