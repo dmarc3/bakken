@@ -145,6 +145,9 @@ function love.keypressed(key)
     if key == "escape" and Debug then
         Debug_Pause = not Debug_Pause
     end
+    if key == "f2" and Debug then
+        Debug_Pause = not Debug_Pause
+    end
     if key == "f1" then
         Debug = not Debug
     end

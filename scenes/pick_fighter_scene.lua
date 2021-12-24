@@ -10,8 +10,8 @@ P2 = "lilah"
 function pickFighterScene:load(gameState)
     -- print("Loading pickFighterScene")
     self.game_canvas = gameState.canvas
-    self.chars = {"drew", "lilah", "sam", "miller", "abram", "drew"}
-    self.chars_xspacing = {12, 21, 21, 15, 27, 12}
+    self.chars = {"drew", "lilah", "sam", "averi", "miller", "abram"}
+    self.chars_xspacing = {12, 21, 21, 11, 15, 27}
     self.animations = {}
     self.animationName = "idle"
     self.animationName1 = "idle"

@@ -1,59 +1,49 @@
 local function hitbox(xDir)
-	return {
+    return {
 		0, 0,
-	    -8*xDir, -18,
-	    8*xDir, -14,
-	    21*xDir, -4,
-	    21*xDir, 0,
-	    17*xDir, 5,
-	    8*xDir, 10,
-	    -8*xDir, 13
+		-12*xDir, -17,
+		9*xDir, -14,
+		20*xDir, 0,
+		21*xDir, 13
 	}
 end
 
-local function hurtbox()
-	return {
-		-2, 12,
-		-6, 11,
-		-6, -11,
-		6, -11,
-		6, 11,
-		2, 12
-	}
+local function hurtbox ()
+	return {-2, 14,
+			-6, 13,
+			-6, 13,
+			-6, -12,
+			6, -12,
+			6, 13,
+			2, 14}
 end
 
-local sfx_pitch  =  "1"
+local sfx_pitch = "1.15"
 
 return {
-	xorigin = 12,
-	yorigin = 30,
-	body_width_pad = 0.25,
-	body_height_pad = 0.38,
-	x_shift_pad = 0.585,
+	xorigin = 11,
+	yorigin = 23,
+	body_width_pad = 0.3,
+	body_height_pad = 0.75,
+	x_shift_pad = 0.5,
 	idle_duration = 0.6,
-	attack_1_duration = 1.16,
+	attack_1_duration = 0.4,
 	jump_duration = 0.5,
 	airborne_duration = 0.8,
 	land_duration = 0.15,
 	damage_duration = 0.5,
-	block_start_dur = 0.40,
+	block_start_dur = 0.45,
 	block_end_dur = 0.45,
 	idle = {
-		f1 = {x = 12},
-		f2 = {x = 12},
-		f3 = {x = 12},
-		f4 = {x = 12}
+		f1 = {x = 11},
+		f2 = {x = 11}
 	},
 	a1 = {
-		f1 = {dx = 0,hit = false},
-	    f2 = {dx = 4,hit = false},
-	    f3 = {dx = 0,hit = false},
-	    f4 = {dx = 0,hit = false},
-	    f5 = {dx = 6,hit = true},
-	    f6 = {dx = 0,hit = false},
-	    f7 = {dx = -9,hit = false},
-	    f8 = {dx = 0,hit = false},
-	    f9 = {dx = -1,hit = false},
+		f1 = {dx = 0, hit = false},
+	    f2 = {dx = 0, hit = false},
+	    f3 = {dx = 0, hit = false},
+	    f4 = {dx = 0, hit = true},
+	    f5 = {dx = 0, hit = false},
 		hitbox = {
 			vertices = hitbox,
 			body = nil,
@@ -65,23 +55,23 @@ return {
 		}
 	},
 	walk = {
-		f1 = {x = 16},
-		f2 = {x = 16},
-		f3 = {x = 16},
-		f4 = {x = 16},
-		f5 = {x = 16},
-		f6 = {x = 16}
+		f1 = {x = 11},
+		f2 = {x = 11},
+		f3 = {x = 11},
+		f4 = {x = 11},
+		f5 = {x = 11},
+		f6 = {x = 11}
 	},
 	block_start = {
-		f1 = 12,
-		f2 = 12,
-		f3 = 12
+		f1 = 11,
+	    f2 = 11,
+		f3 = 11
 	},
-	block = {f1 = 12},
+	block = {f1 = 11},
 	block_end = {
-		f1 = 12,
-		f2 = 12,
-		f3 = 12
+		f1 = 11,
+		f2 = 11,
+		f3 = 11
 	},
 	sfx = {
 		attack_1 = {

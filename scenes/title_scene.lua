@@ -32,7 +32,7 @@ function titleScene:load(gameState)
     self.PB_SpriteSheet = love.graphics.newImage("assets/ui/press_button.png")
     self.PB_SpriteSheetMeta = "assets/ui/press_button.json"
     self.press_button = peachy.new(self.PB_SpriteSheetMeta, self.PB_SpriteSheet, "Idle")
-    local chars = {"drew", "lilah", "sam", "miller", "lilah", "abram"}
+    local chars = {"drew", "miller", "sam", "averi", "lilah", "abram"}
     local x = {WindowWidth/GlobalScale*0.1, WindowWidth/GlobalScale*0.25, WindowWidth/GlobalScale*0.4, WindowWidth/GlobalScale*0.55, WindowWidth/GlobalScale*0.75, WindowWidth/GlobalScale*0.9}
     self:loadChars(chars, x)
     gameState:setMusic("assets/audio/music/title_theme.ogg")

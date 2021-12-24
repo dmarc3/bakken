@@ -27,7 +27,7 @@ local sfx_pitch  =  "1"
 
 return {
 	xorigin = 15,
-	yorigin = 23,
+	yorigin = 25,
 	body_width_pad = 0.3333333333,
 	body_height_pad = 0.5897,
 	x_shift_pad = 0.585,
