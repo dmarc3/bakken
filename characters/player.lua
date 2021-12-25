@@ -51,6 +51,7 @@ function Player:new(id, char, x, y)
     instance.x_shift_pad = instance.charsheet.x_shift_pad
     instance.idle_duration = instance.charsheet.idle_duration
     instance.attack_1_duration = instance.charsheet.attack_1_duration
+    instance.attack_damage = instance.charsheet.attack_damage
     instance.jump_duration = instance.charsheet.jump_duration
     instance.airborne_duration = instance.charsheet.airborne_duration
     instance.land_duration = instance.charsheet.land_duration
@@ -271,8 +272,9 @@ function Player:setState()
         self.animationName = "dead"
     elseif self.dead then
         self.animationName = "dead"
-        self.animation[self.animationName]:setFrame(6)
-        self.animation[self.animationName]:pause()
+        -- self.animation[self.animationName]:setFrame(6)
+        self.animation[self.animationName]:stop({onLast = true})
+        -- self.animation[self.animationName]:pause()
     elseif self.victory and self.victory_timer < self.victory_duration then
         self.animationName = "victory"
     elseif self.victory then
@@ -357,6 +359,7 @@ function Player:updateHealthBar(dt)
         self.hb_anim = false
         self.hb_anim_timer = 0
         self.kneel = true
+        self.knocked_out = true
     end
     if self.hb_lives_frame == 3 and self.health == 0 then
         self.dead = true
@@ -517,6 +520,8 @@ function Player:drawHitBox(anim)
         else
             self.delete_bodies["player"..self.id.."_a1"] = 1
         end
+    else
+        self.delete_bodies["player"..self.id.."_a1"] = 1
     end
 end
 
@@ -585,6 +590,7 @@ function Player:jump()
 end
 
 function Player:attack_1()
+    self.blocking = false
     local current_attack = self.attack
     if self.joystick then
         if ButtonsPressed[self.id][self.a] == true then
@@ -821,7 +827,8 @@ end
 function Player:trigger_sfx(sfx_type)
     if sfx_type == "attack_1" and not self.attack then
         for i = 1, #self.sfx.attack_1 do
-            utils.pplay(self.sfx.attack_1[i])
+            -- utils.pplay(self.sfx.attack_1[i])
+            utils.snplay(self.sfx.attack_1[i])
         end
     elseif sfx_type == "block" then
         if not self.blocking then

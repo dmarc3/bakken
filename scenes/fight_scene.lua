@@ -264,9 +264,11 @@ end
 function fight_scene:drawVictory()
     if Level.complete and self.end_timer > self.victory_duration then
         if Level.player1.dead then
+            Level.player2.invuln = true
             Names.player2:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
         end
         if Level.player2.dead then
+            Level.player1.invuln = true
             Names.player1:draw(WindowWidth/GlobalScale*0.38, WindowHeight/GlobalScale*0.3)
         end
         if Level.player1.dead or Level.player2.dead then
@@ -384,20 +386,20 @@ function beginContact(a, b, collision)
     if (a:getUserData() == "sensor1" and b:getUserData() == "player2") or (b:getUserData() == "sensor1" and a:getUserData() == "player2") then
         if not Level.player2.invuln then
             if not Level.player2.blocking then
-                Level.player2:damage(50)
+                Level.player2:damage(Level.player1.attack_damage)
             else
                 utils.pplay(Level.player2.sfx.parry)
-                Level.player2:damage(50*0.2)
+                Level.player2:damage(math.floor(Level.player1.attack_damage*0.2))
             end
         end
     end
     if (a:getUserData() == "sensor2" and b:getUserData() == "Level.player1") or (b:getUserData() == "sensor2" and a:getUserData() == "player1") then
         if not Level.player1.invuln then
             if not Level.player1.blocking then
-                Level.player1:damage(10)
+                Level.player1:damage(Level.player2.attack_damage)
             else
                 utils.pplay(Level.player1.sfx.parry)
-                Level.player1:damage(10*0.2)
+                Level.player1:damage(math.floor(Level.player2.attack_damage*0.2))
             end
         end
     end

@@ -290,7 +290,8 @@ function Level:draw(x, y, sx, sy)
     if self.splash then
         love.graphics.push()
         love.graphics.scale(sx, sy)
-        self.Splash:draw(self.splash_x-self.Splash:getWidth()/2, self.splash_y)
+        -- self.Splash:draw(self.splash_x-self.Splash:getWidth()/2, self.splash_y)
+        self.Splash:draw(self.splash_x, self.splash_y)
         love.graphics.pop()
     end
     love.graphics.setCanvas(orig_canvas)
@@ -342,9 +343,8 @@ function Level:detectFall()
         self.player1.x = self.player1.x0
         self.player1.physics.body:setPosition(self.player1.x0, self.player1.y0*WindowHeight/GlobalScale)
         self.player1.physics.body:setLinearVelocity(0, 0)
-        self.player1.health = 0
-        self.player1.knocked_out = true
-        self.player1.fall = true
+        self.player1:damage(self.player1.health)
+        -- self.player1.knocked_out = true
     elseif self.player1.y/(WindowHeight/GlobalScale) > 0.8 and self.splash_timer < self.splash_duration and self.splash_count == 0 then
         self.splash = true
         self.splash_count = self.splash_count + 1
@@ -356,9 +356,8 @@ function Level:detectFall()
         self.player2.x = self.player2.x0
         self.player2.physics.body:setPosition(self.player2.x0, self.player2.y0*WindowHeight/GlobalScale)
         self.player2.physics.body:setLinearVelocity(0, 0)
-        self.player2.health = 0
-        self.player2.knocked_out = true
-        self.player2.fall = true
+        self.player2:damage(self.player2.health)
+        -- self.player2.knocked_out = true
     elseif self.player2.y/(WindowHeight/GlobalScale) > 0.8 and self.splash_timer < self.splash_duration and self.splash_count == 0 then
         self.splash = true
         self.splash_count = self.splash_count + 1

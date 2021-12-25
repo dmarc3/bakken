@@ -32,6 +32,7 @@ return {
 	x_shift_pad = 0.585,
 	idle_duration = 0.8,
 	attack_1_duration = 0.9,
+	attack_damage = 13,
 	jump_duration = 0.5,
 	airborne_duration = 0.8,
 	land_duration = 0.5,

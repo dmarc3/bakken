@@ -249,7 +249,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 75
    },
    {
     "filename": "drew 28.aseprite",
@@ -258,7 +258,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 75
    },
    {
     "filename": "drew 29.aseprite",
@@ -267,7 +267,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 75
    },
    {
     "filename": "drew 30.aseprite",
@@ -276,7 +276,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 75
    },
    {
     "filename": "drew 31.aseprite",
@@ -285,7 +285,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 75
    },
    {
     "filename": "drew 32.aseprite",
@@ -294,7 +294,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 200
+    "duration": 75
    },
    {
     "filename": "drew 33.aseprite",
@@ -303,7 +303,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 50
+    "duration": 75
    },
    {
     "filename": "drew 34.aseprite",
@@ -312,7 +312,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 75
    },
    {
     "filename": "drew 35.aseprite",
@@ -321,7 +321,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 58 },
     "sourceSize": { "w": 50, "h": 58 },
-    "duration": 100
+    "duration": 75
    },
    {
     "filename": "drew 36.aseprite",

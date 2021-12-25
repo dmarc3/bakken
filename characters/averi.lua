@@ -27,7 +27,8 @@ return {
 	body_height_pad = 0.75,
 	x_shift_pad = 0.5,
 	idle_duration = 0.6,
-	attack_1_duration = 0.4,
+	attack_1_duration = 0.5,
+	attack_damage = 8,
 	jump_duration = 0.5,
 	airborne_duration = 0.8,
 	land_duration = 0.15,
@@ -90,6 +91,9 @@ return {
         ),
         kneel = love.audio.newSource(
             "assets/audio/sfx/kneel/kneel_breath_p" .. sfx_pitch .. ".ogg", "static"
+        ),
+        knockout = love.audio.newSource(
+            "assets/audio/sfx/knockout/knockout_p" .. sfx_pitch .. ".ogg", "static"
         )
 	}
 }
