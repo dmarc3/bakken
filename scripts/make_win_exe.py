@@ -39,7 +39,7 @@ print(love_path)
 
 # Run executable creation command
 os.system('copy /b '+love_path+'+fighter.love fighter.exe')
-os.remove('fighter.love')
+# os.remove('fighter.love')
 
 # Copy relevant DLLs
 DLLs = glob.glob(os.path.join('C:', os.path.sep, 'Program Files', 'LOVE', '*.dll'))
