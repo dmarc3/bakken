@@ -590,21 +590,22 @@ function Player:jump()
 end
 
 function Player:attack_1()
-    self.blocking = false
-    local current_attack = self.attack
-    if self.joystick then
-        if ButtonsPressed[self.id][self.a] == true then
-            self:trigger_sfx("attack_1")
-            self.attack = true
+    if not self.blocking then
+        local current_attack = self.attack
+        if self.joystick then
+            if ButtonsPressed[self.id][self.a] == true then
+                self:trigger_sfx("attack_1")
+                self.attack = true
+            end
+        else
+            if KeysPressed[self.a] == true then
+                self:trigger_sfx("attack_1")
+                self.attack = true
+            end
         end
-    else
-        if KeysPressed[self.a] == true then
-            self:trigger_sfx("attack_1")
-            self.attack = true
+        if not current_attack and self.attack then
+            self.original_x = self.physics.body:getX()
         end
-    end
-    if not current_attack and self.attack then
-        self.original_x = self.physics.body:getX()
     end
 end
 
@@ -715,28 +716,23 @@ function Player:blocks()
     -- Set block flag
     if self.joystick then
         if ButtonsPressed[self.id][self.b] == true then
-            self:trigger_sfx("block")
+            if cur_block == false then
+                self:trigger_sfx("block")
+            end
             self.blocking = true
         else
             self.blocking = false
         end
-        -- if AxisMoved[self.id][self.b] == nil then
-        --     self.blocking = false
-        -- elseif AxisMoved[self.id][self.b] > 0.5 then
-        --     self:trigger_sfx("block")  -- keep this above `self.blocking = true`
-        --     self.blocking = true
-        -- else
-        --     self.blocking = false
-        -- end
     else
         if KeysPressed[self.b] == true then
-            self:trigger_sfx("block")  -- keep this above `self.blocking = true`
+            if cur_block == false then
+                self:trigger_sfx("block")
+            end
             self.blocking = true
         else
             self.blocking = false
         end
     end
-
     -- Detect if block has ended
     if cur_block == true and self.blocking == false then
         self.end_block = true

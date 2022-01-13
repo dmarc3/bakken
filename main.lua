@@ -1,8 +1,4 @@
--- Full Medical Alchemist
-
--- In the medicinal alchemy world, humoralism based treatments are considered especially unstable.
--- In Ballurdia, the dedicated physickers who investigate these dangerous practices are members 
--- of an elite group known as the Full Medical Alchemists. These are their stories.
+-- Bakken main file
 
 -- Load Modules / Libraries
 local push = require("3rd/push/push")
