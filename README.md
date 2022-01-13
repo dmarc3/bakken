@@ -1,6 +1,6 @@
 ![](assets/ui/title.png "title")
 
-Merry Christmas (2021) to the Bakke Everhart kids! Love Uncle Marcus!
+Merry Christmas (2021) to the Bakke / Everhart kids! Love Uncle Marcus!
 
 ## Bakken v1.0 Features
 
