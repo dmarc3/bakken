@@ -20,7 +20,5 @@ __Levels__
 - `Lake Curlew`
 
 ### Special thanks to...
-- Erik Bakke ([Noble-Viking](https://github.com/Noble-Viking))
-- Rusty Roberts ([rhroberts](https://github.com/rhroberts))
-- Madeleine Hale
-- Katherine Joseph
+- [Noble-Viking](https://github.com/Noble-Viking)
+- [rhroberts](https://github.com/rhroberts)
